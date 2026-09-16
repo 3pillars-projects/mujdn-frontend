@@ -35,6 +35,9 @@ export class Permission extends BaseCrudModel<Permission, PermissionService> {
   declare permissionType: BaseLookupModel;
   declare actionDate?: Date | string;
   declare canTakeAction?: boolean;
+  // Root-department override: lets a super-admin reject an already-Accepted permission.
+  // Sibling to canTakeAction — never inferred from role, only from this server-computed flag.
+  declare canRejectAfterAcceptance?: boolean;
   // Opaque Base64 row-version; echoed back untouched on update, never generated here
   declare concurrencyUpdateVersion?: string | null;
   // Files already stored against this permission; always present on read, never sent back as-is
