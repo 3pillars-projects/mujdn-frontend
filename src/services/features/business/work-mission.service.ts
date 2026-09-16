@@ -95,6 +95,19 @@ export class WorkMissionService extends LookupBaseService<WorkMission, number> {
       .pipe(map((res) => res.data ?? {}));
   }
 
+  /**
+   * Whether the current user's department (and every ancestor) allows the work-missions
+   * management module. UI visibility only; the mission endpoints do not enforce it.
+   */
+  isWorkMissionEnabled(): Observable<boolean> {
+    return this.http
+      .get<{
+        data: boolean;
+        error: null;
+      }>(this.getUrlSegment() + '/is-enabled', { withCredentials: true })
+      .pipe(map((res) => res.data === true));
+  }
+
   @CastResponse(undefined, { fallback: '$pagination' })
   getMyWorkMissionsAsync(
     paginationParams?: PaginationParams,
