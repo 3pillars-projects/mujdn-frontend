@@ -41,6 +41,20 @@
       </h5>
     </div>
     <div>
+      <p class="text-sm text-white mb-2">
+        {{ 'DEPARTMENTS_HEADER_PAGE.PARENT_DEPARTMENT' | translate }}
+      </p>
+      <h5 class="text-base font-semibold text-white truncate">
+        @if (departmentData?.fkParentDepartmentId == null) {
+          {{ 'DEPARTMENTS_HEADER_PAGE.MAIN_DEPARTMENT' | translate }}
+        } @else {
+          {{
+            isCurrentLanguageEnglish() ? parentDepartment?.nameEn : parentDepartment?.nameAr
+          }}
+        }
+      </h5>
+    </div>
+    <div>
       <p class="text-sm text-white mb-2">{{ 'DEPARTMENTS_HEADER_PAGE.REGION' | translate }}</p>
       <h5 class="text-base font-semibold text-white">
         {{

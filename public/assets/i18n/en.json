@@ -329,6 +329,8 @@
     "ONE_LEVEL_APPROVAL": "One level approval",
     "TWO_LEVEL_APPROVAL": "Two levels approval",
     "DEPARTMENT_NAME": "Department name",
+    "PARENT_DEPARTMENT": "Parent department",
+    "MAIN_DEPARTMENT": "Main department",
     "REGION": "Region",
     "CITY": "City",
     "PHONE": "Phone",

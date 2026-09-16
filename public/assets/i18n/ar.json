@@ -329,6 +329,8 @@
     "ONE_LEVEL_APPROVAL": "موافقه على مستوى واحد",
     "TWO_LEVEL_APPROVAL": "موافقه على مستويين",
     "DEPARTMENT_NAME": "اسم الإدارة",
+    "PARENT_DEPARTMENT": "الإدارة الأعلى",
+    "MAIN_DEPARTMENT": "الإدارة الرئيسية",
     "REGION": "المنطقة",
     "CITY": "المدينة",
     "PHONE": "الهاتف",

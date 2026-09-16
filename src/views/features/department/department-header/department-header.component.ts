@@ -25,6 +25,7 @@ export class DepartmentHeaderComponent {
   @Input() cities: City[] = [];
   @Input() regions: BaseLookupModel[] = [];
   @Input() usersProfiles: BaseLookupModel[] = [];
+  @Input() departmentsTree: Department[] = [];
   @Output() dialogClosed = new EventEmitter<Department>();
   @Input() selectedDepartmentSignal!: Signal<Department | null>;
   PERMISSION_APPROVAL_LEVELS = PERMISSION_APPROVAL_LEVELS;
@@ -35,6 +36,23 @@ export class DepartmentHeaderComponent {
     width: '100%',
     maxWidth: '800px',
   };
+
+  get parentDepartment(): Department | null {
+    const parentId = this.departmentData?.fkParentDepartmentId;
+    if (!parentId) return null;
+    return this.findDepartmentInTree(this.departmentsTree, parentId);
+  }
+
+  private findDepartmentInTree(departments: Department[], id: number): Department | null {
+    for (const dept of departments) {
+      if (dept.id === id) return dept;
+      if (dept.childDepartments?.length) {
+        const found = this.findDepartmentInTree(dept.childDepartments, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
 
   getApprovalLevelText(): string {
     if (!this.departmentData) return '';
