@@ -24,7 +24,7 @@ import { City } from '@/models/features/lookups/city/city';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { ConfirmationService } from '@/services/shared/confirmation.service';
-import { filter, switchMap, tap } from 'rxjs';
+import { filter, of, switchMap, tap } from 'rxjs';
 import { Department } from '@/models/features/lookups/department/department';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { ImportLogPopupComponent } from '../import-log-popup/import-log-popup.component';
@@ -242,25 +242,31 @@ export default class DepartmentListComponent extends BaseListComponent<
   }
 
   override openDialog(department: Department) {
-    let dialogConfig: MatDialogConfig = new MatDialogConfig();
-    let lookups = {
-      cities: this.cities,
-      regions: this.regions,
-      usersProfiles: this.usersProfiles,
-    };
     const viewMode = department.id && department.id != 0 ? ViewModeEnum.EDIT : ViewModeEnum.CREATE;
-    dialogConfig.data = { model: department, lookups: lookups, viewMode: viewMode };
-    dialogConfig.width = this.dialogSize.width;
-    dialogConfig.maxWidth = this.dialogSize.maxWidth;
-    const dialogRef = this.matDialog.open(DepartmentPopupComponent as any, dialogConfig);
+    const parentDepartments$ =
+      viewMode == ViewModeEnum.EDIT
+        ? this.departmentService.getParentOptions(department.id!)
+        : of([]);
 
-    return dialogRef
-      .afterClosed()
-      .subscribe((result: { data: Department; action: DIALOG_ENUM }) => {
+    parentDepartments$.subscribe((parentDepartments) => {
+      let dialogConfig: MatDialogConfig = new MatDialogConfig();
+      let lookups = {
+        cities: this.cities,
+        regions: this.regions,
+        usersProfiles: this.usersProfiles,
+        parentDepartments,
+      };
+      dialogConfig.data = { model: department, lookups: lookups, viewMode: viewMode };
+      dialogConfig.width = this.dialogSize.width;
+      dialogConfig.maxWidth = this.dialogSize.maxWidth;
+      const dialogRef = this.matDialog.open(DepartmentPopupComponent as any, dialogConfig);
+
+      dialogRef.afterClosed().subscribe((result: { data: Department; action: DIALOG_ENUM }) => {
         if (result && result?.action == DIALOG_ENUM.OK) {
           this.onDepartmentChange();
         }
       });
+    });
   }
 
   openImportModal() {

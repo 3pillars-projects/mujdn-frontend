@@ -25,6 +25,11 @@ import { Observable, of, switchMap } from 'rxjs';
     unwrap: 'data',
     shape: { 'list.*': () => BaseLookupModel },
   },
+  $parentOptions: {
+    model: () => BaseLookupModel,
+    unwrap: 'data',
+    shape: { data: () => BaseLookupModel },
+  },
 })
 export class DepartmentService extends LookupBaseService<Department, number> {
   override serviceName: string = 'DepartmentService';
@@ -48,5 +53,15 @@ export class DepartmentService extends LookupBaseService<Department, number> {
       this.getUrlSegment() + '/' + 'GetMyDepartmentsForMissions',
       { withCredentials: true }
     );
+  }
+
+  @CastResponse(undefined, { fallback: '$parentOptions' })
+  getParentOptions(id: number): Observable<BaseLookupModel[]> {
+    return this.http
+      .get<ListResponseData<BaseLookupModel>>(
+        this.getUrlSegment() + '/' + id + '/' + 'parent-options',
+        { withCredentials: true }
+      )
+      .pipe(switchMap((response: ListResponseData<BaseLookupModel>) => of(response.data)));
   }
 }

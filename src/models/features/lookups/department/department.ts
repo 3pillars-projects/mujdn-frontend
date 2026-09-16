@@ -37,6 +37,7 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
       phoneNumber,
       fax,
       fkManagerId,
+      fkParentDepartmentId,
       isOneLevelApproval,
     } = this;
     return {
@@ -84,6 +85,7 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
         ],
       ],
       fkManagerId: [fkManagerId, []],
+      fkParentDepartmentId: [fkParentDepartmentId, []],
       isOneLevelApproval: [isOneLevelApproval !== undefined ? isOneLevelApproval : true, []],
     };
   }

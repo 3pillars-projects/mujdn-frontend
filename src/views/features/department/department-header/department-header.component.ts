@@ -10,6 +10,7 @@ import { LanguageService } from '@/services/shared/language.service';
 import { Component, effect, EventEmitter, inject, Input, Output, Signal } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { DepartmentPopupComponent } from '../department-popup/department-popup.component';
 
 @Component({
@@ -53,32 +54,37 @@ export class DepartmentHeaderComponent {
     }
   });
   openDialog() {
-    let dialogConfig: MatDialogConfig = new MatDialogConfig();
-    let lookups = {
-      cities: this.cities,
-      regions: this.regions,
-      usersProfiles: this.usersProfiles,
-    };
+    const parentDepartments$ = this.departmentData?.id
+      ? this.departmentService.getParentOptions(this.departmentData.id)
+      : of([]);
 
-    dialogConfig.data = {
-      model: this.departmentData ? new Department().clone(this.departmentData) : new Department(),
-      lookups: lookups,
-      viewMode: ViewModeEnum.EDIT,
-    };
-    dialogConfig.width = this.dialogSize.width;
-    dialogConfig.maxWidth = this.dialogSize.maxWidth;
+    parentDepartments$.subscribe((parentDepartments) => {
+      let dialogConfig: MatDialogConfig = new MatDialogConfig();
+      let lookups = {
+        cities: this.cities,
+        regions: this.regions,
+        usersProfiles: this.usersProfiles,
+        parentDepartments,
+      };
 
-    const dialogRef = this.matDialog.open(DepartmentPopupComponent as any, dialogConfig);
+      dialogConfig.data = {
+        model: this.departmentData ? new Department().clone(this.departmentData) : new Department(),
+        lookups: lookups,
+        viewMode: ViewModeEnum.EDIT,
+      };
+      dialogConfig.width = this.dialogSize.width;
+      dialogConfig.maxWidth = this.dialogSize.maxWidth;
 
-    return dialogRef
-      .afterClosed()
-      .subscribe((result: { action: DIALOG_ENUM; data: Department }) => {
+      const dialogRef = this.matDialog.open(DepartmentPopupComponent as any, dialogConfig);
+
+      dialogRef.afterClosed().subscribe((result: { action: DIALOG_ENUM; data: Department }) => {
         if (result.action && result.action == DIALOG_ENUM.OK) {
           this.departmentData = { ...result.data } as Department;
           this.dialogClosed.emit(this.departmentData);
           dialogRef.close(DIALOG_ENUM.OK);
         }
       });
+    });
   }
 
   isCurrentLanguageEnglish() {

@@ -179,6 +179,31 @@
             ></span>
           </div>
         </div>
+        @if (!isCreateMode) {
+          <div>
+            <label for="parentDepartmentSelect" class="label">{{
+              'DEPARTMENT_POPUP.PARENT_DEPARTMENT' | translate
+            }}</label>
+            <div class="relative">
+              <p-select
+                name="parentDepartmentSelect"
+                [options]="parentDepartments"
+                [optionLabel]="langOptionLabel"
+                optionValue="id"
+                [placeholder]="'DEPARTMENT_POPUP.CHOOSE_PARENT_DEPARTMENT' | translate"
+                class="w-full peer"
+                id="parentDepartmentSelect"
+                formControlName="fkParentDepartmentId"
+                [disabled]="isRootDepartment"
+              >
+              </p-select>
+              <span
+                class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+              ></span>
+            </div>
+            <app-validation-messages [control]="fkParentDepartmentIdControl"></app-validation-messages>
+          </div>
+        }
       </div>
 
       @if (model.fkParentDepartmentId != null) {
