@@ -179,6 +179,33 @@
             ></span>
           </div>
         </div>
+        @if (!isCreateMode) {
+          <div>
+            <label for="parentDepartmentSelect" class="label">{{
+              'DEPARTMENT_POPUP.PARENT_DEPARTMENT' | translate
+            }}</label>
+            <div class="relative">
+              <p-select
+                name="parentDepartmentSelect"
+                [options]="parentDepartments"
+                [optionLabel]="langOptionLabel"
+                optionValue="id"
+                [placeholder]="'DEPARTMENT_POPUP.CHOOSE_PARENT_DEPARTMENT' | translate"
+                class="w-full peer"
+                id="parentDepartmentSelect"
+                formControlName="fkParentDepartmentId"
+                [disabled]="isRootDepartment"
+              >
+              </p-select>
+              <span
+                class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+              ></span>
+            </div>
+            <app-validation-messages
+              [control]="fkParentDepartmentIdControl"
+            ></app-validation-messages>
+          </div>
+        }
       </div>
 
       @if (model.fkParentDepartmentId != null) {
@@ -229,6 +256,36 @@
           </div>
         </div>
       }
+      <div class="mt-6 pt-6 border-t border-[#d2d6db] text-[#000]">
+        <h3 class="text-[#1f2a37 font-[600] mb-4 text-lg sm:text-xl">
+          {{ 'DEPARTMENT_POPUP.WORK_MISSIONS_SETTINGS' | translate }}
+        </h3>
+        <label for="isWorkMissionEnabled" class="flex items-center gap-2 cursor-pointer relative">
+          <input
+            id="isWorkMissionEnabled"
+            type="checkbox"
+            formControlName="isWorkMissionEnabled"
+            aria-describedby="isWorkMissionEnabledHint"
+            class="appearance-none w-6 h-6 shrink-0 border border-[#6c737f] rounded-[2px] checked:bg-[#1b8354] checked:border-transparent focus-visible:outline-2 focus-visible:outline-[#1b8354] peer"
+          />
+          <svg
+            class="absolute start-1 top-1 w-4 h-4 text-white pointer-events-none scale-0 peer-checked:scale-100 transition-transform"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span>{{ 'DEPARTMENT_POPUP.ENABLE_WORK_MISSIONS' | translate }}</span>
+        </label>
+        <p id="isWorkMissionEnabledHint" class="text-sm text-[#6c737f] mt-2">
+          {{ 'DEPARTMENT_POPUP.ENABLE_WORK_MISSIONS_HINT' | translate }}
+        </p>
+      </div>
       <div class="actions mt-6 flex items-center justify-end gap-4">
         <button type="button" class="btn gray-btn" (click)="close()">
           {{ 'DEPARTMENT_POPUP.CANCEL' | translate }}

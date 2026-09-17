@@ -1,6 +1,6 @@
 # Shift Feature — Frontend Migration Guide
 
-> Based on: `shift-controller-enhancements.md`  
+> Based on: `shift-controller-enhancements.md`
 > Branch: `refactoring-shifts-deep` | Date: 2026-05-04
 
 This document lists every API call the frontend must update. Each section shows the

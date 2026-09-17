@@ -2,7 +2,7 @@
 
 **Scope:** add file attachments to the three request modules — **Leaves**, **Permissions**, **Work Missions** — on both the create and the edit screens, plus download from the list screens.
 
-All three use one identical mechanism. Build the upload/attachment UI **once** as a shared component and wire it into three forms. The only per-module differences are the route, the request body fields, and the role gate — tabulated in [Per-module reference](#per-module-reference).
+All three use one identical mechanism. Build the upload/attachment UI **once** as a shared component and wire it into three forms. The only per-module differences are the route, the request body fields, and the role gate — tabulated in [Per-module reference](#10-per-module-reference).
 
 > **This changes existing endpoints.** `POST` and `PUT` on all three modules no longer accept the full row model. They take dedicated request objects, and the API **rejects any unrecognised JSON property** with `400 VALIDATION_FAILED`. Existing create/edit calls that echo the fetched model back will break. Rewriting those three create and three edit payloads is part of this task, not optional.
 

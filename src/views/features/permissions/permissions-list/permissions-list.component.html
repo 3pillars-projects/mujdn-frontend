@@ -474,7 +474,7 @@
                       </td>
                       <td>
                         <div class="actions flex gap-2">
-                          @if (!permissionsRequest.canTakeAction) {
+                          @if (!canTakeNormalAction(permissionsRequest)) {
                             <button
                               (click)="openDataDialog(permissionsRequest, undefined, true)"
                               class="table-action-gray-btn"
@@ -486,7 +486,7 @@
                             (permissionsRequest.status.id === permissionStatusEnum.New ||
                               permissionsRequest.status.id ===
                                 permissionStatusEnum.FirstAccepted) &&
-                            permissionsRequest.canTakeAction
+                            canTakeNormalAction(permissionsRequest)
                           ) {
                             <button
                               (click)="openDataDialog(permissionsRequest, undefined, true)"
