@@ -337,7 +337,7 @@
     "ADDRESS": "Address",
     "PERMISSION_REQUEST": "Permission request",
     "MANAGER_NAME": "Manager name",
-    "WORK_MISSIONS": "Task assignment",
+    "WORK_MISSIONS": "Mission assignment",
     "WORK_MISSIONS_ENABLED": "Enabled",
     "WORK_MISSIONS_DISABLED": "Disabled"
   },
@@ -384,8 +384,8 @@
     "APPROVAL_LEVEL": "Approval level",
     "ONE_LEVEL_APPROVAL": "One level approval",
     "TWO_LEVEL_APPROVAL": "Two levels approval",
-    "WORK_MISSIONS_SETTINGS": "Task assignment",
-    "ENABLE_WORK_MISSIONS": "Enable task assignment (work missions)",
+    "WORK_MISSIONS_SETTINGS": "Mission assignment",
+    "ENABLE_WORK_MISSIONS": "Enable Mission assignment (work missions)",
     "ENABLE_WORK_MISSIONS_HINT": "When disabled, managers and HR officers in this department and its sub-departments will not see mission management. Employees can still view their own missions.",
     "SAVE": "Save",
     "CANCEL": "Cancel"
