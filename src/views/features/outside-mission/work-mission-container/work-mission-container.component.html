@@ -25,13 +25,15 @@
         <p-tabpanel value="0">
           <app-my-work-mission-list></app-my-work-mission-list>
         </p-tabpanel>
-        <p-tabpanel value="1">
-          <app-assign-work-mission-list
-            [missionsSignal]="missions"
-            [departmentsSignal]="departments"
-          >
-          </app-assign-work-mission-list>
-        </p-tabpanel>
+        @if (canAssign) {
+          <p-tabpanel value="1">
+            <app-assign-work-mission-list
+              [missionsSignal]="missions"
+              [departmentsSignal]="departments"
+            >
+            </app-assign-work-mission-list>
+          </p-tabpanel>
+        }
       </p-tabpanels>
     </p-tabs>
   </div>

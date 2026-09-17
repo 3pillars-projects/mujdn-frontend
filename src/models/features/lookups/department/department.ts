@@ -26,6 +26,7 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
   declare manager?: DepartmentManager;
   declare childDepartments?: Department[];
   declare isOneLevelApproval: boolean;
+  declare isWorkMissionEnabled?: boolean | null;
 
   buildForm() {
     const {
@@ -37,7 +38,9 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
       phoneNumber,
       fax,
       fkManagerId,
+      fkParentDepartmentId,
       isOneLevelApproval,
+      isWorkMissionEnabled,
     } = this;
     return {
       nameAr: [
@@ -84,7 +87,9 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
         ],
       ],
       fkManagerId: [fkManagerId, []],
+      fkParentDepartmentId: [fkParentDepartmentId, []],
       isOneLevelApproval: [isOneLevelApproval !== undefined ? isOneLevelApproval : true, []],
+      isWorkMissionEnabled: [isWorkMissionEnabled ?? true, []],
     };
   }
 }

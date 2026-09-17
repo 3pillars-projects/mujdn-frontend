@@ -59,8 +59,12 @@ export default class WorkMissionContainerComponent implements OnInit {
 
   ngOnInit() {
     // Only set departments from resolver, not missions
-    this.departments.set(this.activatedRoute.snapshot.data['list'].departments || []);
-    this.canAssign = !!(this.authService.isDepartmentManager || this.authService.isHROfficer);
+    const resolved = this.activatedRoute.snapshot.data['list'];
+    this.departments.set(resolved?.departments || []);
+    // "My missions" stays visible; only the management tab follows the department setting.
+    this.canAssign =
+      !!(this.authService.isDepartmentManager || this.authService.isHROfficer) &&
+      resolved?.isWorkMissionEnabled === true;
   }
 
   // Method to handle tab change

@@ -52,6 +52,7 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
   fb = inject(FormBuilder);
   cities: City[] = [];
   regions: BaseLookupModel[] = [];
+  parentDepartments: BaseLookupModel[] = [];
   usersProfiles: UsersWithDepartmentLookup[] = new Array<UsersWithDepartmentLookup>();
   date2: Date | undefined;
   filteredCities: City[] = [];
@@ -72,6 +73,12 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
   get fkCityIdControl() {
     return this.form.get('fkCityId') as FormControl;
   }
+  get fkParentDepartmentIdControl() {
+    return this.form.get('fkParentDepartmentId') as FormControl;
+  }
+  get isRootDepartment(): boolean {
+    return this.model.fkParentDepartmentId == null;
+  }
   get addressControl() {
     return this.form.get('address') as FormControl;
   }
@@ -91,6 +98,7 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
     this.model = this.data.model;
     this.cities = this.data.lookups.cities;
     this.regions = this.data.lookups.regions;
+    this.parentDepartments = this.data.lookups.parentDepartments || [];
     this.usersProfiles =
       this.data?.lookups?.usersProfiles?.filter(
         (x: UsersWithDepartmentLookup) => x.departmentId == this.model?.id

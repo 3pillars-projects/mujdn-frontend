@@ -232,8 +232,18 @@ export default class PermissionsListComponent
     });
   }
 
+  /** A root-department admin with no manager/HR role of their own gets the reject-after-acceptance
+   * override only, never the normal accept/reject chain; a manager/HR role keeps its normal actions. */
+  canTakeNormalAction(permission: Permission): boolean {
+    return !!permission.canTakeAction && !this.authService.isRootDepartmentOversightOnly;
+  }
+
   showIncomingPermissions() {
-    return this.authService.isDepartmentManager || this.authService.isHROfficer;
+    return (
+      this.authService.isDepartmentManager ||
+      this.authService.isHROfficer ||
+      this.authService.isRootDepartmentAdmin
+    );
   }
 
   /** Downloading a permission as a file is offered to department managers, on accepted requests only. */

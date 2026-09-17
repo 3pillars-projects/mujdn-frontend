@@ -11,13 +11,14 @@ import { DepartmentService } from '@/services/features/lookups/department.servic
 import { UserProfileService } from '@/services/features/user-profile.service';
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { catchError, forkJoin, map, of } from 'rxjs';
+import { catchError, forkJoin, map, of, shareReplay, switchMap } from 'rxjs';
 
 export const WorkMissionResolver: ResolveFn<
   {
     departments: BaseLookupModel[] | null;
     myMissions: PaginatedList<WorkMission> | null;
     creators: BaseLookupModel[] | null;
+    isWorkMissionEnabled: boolean;
   } | null
 > = () => {
   const workMissionService = inject(WorkMissionService);
@@ -29,14 +30,26 @@ export const WorkMissionResolver: ResolveFn<
 
   const canLoadDepartments = !!(authService.isDepartmentManager || authService.isHROfficer);
 
+  // The management tab is hidden when the call fails (the global interceptor reports the error).
+  const isWorkMissionEnabled$ = canLoadDepartments
+    ? workMissionService.isWorkMissionEnabled().pipe(
+        catchError(() => of(false)),
+        shareReplay(1)
+      )
+    : of(false);
+
   return forkJoin({
     // Remove missions from resolver - will be loaded on tab change instead
-    departments: canLoadDepartments
-      ? departmentService.getMyDepartmentsForMissionsAsync().pipe(
-          map((resp: ListResponseData<BaseLookupModel>) => resp?.data ?? null),
-          catchError(() => of(null))
-        )
-      : of(null),
+    departments: isWorkMissionEnabled$.pipe(
+      switchMap((isEnabled) =>
+        isEnabled
+          ? departmentService.getMyDepartmentsForMissionsAsync().pipe(
+              map((resp: ListResponseData<BaseLookupModel>) => resp?.data ?? null),
+              catchError(() => of(null))
+            )
+          : of(null)
+      )
+    ),
 
     myMissions: workMissionService.getMyWorkMissionsAsync(new PaginationParams(), {}).pipe(
       map((response: PaginatedListResponseData<WorkMission>) => response?.data || null),
@@ -44,5 +57,7 @@ export const WorkMissionResolver: ResolveFn<
     ),
 
     creators: userProfileService.getLookup().pipe(catchError(() => of([]))),
+
+    isWorkMissionEnabled: isWorkMissionEnabled$,
   }).pipe(catchError(() => of(null)));
 };

@@ -44,6 +44,16 @@ export class AuthService extends BaseCrudService<LoggedInUser, string> {
     return this.loggedInUser.value?.isInRootDepartment;
   }
 
+  get isRootDepartmentAdmin() {
+    return this.isAdmin && this.isRootdepartment;
+  }
+
+  /** True only when root-department oversight is someone's sole standing — a manager/HR role
+   * they also hold keeps their normal approval-chain actions, independent of this admin flag. */
+  get isRootDepartmentOversightOnly() {
+    return this.isRootDepartmentAdmin && !this.isDepartmentManager && !this.isHROfficer;
+  }
+
   get isdepartmentActualManager() {
     return this.isActualDepartmentManager();
   }

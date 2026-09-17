@@ -28,12 +28,16 @@
             }
           </button>
         }
-        @if (model.canTakeAction) {
+        @if (model.canTakeAction && !authService.isRootDepartmentOversightOnly) {
           <button class="btn red-btn" (click)="rejectPermission()">
             {{ 'PERMISSION_PAGE.DECLINE' | translate }}
           </button>
           <button class="btn green-btn" (click)="acceptPermission()">
             {{ 'PERMISSION_PAGE.APPROVE' | translate }}
+          </button>
+        } @else if (model.canRejectAfterAcceptance && authService.isRootDepartmentAdmin) {
+          <button class="btn red-btn" (click)="rejectPermission()">
+            {{ 'PERMISSION_PAGE.DECLINE' | translate }}
           </button>
         }
       </div>

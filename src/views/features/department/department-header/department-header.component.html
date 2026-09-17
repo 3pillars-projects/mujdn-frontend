@@ -41,6 +41,20 @@
       </h5>
     </div>
     <div>
+      <p class="text-sm text-white mb-2">
+        {{ 'DEPARTMENTS_HEADER_PAGE.PARENT_DEPARTMENT' | translate }}
+      </p>
+      <h5 class="text-base font-semibold text-white truncate">
+        @if (departmentData?.fkParentDepartmentId == null) {
+          {{ 'DEPARTMENTS_HEADER_PAGE.MAIN_DEPARTMENT' | translate }}
+        } @else {
+          {{
+            isCurrentLanguageEnglish() ? parentDepartment?.nameEn : parentDepartment?.nameAr
+          }}
+        }
+      </h5>
+    </div>
+    <div>
       <p class="text-sm text-white mb-2">{{ 'DEPARTMENTS_HEADER_PAGE.REGION' | translate }}</p>
       <h5 class="text-base font-semibold text-white">
         {{
@@ -78,6 +92,21 @@
         class="min-w-[109px] min-h-[24px] inline-flex items-center justify-center font-medium text-[#1f2a37] px-4 rounded-full bg-[#f9fafb]"
       >
         {{ 'DEPARTMENTS_HEADER_PAGE.' + getApprovalLevelText() | translate }}</span
+      >
+    </div>
+    <div>
+      <p class="text-sm text-white mb-2">
+        {{ 'DEPARTMENTS_HEADER_PAGE.WORK_MISSIONS' | translate }}
+      </p>
+      <span
+        class="min-w-[109px] min-h-[24px] inline-flex items-center justify-center font-medium text-[#1f2a37] px-4 rounded-full bg-[#f9fafb]"
+      >
+        {{
+          (departmentData?.isWorkMissionEnabled === false
+            ? 'DEPARTMENTS_HEADER_PAGE.WORK_MISSIONS_DISABLED'
+            : 'DEPARTMENTS_HEADER_PAGE.WORK_MISSIONS_ENABLED'
+          ) | translate
+        }}</span
       >
     </div>
     <div>
