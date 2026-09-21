@@ -2,7 +2,7 @@ import { BaseCrudModel } from '@/abstracts/base-crud-model';
 import { LeaveService } from '@/services/features/lookups/leave.service';
 import { InterceptModel } from 'cast-response';
 import { LeaveInterceptor } from '@/model-interceptors/features/lookups/leave-interceptor';
-import { Validators } from '@angular/forms';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
@@ -15,6 +15,12 @@ import {
 
 const { send, receive } = new LeaveInterceptor();
 
+function nonWhitespaceRequired(control: AbstractControl): ValidationErrors | null {
+  return typeof control.value === 'string' && control.value.trim().length === 0
+    ? { required: true }
+    : null;
+}
+
 export class LeaveEmployeeLookup extends UsersWithDepartmentLookup {
   declare department?: BaseLookupModel;
 }
@@ -26,6 +32,7 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare employee?: LeaveEmployeeLookup | null;
   declare dateFrom: Date | string;
   declare dateTo: Date | string;
+  declare decisionNumber: string;
   declare fkLeaveTypeId: number;
   declare leaveType?: BaseLookupModel | null;
   declare status: LEAVE_STATUS_ENUM;
@@ -45,12 +52,16 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare attachmentSelection?: AttachmentSelection;
 
   buildForm() {
-    const { fkEmployeeId, fkLeaveTypeId, dateFrom, dateTo, attachments } = this;
+    const { fkEmployeeId, fkLeaveTypeId, dateFrom, dateTo, decisionNumber, attachments } = this;
     return {
       fkEmployeeId: [fkEmployeeId, [Validators.required]],
       fkLeaveTypeId: [fkLeaveTypeId, [Validators.required]],
       dateFrom: [dateFrom, [Validators.required]],
       dateTo: [dateTo, [Validators.required]],
+      decisionNumber: [
+        decisionNumber,
+        [Validators.required, nonWhitespaceRequired, Validators.maxLength(100)],
+      ],
       // A leave must always carry at least one file — counting the ones it already has, so
       // an edit that keeps the existing attachment does not demand a pointless re-upload.
       attachmentSelection: [toAttachmentSelection(attachments), [attachmentsRequired]],

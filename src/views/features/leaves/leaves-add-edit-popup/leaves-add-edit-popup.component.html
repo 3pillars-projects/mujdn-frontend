@@ -79,6 +79,29 @@
         {{ 'LEAVES_PAGE.LEAVE_DETAILS' | translate }}
       </h4>
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+        <!-- Decision / Request Number -->
+        <div>
+          <label class="label" for="decisionNumber-popup">{{
+            'LEAVES_PAGE.DECISION_NUMBER' | translate
+          }}</label>
+          <div class="relative">
+            <input
+              formControlName="decisionNumber"
+              pInputText
+              class="peer w-full"
+              fluid="true"
+              id="decisionNumber-popup"
+              maxlength="100"
+              type="text"
+              [placeholder]="'LEAVES_PAGE.DECISION_NUMBER' | translate"
+            />
+            <span
+              class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+            ></span>
+          </div>
+          <app-validation-messages [control]="decisionNumberControl"></app-validation-messages>
+        </div>
+
         <!-- Date From -->
         <div>
           <label class="label" for="dateFrom-popup">{{
