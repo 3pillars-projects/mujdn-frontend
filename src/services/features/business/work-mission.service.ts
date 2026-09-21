@@ -148,6 +148,15 @@ export class WorkMissionService extends LookupBaseService<WorkMission, number> {
     ) as unknown as Observable<PaginatedListResponseData<WorkMission>>;
   }
 
+  getMyMissionCreatorsLookup(): Observable<BaseLookupModel[]> {
+    return this.http
+      .get<ListResponseData<BaseLookupModel>>(
+        this.getUrlSegment() + '/my-mission-creators-lookup',
+        { withCredentials: true }
+      )
+      .pipe(map((response) => response.data ?? []));
+  }
+
   exportMyWorkMissionsPdf(
     language: LANGUAGE_ENUM | string,
     filterOptions?: OptionsContract
