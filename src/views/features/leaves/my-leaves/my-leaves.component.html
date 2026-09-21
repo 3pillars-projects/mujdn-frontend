@@ -131,6 +131,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th>{{ 'LEAVES_PAGE.LEAVE_TYPE' | translate }}</th>
+            <th>{{ 'LEAVES_PAGE.DECISION_NUMBER' | translate }}</th>
             <th>{{ 'LEAVES_PAGE.DATE_FROM' | translate }}</th>
             <th>{{ 'LEAVES_PAGE.DATE_TO' | translate }}</th>
             <th>{{ 'LEAVES_PAGE.REQUEST_STATUS' | translate }}</th>
@@ -140,6 +141,7 @@
         <ng-template pTemplate="body" let-leave>
           <tr>
             <td>{{ leaveTypeName(leave) }}</td>
+            <td>{{ leave.decisionNumber || '-' }}</td>
             <td>{{ leave.dateFrom | date: 'dd/MM/yyyy' }}</td>
             <td>{{ leave.dateTo | date: 'dd/MM/yyyy' }}</td>
             <td>

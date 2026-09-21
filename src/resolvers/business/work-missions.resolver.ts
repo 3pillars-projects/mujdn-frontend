@@ -8,7 +8,6 @@ import { PaginatedListResponseData } from '@/models/shared/response/paginated-li
 import { AuthService } from '@/services/auth/auth.service';
 import { WorkMissionService } from '@/services/features/business/work-mission.service';
 import { DepartmentService } from '@/services/features/lookups/department.service';
-import { UserProfileService } from '@/services/features/user-profile.service';
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { catchError, forkJoin, map, of, shareReplay, switchMap } from 'rxjs';
@@ -23,7 +22,6 @@ export const WorkMissionResolver: ResolveFn<
 > = () => {
   const workMissionService = inject(WorkMissionService);
   const departmentService = inject(DepartmentService);
-  const userProfileService = inject(UserProfileService);
   const authService = inject(AuthService);
 
   const user = authService.getUser().value;
@@ -56,7 +54,7 @@ export const WorkMissionResolver: ResolveFn<
       catchError(() => of(null))
     ),
 
-    creators: userProfileService.getLookup().pipe(catchError(() => of([]))),
+    creators: workMissionService.getMyMissionCreatorsLookup().pipe(catchError(() => of([]))),
 
     isWorkMissionEnabled: isWorkMissionEnabled$,
   }).pipe(catchError(() => of(null)));

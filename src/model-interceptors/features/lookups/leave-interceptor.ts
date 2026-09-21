@@ -14,6 +14,7 @@ interface LeaveRequestPayload {
   fkLeaveTypeId?: number;
   dateFrom: string;
   dateTo: string;
+  decisionNumber: string;
   temporaryUploadIds: string[];
   id?: number;
   concurrencyUpdateVersion?: string | null;
@@ -42,6 +43,7 @@ export class LeaveInterceptor implements ModelInterceptorContract<Leave> {
       fkLeaveTypeId: model.fkLeaveTypeId,
       dateFrom: toDateOnly(model.dateFrom),
       dateTo: toDateOnly(model.dateTo),
+      decisionNumber: model.decisionNumber?.trim() ?? '',
       // Always present; `[]` when the user staged nothing.
       temporaryUploadIds: temporaryUploadIds(selection),
     };

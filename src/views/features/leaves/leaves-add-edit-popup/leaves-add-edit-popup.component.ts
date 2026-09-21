@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material/d
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Leave } from '@/models/features/lookups/leave/leave';
@@ -38,6 +39,7 @@ import { Attachment } from '@/models/shared/attachment/attachment';
     ReactiveFormsModule,
     SelectModule,
     DatePickerModule,
+    InputTextModule,
     TranslatePipe,
     RequiredMarkerDirective,
     ValidationMessagesComponent,
@@ -102,6 +104,7 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
       this.form = this.fb.group({
         fkEmployeeId: [{ value: this.model.fkEmployeeId, disabled: true }],
         fkLeaveTypeId: [{ value: this.model.fkLeaveTypeId, disabled: true }],
+        decisionNumber: [{ value: this.model.decisionNumber, disabled: true }],
         dateFrom: [{ value: this.model.dateFrom, disabled: datesDisabled }, [Validators.required]],
         dateTo: [{ value: this.model.dateTo, disabled: datesDisabled }, [Validators.required]],
       });
@@ -258,6 +261,10 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
 
   get dateToControl() {
     return this.form.get('dateTo') as FormControl;
+  }
+
+  get decisionNumberControl() {
+    return this.form.get('decisionNumber') as FormControl;
   }
 
   /** Absent in take-action mode, which builds a form of its own. */
