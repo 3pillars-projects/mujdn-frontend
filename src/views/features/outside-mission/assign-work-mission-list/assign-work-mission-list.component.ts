@@ -43,6 +43,13 @@ import {
 } from '@/models/features/business/work-mission-type-option';
 import { finalize } from 'rxjs';
 import { downloadBlobData } from '@/utils/utils';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
+import {
+  WORK_MISSION_STATUS_OPTIONS,
+  workMissionStatusBadgeClass,
+  workMissionStatusDotClass,
+  workMissionStatusTextKey,
+} from '@/utils/work-mission-status';
 
 @Component({
   selector: 'app-assign-work-mission-list',
@@ -94,6 +101,11 @@ export class AssignWorkMissionListComponent
   missions: WorkMission[] = [];
   departments: BaseLookupModel[] = [];
   workMissionTypeOptions: WorkMissionTypeOption[] = WORK_MISSION_TYPE_OPTIONS;
+  readonly statusOptions = WORK_MISSION_STATUS_OPTIONS;
+  readonly statusTextKey = workMissionStatusTextKey;
+  readonly statusBadgeClass = workMissionStatusBadgeClass;
+  readonly statusDotClass = workMissionStatusDotClass;
+  statusFilterOptions: { value: WorkMissionStatusEnum; label: string }[] = [];
   downloadingMissionId?: number;
 
   // Base class overrides
@@ -135,10 +147,12 @@ export class AssignWorkMissionListComponent
     });
 
     this.initializeActionList();
+    this.buildStatusFilterOptions();
 
     // Re-initialize action list when language changes
     this.translateService.onLangChange.subscribe(() => {
       this.initializeActionList();
+      this.buildStatusFilterOptions();
     });
   }
 
@@ -167,7 +181,27 @@ export class AssignWorkMissionListComponent
         model.workMissionType,
         this.isCurrentLanguageEnglish()
       ),
+      [this.translateService.instant('WORK_MISSIONS.CREATOR_DEPARTMENT')]: this.lookupName(
+        model.creatorDepartment
+      ),
+      [this.translateService.instant('WORK_MISSIONS.STATUS')]: model.status
+        ? this.translateService.instant(workMissionStatusTextKey(model.status))
+        : '',
     };
+  }
+
+  /** Department names in the current language. */
+  lookupName(item?: { nameAr?: string; nameEn?: string | null } | null): string {
+    if (!item) return '';
+    return (this.isCurrentLanguageEnglish() ? item.nameEn || item.nameAr : item.nameAr) ?? '';
+  }
+
+  /** Status options with their label resolved for the filter dropdown. */
+  private buildStatusFilterOptions(): void {
+    this.statusFilterOptions = this.statusOptions.map((option) => ({
+      value: option.value,
+      label: this.translateService.instant(option.labelKey),
+    }));
   }
   addOrEditModel(mission?: WorkMission): void {
     this.openDialog(mission ?? new WorkMission());
@@ -209,6 +243,7 @@ export class AssignWorkMissionListComponent
 
   setSelectedModel(model: WorkMission) {
     this.selectedModel = model;
+    this.initializeActionList();
   }
 
   downloadMissionPdf(mission: WorkMission): void {
@@ -239,24 +274,30 @@ export class AssignWorkMissionListComponent
     return `${missionName ? `${title} - ${missionName}` : title}.pdf`;
   }
 
+  // Edit/Delete follow the server's per-row flags: only the creator, and only until HR decides.
   private initializeActionList(): void {
-    this.actionList = [
-      {
+    const mission = this.selectedModel;
+    const items: MenuItem[] = [];
+    if (!mission || mission.canEdit) {
+      items.push({
         label: this.translateService.instant('COMMON.EDIT'),
         command: () => {
           this.addOrEditModel(this.selectedModel);
         },
-      },
-      {
-        separator: true,
-      },
-      {
+      });
+    }
+    if (!mission || mission.canDelete) {
+      if (items.length) {
+        items.push({ separator: true });
+      }
+      items.push({
         label: this.translateService.instant('COMMON.DELETE'),
         command: () => {
           this.deleteMission(this.selectedModel!.id);
         },
-      },
-    ];
+      });
+    }
+    this.actionList = items;
   }
 
   resetFilter(): void {

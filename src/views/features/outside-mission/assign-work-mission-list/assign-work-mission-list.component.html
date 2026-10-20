@@ -65,6 +65,25 @@
           ></span>
         </div>
 
+        <div class="relative">
+          <label class="label" for="missionStatusFilter">{{
+            'WORK_MISSIONS.STATUS' | translate
+          }}</label>
+          <p-select
+            inputId="missionStatusFilter"
+            [options]="statusFilterOptions"
+            [(ngModel)]="filterModel.missionStatus"
+            optionValue="value"
+            optionLabel="label"
+            [showClear]="true"
+            [placeholder]="'WORK_MISSIONS.STATUS' | translate"
+            class="w-full peer"
+          ></p-select>
+          <span
+            class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+          ></span>
+        </div>
+
         <!-- Date From -->
         <div class="relative">
           <label class="label" for="dateFrom">{{ 'WORK_MISSIONS.FROM' | translate }}</label>
@@ -156,6 +175,8 @@
             <th>{{ 'WORK_MISSIONS.STARTING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.ENDING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.MISSION_TYPE' | translate }}</th>
+            <th>{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</th>
+            <th>{{ 'WORK_MISSIONS.STATUS' | translate }}</th>
             <th class="w-10">{{ 'COMMON.ACTION' | translate }}</th>
           </tr>
         </ng-template>
@@ -187,6 +208,15 @@
                 >{{ getWorkMissionTypeName(mission) }}</span
               >
             </td>
+            <td>{{ lookupName(mission.creatorDepartment) || '-' }}</td>
+            <td>
+              @if (mission.status) {
+                <span [class]="statusBadgeClass(mission.status)">
+                  <span [class]="statusDotClass(mission.status)" aria-hidden="true"></span>
+                  {{ statusTextKey(mission.status) | translate }}
+                </span>
+              }
+            </td>
             <td>
               <!-- Full Actions: View, Assign Employees, Split Button -->
               <div class="actions flex gap-2">
@@ -197,13 +227,16 @@
                 >
                   <img alt="" src="assets/icons/view-action.svg" />
                 </button>
-                <button
-                  (click)="openAssignEmployeesDialog(mission)"
-                  class="table-action-gray-btn btn black-btn flex gap-2 font-medium"
-                >
-                  <img class="invert brightness-0" src="/assets/icons/leading.svg" alt="اسناد" />
-                  {{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}
-                </button>
+                <!-- Only the creator assigns, and only until HR decides the mission. -->
+                @if (mission.canAssign) {
+                  <button
+                    (click)="openAssignEmployeesDialog(mission)"
+                    class="table-action-gray-btn btn black-btn flex gap-2 font-medium"
+                  >
+                    <img class="invert brightness-0" src="/assets/icons/leading.svg" alt="" />
+                    {{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}
+                  </button>
+                }
                 <button
                   (click)="downloadMissionPdf(mission)"
                   class="table-action-green-btn"
@@ -222,7 +255,7 @@
                     <img alt="" src="assets/icons/download-qr.svg" />
                   }
                 </button>
-                @if (mission.isMissionCreator) {
+                @if (mission.canEdit || mission.canDelete) {
                   <p-splitbutton
                     [appendTo]="missionContainer"
                     (click)="setSelectedModel(mission)"

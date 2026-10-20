@@ -1,15 +1,28 @@
 <div [dir]="direction">
   <div class="p-6">
-    <button class="block ms-auto" (click)="close()">
+    <button
+      class="block ms-auto"
+      type="button"
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
       <i class="pi pi-times close-popup"></i>
     </button>
-    <h3 class="text-[#1f2a37 font-[600] mb-4 text-lg sm:text-xl">
-      @if (model.isMyMission) {
-        {{ 'WORK_MISSIONS.MY_MISSION_DATA' | translate }}
-      } @else {
-        {{ 'WORK_MISSIONS.MISSION_DATA' | translate }}
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+      <h3 class="text-[#1f2a37] font-[600] text-lg sm:text-xl">
+        @if (model.isMyMission) {
+          {{ 'WORK_MISSIONS.MY_MISSION_DATA' | translate }}
+        } @else {
+          {{ 'WORK_MISSIONS.MISSION_DATA' | translate }}
+        }
+      </h3>
+      @if (model.status) {
+        <span [class]="statusBadgeClass(model.status)">
+          <span [class]="statusDotClass(model.status)" aria-hidden="true"></span>
+          {{ statusTextKey(model.status) | translate }}
+        </span>
       }
-    </h3>
+    </div>
     <div class="bg-[#074d31] rounded-2xl p-6 mb-6">
       <div class="bg-[#1B835433] border border-[#1b8354] rounded-2xl px-6 py-3">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -43,6 +56,12 @@
           </h4>
         </div>
         <div class="flex flex-col gap-1 text-white">
+          <span class="text-[14px]">{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</span>
+          <h4 class="font-semibold text-[16px]">
+            {{ lookupName(model.creatorDepartment) || '-' }}
+          </h4>
+        </div>
+        <div class="flex flex-col gap-1 text-white">
           <span class="text-[14px]">{{ 'WORK_MISSIONS.MISSION_TYPE' | translate }}</span>
           <h4 class="font-semibold text-[16px]">
             {{ getWorkMissionTypeName(model) }}
@@ -50,6 +69,47 @@
         </div>
       </div>
     </div>
+    <!-- HR decision: shown once the mission was approved (by HR or automatically) or rejected. -->
+    @if (model.status === statusEnum.Approved || model.status === statusEnum.Rejected) {
+      <div class="rounded-2xl p-6 mb-6 border border-[#d2d6db]">
+        <h4 class="text-[#1f2a37] font-semibold text-[16px] mb-4">
+          {{ 'WORK_MISSIONS.HR_DECISION' | translate }}
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex flex-col gap-1">
+            <span class="text-[#6c737f] text-[14px]">{{
+              'WORK_MISSIONS.DECIDED_BY' | translate
+            }}</span>
+            <span class="text-[#161616] font-semibold">
+              {{ lookupName(model.hrDecisionBy) || '-' }}
+              @if (model.isAutoApproved) {
+                <span class="text-[#6c737f] font-normal">
+                  ({{ 'WORK_MISSIONS.AUTO_APPROVED' | translate }})
+                </span>
+              }
+            </span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <span class="text-[#6c737f] text-[14px]">{{
+              'WORK_MISSIONS.DECISION_DATE' | translate
+            }}</span>
+            <span class="text-[#161616] font-semibold">{{
+              model.hrDecisionDate ? (model.hrDecisionDate | date: 'dd/MM/yyyy') : '-'
+            }}</span>
+          </div>
+          @if (model.status === statusEnum.Rejected && model.rejectionNotes) {
+            <div class="flex flex-col gap-1 md:col-span-2">
+              <span class="text-[#6c737f] text-[14px]">{{
+                'WORK_MISSIONS.REJECTION_NOTES' | translate
+              }}</span>
+              <p class="text-[#161616] font-semibold whitespace-pre-line">
+                {{ model.rejectionNotes }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
     <div class="bg-[#f3f4f6] rounded-2xl p-6">
       <h4 class="text-[#6c737f] text-[14px] mb-2">{{ 'WORK_MISSIONS.DESCRIPTION' | translate }}</h4>
       <p class="text-[#161616] text-[16px] font-semibold">
@@ -88,8 +148,30 @@
         </div>
       </div>
     }
-    <div class="actions mt-6 flex items-center justify-between gap-4">
+    <div class="actions mt-6 flex flex-wrap items-center justify-between gap-4">
       <button (click)="close()" class="btn gray-btn">{{ 'COMMON.CANCEL' | translate }}</button>
+      @if (model.canTakeAction) {
+        <div class="flex flex-wrap items-center gap-4">
+          <button
+            type="button"
+            class="btn red-btn"
+            (click)="reject()"
+            [disabled]="isDeciding"
+            [attr.aria-busy]="isDeciding"
+          >
+            {{ 'WORK_MISSIONS.REJECT' | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn green-btn"
+            (click)="approve()"
+            [disabled]="isDeciding"
+            [attr.aria-busy]="isDeciding"
+          >
+            {{ 'WORK_MISSIONS.APPROVE' | translate }}
+          </button>
+        </div>
+      }
       @if (showDownloadPdf) {
         <button
           class="btn green-btn"

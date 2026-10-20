@@ -20,6 +20,9 @@
         @if (canAssign) {
           <p-tab value="1">{{ 'WORK_MISSIONS.ASSIGN_WORK_MISSIONS' | translate }}</p-tab>
         }
+        @if (canReviewAsHr) {
+          <p-tab value="2">{{ 'WORK_MISSIONS.HR_APPROVALS_TAB' | translate }}</p-tab>
+        }
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0">
@@ -32,6 +35,11 @@
               [departmentsSignal]="departments"
             >
             </app-assign-work-mission-list>
+          </p-tabpanel>
+        }
+        @if (canReviewAsHr) {
+          <p-tabpanel value="2">
+            <app-hr-mission-approvals-list></app-hr-mission-approvals-list>
           </p-tabpanel>
         }
       </p-tabpanels>

@@ -1,4 +1,5 @@
 import { Component, Inject, inject, ElementRef, Renderer2 } from '@angular/core';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { Select } from 'primeng/select';
@@ -274,20 +275,24 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
   }
   saveAssignments() {
     this.selectedUsers.missionId = this.model?.id;
+    const previousStatus = this.model?.status;
     this.workMissionService.addUsersToMission(this.selectedUsers).subscribe({
       next: (response) => {
         const conflictingIds = response?.conflictingUserIds ?? [];
+        // Where the assignment moved the mission in the HR workflow, if it moved.
+        const statusMessage = this.assignmentStatusMessageKey(previousStatus, response?.status);
         if (conflictingIds.length > 0) {
           // Partial conflict: some assigned, some skipped
           this.alertService.showWarningMessage({
-            messages: ['WORK_MISSIONS.ASSIGN_PARTIAL_CONFLICT'],
+            messages: ['WORK_MISSIONS.ASSIGN_PARTIAL_CONFLICT', ...statusMessage],
           });
         } else {
           // All assigned successfully
           this.alertService.showSuccessMessage({
-            messages: ['WORK_MISSIONS.ASSIGN_SUCCESS'],
+            messages: ['WORK_MISSIONS.ASSIGN_SUCCESS', ...statusMessage],
           });
         }
+        // Closing with OK reloads the list: the mission's status (and row version) may have changed.
         this.dialogRef.close(DIALOG_ENUM.OK);
       },
       error: () => {
@@ -295,6 +300,25 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
       },
     });
   }
+  private assignmentStatusMessageKey(
+    previousStatus?: WorkMissionStatusEnum,
+    status?: WorkMissionStatusEnum
+  ): string[] {
+    if (!status || status === previousStatus) {
+      return [];
+    }
+    switch (status) {
+      case WorkMissionStatusEnum.PendingHrApproval:
+        return ['WORK_MISSIONS.SENT_TO_HR'];
+      case WorkMissionStatusEnum.Approved:
+        return ['WORK_MISSIONS.APPROVED_AUTOMATICALLY'];
+      case WorkMissionStatusEnum.Draft:
+        return ['WORK_MISSIONS.BACK_TO_DRAFT'];
+      default:
+        return [];
+    }
+  }
+
   isCurrentLanguageEnglish() {
     return this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH;
   }
@@ -305,7 +329,7 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
   onTooltipHover(event: MouseEvent): void {
     const button = event.currentTarget as HTMLElement;
     const tooltip = button.querySelector('.tooltip-text') as HTMLElement;
-    
+
     if (!tooltip) return;
 
     const rect = button.getBoundingClientRect();
