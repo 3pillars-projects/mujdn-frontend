@@ -111,7 +111,37 @@ export class LeaveService extends BaseCrudService<Leave, number> {
       );
   }
 
-  // DEPARTMENT_MANAGER only — employees inside the caller's leave scope
+  /**
+   * DEPARTMENT_MANAGER only — leaves waiting at a manager level the caller decides, plus the
+   * ones he already decided. HR confirmations use the inherited `loadPaginated` instead.
+   */
+  @CastResponse(undefined, { fallback: '$pagination' })
+  loadApprovalsPaginated(
+    paginationParams?: PaginationParams,
+    filterOptions?: OptionsContract | undefined
+  ): Observable<PaginatedList<Leave>> {
+    const httpParams = new HttpParams({
+      fromObject: paginationParams as unknown as never,
+    });
+    filterOptions = genericDateOnlyConvertor(filterOptions);
+    return this.http
+      .post<PaginatedListResponseData<Leave>>(
+        this.getUrlSegment() + '/GetApprovalsWithPaging',
+        filterOptions || {},
+        {
+          params: httpParams,
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        map((response) => ({
+          list: response.data.list as Leave[],
+          paginationInfo: response.data.paginationInfo,
+        }))
+      );
+  }
+
+  // DEPARTMENT_MANAGER only — employees inside the caller's leave scope (never himself)
   @CastResponse(undefined, { fallback: '$employeesLookup' })
   getEmployeesLookup(): Observable<LeaveEmployeeLookup[]> {
     return this.http

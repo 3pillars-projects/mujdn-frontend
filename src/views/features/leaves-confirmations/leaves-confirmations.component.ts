@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Breadcrumb } from 'primeng/breadcrumb';
 import { TableModule } from 'primeng/table';
+import { TabsModule } from 'primeng/tabs';
 import { PaginatorModule } from 'primeng/paginator';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
@@ -24,6 +25,13 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { LeavesViewPopupComponent } from '../leaves/leaves-view-popup/leaves-view-popup.component';
 import { LeavesAddEditPopupComponent } from '../leaves/leaves-add-edit-popup/leaves-add-edit-popup.component';
 import { formatDateOnly } from '@/utils/general-helper';
+import { AuthService } from '@/services/auth/auth.service';
+import { CustomValidators } from '@/validators/custom-validators';
+import {
+  leaveStatusBadgeClass,
+  leaveStatusDotClass,
+  leaveStatusTextKey,
+} from '@/utils/leave-status';
 
 @Component({
   selector: 'app-leaves-confirmations',
@@ -32,6 +40,7 @@ import { formatDateOnly } from '@/utils/general-helper';
     FormsModule,
     Breadcrumb,
     TableModule,
+    TabsModule,
     PaginatorModule,
     DatePickerModule,
     SelectModule,
@@ -52,6 +61,13 @@ export default class LeavesConfirmationsComponent
   leaveService = inject(LeaveService);
   leaveTypeService = inject(LeaveTypeService);
   userService = inject(UserService);
+  authService = inject(AuthService);
+  // 'manager': leaves waiting at a manager level the caller decides (and ones he decided);
+  // 'hr': every leave in the caller's HR scope. A user with both roles switches with tabs; the
+  // route resolver loads the same list the page starts on.
+  readonly showManagerTab = !!this.authService.isDepartmentManager;
+  readonly showHrTab = !!this.authService.isHROfficer;
+  mode: 'manager' | 'hr' = this.showHrTab ? 'hr' : 'manager';
   filterModel: LeaveFilter = new LeaveFilter();
   leaveTypes: BaseLookupModel[] = [];
   employees: UsersWithDepartmentLookup[] = [];
@@ -74,6 +90,52 @@ export default class LeavesConfirmationsComponent
     });
   }
 
+  override loadList() {
+    return this.mode === 'hr'
+      ? this.service.loadPaginated(this.paginationParams, { ...this.appliedFilterModel! })
+      : this.service.loadApprovalsPaginated(this.paginationParams, {
+          ...this.appliedFilterModel!,
+        });
+  }
+
+  onModeChange(mode: string | number): void {
+    if (mode === this.mode) return;
+    this.mode = mode === 'hr' ? 'hr' : 'manager';
+    this.search();
+  }
+
+  get listTitleKey(): string {
+    return this.mode === 'hr'
+      ? 'LEAVES_PAGE.INCOMING_LEAVES_LIST'
+      : 'LEAVES_PAGE.AWAITING_MY_APPROVAL_LIST';
+  }
+
+  override exportExcel(fileName: string = 'data.xlsx'): void {
+    const allDataParams = {
+      ...this.paginationParams,
+      pageNumber: 1,
+      pageSize: CustomValidators.defaultLengths.INT_MAX,
+    };
+    const fetchAll =
+      this.mode === 'hr'
+        ? this.service.loadPaginated(allDataParams, { ...this.appliedFilterModel! })
+        : this.service.loadApprovalsPaginated(allDataParams, { ...this.appliedFilterModel! });
+
+    fetchAll.subscribe({
+      next: (response) => {
+        const fullList = response.list || [];
+        if (fullList.length === 0) {
+          this.alertsService.showErrorMessage({ messages: ['COMMON.NO_DATA_TO_EXPORT'] });
+          return;
+        }
+        this.writeExcelFile(this.mapModelsToExcelRows(fullList), fileName);
+      },
+      error: (_) => {
+        this.alertsService.showErrorMessage({ messages: ['COMMON.ERROR'] });
+      },
+    });
+  }
+
   override openDialog(model: Leave): void {
     const dialogConfig: MatDialogConfig = new MatDialogConfig();
     dialogConfig.data = { model };
@@ -87,11 +149,19 @@ export default class LeavesConfirmationsComponent
       this.openDialog(model);
       return;
     }
-    this.openBaseDialog(LeavesAddEditPopupComponent as any, model, ViewModeEnum.TAKE_ACTION, {
-      employees: this.employees,
-      departments: this.departments,
-      leaveTypes: this.leaveTypes,
-    });
+    this.openBaseDialog(
+      LeavesAddEditPopupComponent as any,
+      model,
+      ViewModeEnum.TAKE_ACTION,
+      {
+        employees: this.employees,
+        departments: this.departments,
+        leaveTypes: this.leaveTypes,
+      },
+      // Only an HR decision may amend the dates; the server says which this caller's would be
+      // (a user who is also the stage's manager decides as manager even on the HR tab).
+      { canChangeDates: !!model.canAmendDates }
+    );
   }
 
   protected override getBreadcrumbKeys() {
@@ -113,9 +183,7 @@ export default class LeavesConfirmationsComponent
       [this.translateService.instant('LEAVES_PAGE.LEAVE_TYPE')]: this.leaveTypeName(model),
       [this.translateService.instant('LEAVES_PAGE.DATE_FROM')]: formatDateOnly(model.dateFrom),
       [this.translateService.instant('LEAVES_PAGE.DATE_TO')]: formatDateOnly(model.dateTo),
-      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(
-        model.status
-      ),
+      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(model),
     };
   }
 
@@ -179,42 +247,16 @@ export default class LeavesConfirmationsComponent
     );
   }
 
-  getStatusBadgeClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'text-[14px] text-[#1849a9] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#eff8ff] font-medium';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'text-[14px] text-[#085d3a] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#ecfdf3] font-medium';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'text-[14px] text-[#912018] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#fef3f2] font-medium';
-      default:
-        return 'text-[14px] text-gray-600 px-2 py-1 rounded-full bg-gray-100 font-medium';
-    }
+  getStatusBadgeClass(leave: Leave): string {
+    return leaveStatusBadgeClass(leave);
   }
 
-  getStatusBadgeDotClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'w-[10px] h-[10px] bg-[#1849a9] rounded-full';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'w-[10px] h-[10px] bg-[#085d3a] rounded-full';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'w-[10px] h-[10px] bg-[#912018] rounded-full';
-      default:
-        return 'w-[10px] h-[10px] bg-gray-600 rounded-full';
-    }
+  getStatusBadgeDotClass(leave: Leave): string {
+    return leaveStatusDotClass(leave);
   }
 
-  getStatusText(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return this.translateService.instant('LEAVES_PAGE.NEW');
-      case LEAVE_STATUS_ENUM.Accepted:
-        return this.translateService.instant('LEAVES_PAGE.ACCEPTED');
-      case LEAVE_STATUS_ENUM.Rejected:
-        return this.translateService.instant('LEAVES_PAGE.REJECTED');
-      default:
-        return '';
-    }
+  getStatusText(leave: Leave): string {
+    const key = leaveStatusTextKey(leave);
+    return key ? this.translateService.instant(key) : '';
   }
 }

@@ -30,6 +30,8 @@ import { LeavesRejectPopupComponent } from '../leaves-reject-popup/leaves-reject
 import { AttachmentUploadComponent } from '@/views/shared/attachment-upload/attachment-upload.component';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { Attachment } from '@/models/shared/attachment/attachment';
+import { toDateOnly } from '@/utils/general-helper';
+import { LeaveApprovalTimelineComponent } from '../leave-approval-timeline/leave-approval-timeline.component';
 
 @Component({
   selector: 'app-leaves-add-edit-popup',
@@ -45,6 +47,7 @@ import { Attachment } from '@/models/shared/attachment/attachment';
     ValidationMessagesComponent,
     AttachmentUploadComponent,
     AttachmentListComponent,
+    LeaveApprovalTimelineComponent,
   ],
   templateUrl: './leaves-add-edit-popup.component.html',
   styleUrl: './leaves-add-edit-popup.component.scss',
@@ -62,6 +65,10 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
   isCreateMode = false;
   isEditMode = false;
   isTakeActionMode = false;
+  // The caller files or edits his own leave: no employee to pick.
+  isSelfMode = false;
+  // Only HR may amend the dates while approving; managers approve the dates as filed.
+  canChangeDates = false;
   employees: UsersWithDepartmentLookup[] = [];
   departments: BaseLookupModel[] = [];
   leaveTypes: BaseLookupModel[] = [];
@@ -77,6 +84,8 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
     this.isCreateMode = this.viewMode == ViewModeEnum.CREATE;
     this.isEditMode = this.viewMode == ViewModeEnum.EDIT;
     this.isTakeActionMode = this.viewMode == ViewModeEnum.TAKE_ACTION;
+    this.isSelfMode = !!this.data.isSelf;
+    this.canChangeDates = !!this.data.canChangeDates;
     this.employees = this.data.lookups?.['employees'] ?? [];
     this.departments = this.data.lookups?.['departments'] ?? [];
     this.leaveTypes = this.data.lookups?.['leaveTypes'] ?? [];
@@ -100,7 +109,7 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
 
   override buildForm() {
     if (this.isTakeActionMode) {
-      const datesDisabled = this.isAcceptedLeave;
+      const datesDisabled = this.isAcceptedLeave || !this.canChangeDates;
       this.form = this.fb.group({
         fkEmployeeId: [{ value: this.model.fkEmployeeId, disabled: true }],
         fkLeaveTypeId: [{ value: this.model.fkLeaveTypeId, disabled: true }],
@@ -111,7 +120,7 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
     } else {
       // The control is seeded from the leave's stored attachments, so editing starts from
       // what the leave already has and stays valid while the user keeps at least one file.
-      this.form = this.fb.group(this.model.buildForm());
+      this.form = this.fb.group(this.model.buildForm(this.isSelfMode));
     }
   }
 
@@ -153,16 +162,24 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
       this.showAlreadyDecidedError();
       return;
     }
-    if (!this.validateActionDates()) {
+    if (this.canChangeDates && !this.validateActionDates()) {
       return;
     }
+    // Dates travel only when HR actually changed them: sending them marks an amendment, which
+    // the API refuses from a manager-level decision.
     const { dateFrom, dateTo } = this.form.value;
-    this.service.acceptLeave(this.model.id, dateFrom, dateTo).subscribe({
-      next: () => {
-        this.alertService.showSuccessMessage({ messages: ['COMMON.SAVED_SUCCESSFULLY'] });
-        this.dialogRef.close(DIALOG_ENUM.OK);
-      },
-    });
+    const datesChanged =
+      this.canChangeDates &&
+      (toDateOnly(dateFrom) !== toDateOnly(this.model.dateFrom) ||
+        toDateOnly(dateTo) !== toDateOnly(this.model.dateTo));
+    this.service
+      .acceptLeave(this.model.id, datesChanged ? dateFrom : null, datesChanged ? dateTo : null)
+      .subscribe({
+        next: () => {
+          this.alertService.showSuccessMessage({ messages: ['COMMON.SAVED_SUCCESSFULLY'] });
+          this.dialogRef.close(DIALOG_ENUM.OK);
+        },
+      });
   }
 
   reject(): void {

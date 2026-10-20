@@ -12,6 +12,15 @@
       </h3>
     </div>
 
+    @if (showManagerTab && showHrTab) {
+      <p-tabs [value]="mode" (valueChange)="onModeChange($event)">
+        <p-tablist class="mb-6">
+          <p-tab value="hr">{{ 'LEAVES_PAGE.HR_CONFIRMATIONS_TAB' | translate }}</p-tab>
+          <p-tab value="manager">{{ 'LEAVES_PAGE.AWAITING_MY_APPROVAL_TAB' | translate }}</p-tab>
+        </p-tablist>
+      </p-tabs>
+    }
+
     <div class="bg-white rounded-2xl p-4 sm:p-8 border border-[#d2d6db]">
       <!-- Search Filter Section -->
       <div class="p-6 sm:p-8 rounded-2xl bg-[#f3f4f6]">
@@ -190,23 +199,24 @@
           class="flex items-start xl:items-center justify-between flex-col xl:flex-row gap-4 bg-[#e5e7eb] rounded-lg p-4 sm:p-6 mb-4"
         >
           <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-[#161616]">
-            {{ 'LEAVES_PAGE.INCOMING_LEAVES_LIST' | translate }}
+            {{ listTitleKey | translate }}
           </h4>
           <div class="actions flex items-center gap-4 ms-auto">
             <button
-              (click)="
-                exportExcel(getTranslatedFileName('LEAVES_PAGE.INCOMING_LEAVES_LIST', 'xlsx'))
-              "
+              (click)="exportExcel(getTranslatedFileName(listTitleKey, 'xlsx'))"
               class="table-head-action-btn min-w-[40px]"
             >
               <img alt="" src="assets/icons/excel.svg" />
             </button>
-            <button
-              (click)="exportPdf(getTranslatedFileName('LEAVES_PAGE.INCOMING_LEAVES_LIST'))"
-              class="table-head-action-btn min-w-[40px]"
-            >
-              <img alt="" src="assets/icons/pdf.svg" />
-            </button>
+            <!-- The PDF export covers the HR list only. -->
+            @if (mode === 'hr') {
+              <button
+                (click)="exportPdf(getTranslatedFileName('LEAVES_PAGE.INCOMING_LEAVES_LIST'))"
+                class="table-head-action-btn min-w-[40px]"
+              >
+                <img alt="" src="assets/icons/pdf.svg" />
+              </button>
+            }
           </div>
         </div>
 
@@ -235,9 +245,9 @@
                 <td>{{ leave.dateFrom | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ leave.dateTo | date: 'dd/MM/yyyy' }}</td>
                 <td>
-                  <span [class]="getStatusBadgeClass(leave.status)">
-                    <span [class]="getStatusBadgeDotClass(leave.status)"></span>
-                    {{ getStatusText(leave.status) }}
+                  <span [class]="getStatusBadgeClass(leave)">
+                    <span [class]="getStatusBadgeDotClass(leave)"></span>
+                    {{ getStatusText(leave) }}
                   </span>
                 </td>
                 <td>

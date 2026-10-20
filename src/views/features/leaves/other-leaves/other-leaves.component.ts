@@ -20,11 +20,17 @@ import { UserService } from '@/services/features/user.service';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
+import { LEAVE_SUBMISSION_TYPE_ENUM } from '@/enums/leave-submission-type-enum';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { LeavesViewPopupComponent } from '../leaves-view-popup/leaves-view-popup.component';
 import { LeavesAddEditPopupComponent } from '../leaves-add-edit-popup/leaves-add-edit-popup.component';
 import { formatDateOnly } from '@/utils/general-helper';
+import {
+  leaveStatusBadgeClass,
+  leaveStatusDotClass,
+  leaveStatusTextKey,
+} from '@/utils/leave-status';
 import { CustomValidators } from '@/validators/custom-validators';
 import { PaginationInfo } from '@/models/shared/response/pagination-info';
 
@@ -105,17 +111,27 @@ export class OtherLeavesComponent
   }
 
   addOrEditModel(leave?: Leave): void {
-    if (leave?.id && !leave.isNew()) {
+    // The server decides (`canEdit`): a leave filed on behalf of an employee until HR decides it,
+    // or the manager's own request (listed here too) until someone approves it.
+    if (leave?.id && !leave.canEdit) {
       this.openDialog(leave);
       return;
     }
     const model = leave ?? new Leave();
     const viewMode = model.id ? ViewModeEnum.EDIT : ViewModeEnum.CREATE;
-    this.openBaseDialog(LeavesAddEditPopupComponent as any, model, viewMode, {
-      employees: this.employees,
-      departments: this.departments,
-      leaveTypes: this.leaveTypes,
-    });
+    // His own request keeps its employee: edit it without the employee picker.
+    const isSelf = !!model.id && model.submissionType !== LEAVE_SUBMISSION_TYPE_ENUM.OnBehalf;
+    this.openBaseDialog(
+      LeavesAddEditPopupComponent as any,
+      model,
+      viewMode,
+      {
+        employees: this.employees,
+        departments: this.departments,
+        leaveTypes: this.leaveTypes,
+      },
+      { isSelf }
+    );
   }
 
   protected override getBreadcrumbKeys() {
@@ -194,9 +210,7 @@ export class OtherLeavesComponent
       [this.translateService.instant('LEAVES_PAGE.LEAVE_TYPE')]: this.leaveTypeName(model),
       [this.translateService.instant('LEAVES_PAGE.DATE_FROM')]: formatDateOnly(model.dateFrom),
       [this.translateService.instant('LEAVES_PAGE.DATE_TO')]: formatDateOnly(model.dateTo),
-      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(
-        model.status
-      ),
+      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(model),
     };
   }
 
@@ -260,42 +274,16 @@ export class OtherLeavesComponent
     );
   }
 
-  getStatusBadgeClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'text-[14px] text-[#1849a9] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#eff8ff] font-medium';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'text-[14px] text-[#085d3a] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#ecfdf3] font-medium';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'text-[14px] text-[#912018] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#fef3f2] font-medium';
-      default:
-        return 'text-[14px] text-gray-600 px-2 py-1 rounded-full bg-gray-100 font-medium';
-    }
+  getStatusBadgeClass(leave: Leave): string {
+    return leaveStatusBadgeClass(leave);
   }
 
-  getStatusBadgeDotClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'w-[10px] h-[10px] bg-[#1849a9] rounded-full';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'w-[10px] h-[10px] bg-[#085d3a] rounded-full';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'w-[10px] h-[10px] bg-[#912018] rounded-full';
-      default:
-        return 'w-[10px] h-[10px] bg-gray-600 rounded-full';
-    }
+  getStatusBadgeDotClass(leave: Leave): string {
+    return leaveStatusDotClass(leave);
   }
 
-  getStatusText(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return this.translateService.instant('LEAVES_PAGE.NEW');
-      case LEAVE_STATUS_ENUM.Accepted:
-        return this.translateService.instant('LEAVES_PAGE.ACCEPTED');
-      case LEAVE_STATUS_ENUM.Rejected:
-        return this.translateService.instant('LEAVES_PAGE.REJECTED');
-      default:
-        return '';
-    }
+  getStatusText(leave: Leave): string {
+    const key = leaveStatusTextKey(leave);
+    return key ? this.translateService.instant(key) : '';
   }
 }

@@ -16,8 +16,8 @@
     </h3>
 
     <form [formGroup]="form">
-      <!-- Employee Data (hidden when editing own leave — the record's employee is the caller) -->
-      @if (!isEditMode || model.employee) {
+      <!-- Employee Data (hidden for the caller's own leave — the employee is the caller) -->
+      @if (!isSelfMode && (!isEditMode || model.employee)) {
         <h4 class="text-base sm:text-lg font-semibold text-[#161616] mb-4">
           {{ 'LEAVES_PAGE.EMPLOYEE_DATA' | translate }}
         </h4>
@@ -193,6 +193,9 @@
           [download]="downloadAttachment"
           labelKey="LEAVES_PAGE.ATTACHMENTS"
         />
+        <div class="mt-6">
+          <app-leave-approval-timeline [leave]="model" />
+        </div>
       }
 
       <!-- Actions -->

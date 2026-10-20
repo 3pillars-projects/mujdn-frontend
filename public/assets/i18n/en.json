@@ -1,5 +1,6 @@
 {
   "COMMON": {
+    "LEAVE_APPROVAL_NOT_ALLOWED": "You are not allowed to decide this leave request at its current approval stage.",
     "OK": "Ok",
     "CANCEL": "Cancel",
     "CLOSE": "Close",
@@ -234,6 +235,24 @@
     "NO_DATA_TO_SHOW": "No data to display"
   },
   "LEAVES_PAGE": {
+    "PENDING_DIRECT_MANAGER": "Pending direct manager",
+    "PENDING_SUPERVISOR": "Pending direct supervisor",
+    "PENDING_HIGHER_MANAGER": "Pending higher-level manager",
+    "PENDING_HR": "Pending HR",
+    "STAGE_DIRECT_MANAGER": "Direct manager",
+    "STAGE_SUPERVISOR": "Direct supervisor",
+    "STAGE_HIGHER_MANAGER": "Higher-level manager",
+    "STAGE_HR": "Human Resources",
+    "APPROVAL_HISTORY": "Approval history",
+    "APPROVED_BY": "Approved by",
+    "REJECTED_BY": "Rejected by",
+    "ACTED_AS_HR": "as Human Resources",
+    "AWAITING_DECISION": "Awaiting decision",
+    "VIEW_LEAVE": "View leave request",
+    "WITHDRAW_LEAVE": "Withdraw leave request",
+    "HR_CONFIRMATIONS_TAB": "HR confirmations",
+    "AWAITING_MY_APPROVAL_TAB": "Awaiting my approval",
+    "AWAITING_MY_APPROVAL_LIST": "Leave requests awaiting my approval",
     "LEAVES": "Leave Requests",
     "MY_LEAVES_TAB": "My Requests",
     "OTHER_LEAVES_TAB": "Subordinate Employees' Leave Requests",
@@ -366,6 +385,7 @@
     "DEPARTMENTS_LIST": "Departments list"
   },
   "DEPARTMENT_POPUP": {
+    "APPROVAL_LEVEL_HINT": "Applies to permission requests and to employees' own leave requests.",
     "ADD_DEPARTMENT": "New department",
     "EDIT_DEPARTMENT": "Edit department",
     "DEPARTMENT_NAME_ARABIC": "Department name in arabic",

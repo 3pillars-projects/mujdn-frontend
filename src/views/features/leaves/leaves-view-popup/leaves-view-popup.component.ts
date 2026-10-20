@@ -14,10 +14,12 @@ import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
+import { leaveStatusTextKey } from '@/utils/leave-status';
+import { LeaveApprovalTimelineComponent } from '../leave-approval-timeline/leave-approval-timeline.component';
 
 @Component({
   selector: 'app-leaves-view-popup',
-  imports: [CommonModule, TranslatePipe, AttachmentListComponent],
+  imports: [CommonModule, TranslatePipe, AttachmentListComponent, LeaveApprovalTimelineComponent],
   templateUrl: './leaves-view-popup.component.html',
   styleUrl: './leaves-view-popup.component.scss',
 })
@@ -99,16 +101,7 @@ export class LeavesViewPopupComponent {
   }
 
   get statusTextKey(): string {
-    switch (this.model?.status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'LEAVES_PAGE.NEW';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'LEAVES_PAGE.ACCEPTED';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'LEAVES_PAGE.REJECTED';
-      default:
-        return '';
-    }
+    return this.model ? leaveStatusTextKey(this.model) : '';
   }
 
   employeeName(): string {

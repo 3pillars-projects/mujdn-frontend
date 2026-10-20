@@ -1,0 +1,62 @@
+@if (hasContent) {
+  <section
+    class="flex flex-col gap-3"
+    [attr.aria-label]="'LEAVES_PAGE.APPROVAL_HISTORY' | translate"
+  >
+    <span class="text-sm text-[#6c737f]">{{ 'LEAVES_PAGE.APPROVAL_HISTORY' | translate }}</span>
+    <ol class="flex flex-col gap-3">
+      @for (action of actions; track action.id) {
+        <li class="bg-white border-[0.5px] border-[#d2d6db] rounded-xl px-4 py-3 flex gap-3">
+          <i
+            [class]="
+              action.isApproved
+                ? 'pi pi-check-circle text-[#067647] mt-1'
+                : 'pi pi-times-circle text-[#d92d20] mt-1'
+            "
+            aria-hidden="true"
+          ></i>
+          <div class="flex flex-col gap-1">
+            <span class="text-base font-semibold text-[#161616]">
+              {{ stageLabelKey(action.stage) | translate }}
+              @if (action.department) {
+                <span class="font-normal text-[#6c737f]">— {{ name(action.department) }}</span>
+              }
+            </span>
+            <span class="text-sm text-[#384250]">
+              {{
+                (action.isApproved ? 'LEAVES_PAGE.APPROVED_BY' : 'LEAVES_PAGE.REJECTED_BY')
+                  | translate
+              }}
+              {{ name(action.approver) }}
+              @if (action.actedAsHr && action.stage !== hrStage) {
+                ({{ 'LEAVES_PAGE.ACTED_AS_HR' | translate }})
+              }
+              · {{ action.actionDate | date: 'dd/MM/yyyy' }}
+            </span>
+            @if (action.notes) {
+              <span class="text-sm text-[#6c737f]">{{ action.notes }}</span>
+            }
+          </div>
+        </li>
+      }
+      @if (pendingStage !== null) {
+        <li
+          class="bg-white border-[0.5px] border-dashed border-[#1570ef] rounded-xl px-4 py-3 flex gap-3"
+        >
+          <i class="pi pi-clock text-[#1570ef] mt-1" aria-hidden="true"></i>
+          <div class="flex flex-col gap-1">
+            <span class="text-base font-semibold text-[#161616]">
+              {{ stageLabelKey(pendingStage) | translate }}
+              @if (pendingDepartment) {
+                <span class="font-normal text-[#6c737f]">— {{ name(pendingDepartment) }}</span>
+              }
+            </span>
+            <span class="text-sm text-[#1849a9]">{{
+              'LEAVES_PAGE.AWAITING_DECISION' | translate
+            }}</span>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+}

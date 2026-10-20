@@ -254,7 +254,11 @@ export const routes: Routes = [
       {
         path: 'leaves-confirmations',
         canActivate: [authGuard],
-        data: { roles: [ROLES_ENUM.HR_OFFICER], routeId: RouteIdsEnum.LEAVES_CONFIRMATIONS },
+        // HR decides any stage; department managers decide their approval level.
+        data: {
+          roles: [ROLES_ENUM.HR_OFFICER, ROLES_ENUM.DEPARTMENT_MANAGER],
+          routeId: RouteIdsEnum.LEAVES_CONFIRMATIONS,
+        },
         resolve: { list: departmentLeavesResolver },
         loadComponent: () =>
           import('@/views/features/leaves-confirmations/leaves-confirmations.component'),
