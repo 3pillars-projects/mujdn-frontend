@@ -10,6 +10,8 @@
 - Frontend repository/revision: `mujdn-frontend` on `feature/mission-approval-flow` at `9fddacf0`.
 - Accepted baseline: user request dated 2026-10-20 ("Mission Request Management" §4–6) plus the decisions recorded below.
 
+> **Superseded in part by `Features/mission-unified-list/spec.md` (2026-10-21):** HR-created missions are no longer auto-approved (AC-02, journey step 6); the creator **and covering HR** may edit, delete and reassign (AC-04); an HR creator may decide their own mission (AC-05); `GetHrApprovalsWithPaging` and the HR approvals tab are replaced by the merged management list (AC-09).
+
 ## Goal and user journey
 
 A work mission ("WorkMission" in code, UI at `/attendance/work-missions`) has no status today. It counts for attendance as soon as an employee is assigned to it, and its creator can edit or delete it at any time. This feature turns a mission into a request that HR decides:
@@ -176,9 +178,9 @@ New `WorkMissionModel` fields (response only; never sent back):
 |---|---|---|
 | Attendance effect while pending | Immediate, or approved only | **Accepted:** approved only (user, 2026-10-20) |
 | Forwarding trigger | Automatic at first assignment, or an explicit "send" action | **Accepted:** automatic |
-| Approvers | HR covering the creator department, or Super HR only | **Accepted:** HR covering the creator department; no self-decision; also no decision by an assignee (same rule as Leave L980) |
-| HR-created missions | HR stage or auto-approve | **Accepted:** auto-approved at first assignment, then locked like any approved mission |
-| Who may reassign while pending | Today any DM or HR in scope | **Accepted:** creator only |
+| Approvers | HR covering the creator department, or Super HR only | **Accepted:** HR covering the creator department; no self-decision (*superseded by mission-unified-list: an HR creator may decide*); also no decision by an assignee (same rule as Leave L980) |
+| HR-created missions | HR stage or auto-approve | **Accepted:** auto-approved at first assignment, then locked like any approved mission. *Superseded by mission-unified-list: pending like any mission.* |
+| Who may reassign while pending | Today any DM or HR in scope | **Accepted:** creator only. *Superseded by mission-unified-list: creator or covering HR.* |
 | Assignee notification timing | At assignment, or at approval | **Accepted:** at approval |
 | Creator department source | Snapshot, or current | **Accepted:** snapshot at creation, existing rows backfilled |
 | Existing missions | Backfill as Approved, or leave as Draft | **Accepted:** Approved. Consequence: they become locked. |

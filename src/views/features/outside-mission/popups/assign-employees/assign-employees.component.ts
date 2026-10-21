@@ -310,8 +310,6 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
     switch (status) {
       case WorkMissionStatusEnum.PendingHrApproval:
         return ['WORK_MISSIONS.SENT_TO_HR'];
-      case WorkMissionStatusEnum.Approved:
-        return ['WORK_MISSIONS.APPROVED_AUTOMATICALLY'];
       case WorkMissionStatusEnum.Draft:
         return ['WORK_MISSIONS.BACK_TO_DRAFT'];
       default:

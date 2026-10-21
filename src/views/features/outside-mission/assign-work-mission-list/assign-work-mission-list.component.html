@@ -148,6 +148,8 @@
         <!-- Excel Export -->
         <button
           class="table-head-action-btn min-w-[40px]"
+          [attr.aria-label]="'WORK_MISSIONS.EXPORT_EXCEL' | translate"
+          [title]="'WORK_MISSIONS.EXPORT_EXCEL' | translate"
           (click)="exportExcel(getTranslatedFileName('WORK_MISSIONS.WORK_MISSIONS_LIST', 'xlsx'))"
         >
           <img alt="" src="assets/icons/excel.svg" />
@@ -155,14 +157,18 @@
         <button
           (click)="exportPdf(getTranslatedFileName('WORK_MISSIONS.WORK_MISSIONS_LIST'))"
           class="table-head-action-btn"
+          [attr.aria-label]="'WORK_MISSIONS.EXPORT_PDF' | translate"
+          [title]="'WORK_MISSIONS.EXPORT_PDF' | translate"
         >
           <img alt="" src="assets/icons/pdf.svg" />
         </button>
-        <!-- Add New Mission Button -->
-        <button (click)="addOrEditModel()" class="btn green-btn flex items-center">
-          <img alt="" src="assets/icons/plus.svg" />
-          <span>{{ 'WORK_MISSIONS.ADD_NEW_WORK_MISSION' | translate }}</span>
-        </button>
+        <!-- Creating missions follows the department's work-missions setting. -->
+        @if (canCreate) {
+          <button (click)="addOrEditModel()" class="btn green-btn flex items-center">
+            <img alt="" src="assets/icons/plus.svg" />
+            <span>{{ 'WORK_MISSIONS.ADD_NEW_WORK_MISSION' | translate }}</span>
+          </button>
+        }
       </div>
     </div>
     @if (list && list.length > 0) {
@@ -218,58 +224,70 @@
               }
             </td>
             <td>
-              <!-- Full Actions: View, Assign Employees, Split Button -->
-              <div class="actions flex gap-2">
+              <!-- View, one main action for the mission's stage, then the rest in the ⋮ menu. -->
+              <div class="actions flex items-center gap-2">
                 <button
                   (click)="viewMission(mission)"
                   class="table-action-gray-btn flex gap-2 font-medium"
+                  [attr.aria-label]="'WORK_MISSIONS.VIEW_MISSION' | translate"
                   [title]="'WORK_MISSIONS.VIEW_MISSION' | translate"
                 >
                   <img alt="" src="assets/icons/view-action.svg" />
                 </button>
-                <!-- Only the creator assigns, and only until HR decides the mission. -->
-                @if (mission.canAssign) {
-                  <button
-                    (click)="openAssignEmployeesDialog(mission)"
-                    class="table-action-gray-btn btn black-btn flex gap-2 font-medium"
-                  >
-                    <img class="invert brightness-0" src="/assets/icons/leading.svg" alt="" />
-                    {{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}
-                  </button>
-                }
+                <!-- Fixed width so the menu button lines up across rows. -->
+                <div class="flex min-w-[140px]">
+                  @if (canStartAssignment(mission)) {
+                    <button
+                      (click)="openAssignEmployeesDialog(mission)"
+                      class="black-table-btn-action justify-center w-full whitespace-nowrap"
+                    >
+                      <img
+                        class="invert brightness-0 w-4 h-4"
+                        src="assets/icons/leading.svg"
+                        alt=""
+                      />
+                      <span>{{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}</span>
+                    </button>
+                  } @else if (canDecide(mission)) {
+                    <button
+                      (click)="takeAction(mission)"
+                      class="black-table-btn-action justify-center w-full whitespace-nowrap"
+                    >
+                      <span>{{ 'WORK_MISSIONS.TAKE_ACTION' | translate }}</span>
+                      <i class="pi pi-arrow-right text-xs" aria-hidden="true"></i>
+                    </button>
+                  }
+                </div>
                 <button
-                  (click)="downloadMissionPdf(mission)"
-                  class="table-action-green-btn"
-                  [disabled]="downloadingMissionId !== undefined"
+                  (click)="openRowMenu($event, mission)"
+                  class="table-action-gray-btn min-w-[36px]"
+                  aria-haspopup="true"
+                  [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
+                  [title]="'COMMON.MORE_ACTIONS' | translate"
                   [attr.aria-busy]="downloadingMissionId === mission.id"
-                  [title]="
-                    (downloadingMissionId === mission.id
-                      ? 'WORK_MISSIONS.GENERATING_REPORT'
-                      : 'WORK_MISSIONS.DOWNLOAD_AS_FILE'
-                    ) | translate
-                  "
                 >
                   @if (downloadingMissionId === mission.id) {
                     <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
                   } @else {
-                    <img alt="" src="assets/icons/download-qr.svg" />
+                    <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
                   }
                 </button>
-                @if (mission.canEdit || mission.canDelete) {
-                  <p-splitbutton
-                    [appendTo]="missionContainer"
-                    (click)="setSelectedModel(mission)"
-                    dropdownIcon="pi pi-ellipsis-v"
-                    [model]="actionList"
-                    styleClass="p-button-text p-button-plain"
-                  />
-                  <!-- <p-splitbutton label="Save" icon="pi pi-check" dropdownIcon="pi pi-ellipsis-v" [model]="items" /> -->
-                }
               </div>
             </td>
           </tr>
         </ng-template>
       </p-table>
+      <!-- One popup menu shared by every row; its items are built for the row that opened it. -->
+      <p-menu #rowMenu [popup]="true" [model]="actionList" appendTo="body">
+        <ng-template #item let-item>
+          <a
+            class="flex items-center gap-2 px-4 py-2 text-sm font-medium cursor-pointer"
+            [ngClass]="item.styleClass === dangerItemClass ? 'text-[#b42318]' : 'text-[#161616]'"
+          >
+            <span>{{ item.label }}</span>
+          </a>
+        </ng-template>
+      </p-menu>
     } @else {
       <div class="flex items-center justify-center h-64">
         <p class="text-gray-500">{{ 'CITIES_PAGE.NO_DATA_TO_SHOW' | translate }}</p>

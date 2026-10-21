@@ -101,36 +101,6 @@ export class WorkMissionService extends LookupBaseService<WorkMission, number> {
       .pipe(map((res) => res.data ?? {}));
   }
 
-  /**
-   * HR_OFFICER only — non-draft missions whose creator department is in the caller's HR scope,
-   * pending ones first. Each row's `canTakeAction` says whether the caller may decide it.
-   */
-  @CastResponse(undefined, { fallback: '$pagination' })
-  loadHrApprovalsPaginated(
-    paginationParams?: PaginationParams,
-    filterOptions?: OptionsContract | undefined
-  ): Observable<PaginatedList<WorkMission>> {
-    const httpParams = new HttpParams({
-      fromObject: paginationParams as unknown as never,
-    });
-    filterOptions = genericDateOnlyConvertor(filterOptions);
-    return this.http
-      .post<PaginatedListResponseData<WorkMission>>(
-        this.getUrlSegment() + '/GetHrApprovalsWithPaging',
-        filterOptions || {},
-        {
-          params: httpParams,
-          withCredentials: true,
-        }
-      )
-      .pipe(
-        map((response) => ({
-          list: response.data.list as WorkMission[],
-          paginationInfo: response.data.paginationInfo,
-        }))
-      );
-  }
-
   /** HR approves a pending mission; it then counts for attendance and its assignees are told. */
   approveMission(missionId: number): Observable<void> {
     return this.http

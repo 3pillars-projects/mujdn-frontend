@@ -19,7 +19,6 @@ import { TableModule } from 'primeng/table';
 import { AddNewMissionPopupComponent } from '../popups/add-new-mission-popup/add-new-mission-popup.component';
 import { ViewMissionDataPopupComponent } from '../popups/view-mission-data-popup/view-mission-data-popup.component';
 import { AssignEmployeesComponent } from '../popups/assign-employees/assign-employees.component';
-import { SplitButton, SplitButtonModule } from 'primeng/splitbutton';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { BaseListComponent } from '@/abstracts/base-components/base-list/base-list.component';
@@ -31,7 +30,7 @@ import { PaginatedList } from '@/models/shared/response/paginated-list';
 import { PaginationInfo } from '@/models/shared/response/pagination-info';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
-import { MenuModule } from 'primeng/menu';
+import { Menu, MenuModule } from 'primeng/menu';
 import { UserProfileDataWithNationalId } from '@/models/features/business/user-profile-data-with-national-id';
 import { PaginatedListResponseData } from '@/models/shared/response/paginated-list-response-data';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
@@ -58,13 +57,11 @@ import {
     FormsModule,
     DatePickerModule,
     TableModule,
-    SplitButton,
     InputTextModule,
     PaginatorModule,
     TranslatePipe,
     Select,
     MenuModule,
-    SplitButtonModule,
   ],
   templateUrl: './assign-work-mission-list.component.html',
   styleUrl: './assign-work-mission-list.component.scss',
@@ -83,8 +80,11 @@ export class AssignWorkMissionListComponent
     width: '100%',
     maxWidth: '1024px',
   };
+  /** Items of the row ⋮ menu, rebuilt for the row that opens it. */
   actionList: MenuItem[] = [];
+  readonly dangerItemClass = 'mission-menu-danger';
   @ViewChild('missionContainer', { static: true }) missionContainer!: ElementRef;
+  @ViewChild('rowMenu') rowMenu?: Menu;
 
   // Services and dependencies
   workMissionService = inject(WorkMissionService);
@@ -96,6 +96,8 @@ export class AssignWorkMissionListComponent
   // Accept signals as inputs
   @Input() missionsSignal!: WritableSignal<PaginatedList<WorkMission>>;
   @Input() departmentsSignal!: WritableSignal<BaseLookupModel[]>;
+  /** Whether the "Add new mission" button shows (department work-missions setting). */
+  @Input() canCreate = false;
 
   // Component data
   missions: WorkMission[] = [];
@@ -146,12 +148,10 @@ export class AssignWorkMissionListComponent
       });
     });
 
-    this.initializeActionList();
     this.buildStatusFilterOptions();
 
-    // Re-initialize action list when language changes
+    // The row menu is rebuilt each time it opens, so only the filter labels need refreshing.
     this.translateService.onLangChange.subscribe(() => {
-      this.initializeActionList();
       this.buildStatusFilterOptions();
     });
   }
@@ -222,28 +222,25 @@ export class AssignWorkMissionListComponent
     this.openBaseDialog(AssignEmployeesComponent as any, mission, viewMode, data);
   }
 
-  editMission(mission: WorkMission): void {
-    const dialogRef = this.dialog.open(AddNewMissionPopupComponent, {
-      width: '100%',
-      maxWidth: '1024px',
-      data: { mission, isEdit: true },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // this.loadData();
-      }
-    });
+  /** The details popup carries Approve and Reject for a mission the caller may decide. */
+  takeAction(mission: WorkMission): void {
+    this.viewMission(mission);
   }
 
-  deleteMission(missionId: number): void {
-    // Implement confirmation dialog and delete logic
-    this.deleteModel(missionId);
+  /** A new mission's main action: assign its first employees. */
+  canStartAssignment(mission: WorkMission): boolean {
+    return mission.status === WorkMissionStatusEnum.Draft && !!mission.canAssign;
   }
 
-  setSelectedModel(model: WorkMission) {
-    this.selectedModel = model;
-    this.initializeActionList();
+  /** A pending mission's main action, for HR covering the creator's department. */
+  canDecide(mission: WorkMission): boolean {
+    return mission.status === WorkMissionStatusEnum.PendingHrApproval && !!mission.canTakeAction;
+  }
+
+  openRowMenu(event: Event, mission: WorkMission): void {
+    this.selectedModel = mission;
+    this.actionList = this.buildRowActions(mission);
+    this.rowMenu?.toggle(event);
   }
 
   downloadMissionPdf(mission: WorkMission): void {
@@ -274,30 +271,41 @@ export class AssignWorkMissionListComponent
     return `${missionName ? `${title} - ${missionName}` : title}.pdf`;
   }
 
-  // Edit/Delete follow the server's per-row flags: only the creator, and only until HR decides.
-  private initializeActionList(): void {
-    const mission = this.selectedModel;
+  /**
+   * The ⋮ menu follows the server's per-row flags: the creator and HR covering the creator's
+   * department may edit, reassign or delete until HR decides; anyone who sees the row may
+   * download it.
+   */
+  private buildRowActions(mission: WorkMission): MenuItem[] {
+    const label = (key: string) => this.translateService.instant(key);
     const items: MenuItem[] = [];
-    if (!mission || mission.canEdit) {
+    if (mission.canEdit) {
       items.push({
-        label: this.translateService.instant('COMMON.EDIT'),
-        command: () => {
-          this.addOrEditModel(this.selectedModel);
-        },
+        label: label('WORK_MISSIONS.EDIT_MISSION'),
+        command: () => this.addOrEditModel(mission),
       });
     }
-    if (!mission || mission.canDelete) {
-      if (items.length) {
-        items.push({ separator: true });
-      }
+    items.push({
+      label: label('WORK_MISSIONS.DOWNLOAD_FILE'),
+      disabled: this.downloadingMissionId !== undefined,
+      command: () => this.downloadMissionPdf(mission),
+    });
+    // A new mission's assignment is the main row action; once pending, it moves here.
+    if (mission.canAssign && mission.status === WorkMissionStatusEnum.PendingHrApproval) {
       items.push({
-        label: this.translateService.instant('COMMON.DELETE'),
-        command: () => {
-          this.deleteMission(this.selectedModel!.id);
-        },
+        label: label('WORK_MISSIONS.EDIT_ASSIGNMENT'),
+        command: () => this.openAssignEmployeesDialog(mission),
       });
     }
-    this.actionList = items;
+    if (mission.canDelete) {
+      items.push({
+        label: label('WORK_MISSIONS.DELETE_MISSION'),
+        styleClass: this.dangerItemClass,
+        command: () => this.deleteModel(mission.id),
+      });
+    }
+    // Thin dividers between the items, as in the design.
+    return items.flatMap((item, index) => (index ? [{ separator: true }, item] : [item]));
   }
 
   resetFilter(): void {

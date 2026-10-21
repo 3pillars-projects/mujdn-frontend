@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { TabsModule } from 'primeng/tabs';
 import { MyWorkMissionListComponent } from '@/views/features/outside-mission/my-work-mission-list/my-work-mission-list.component';
 import { AssignWorkMissionListComponent } from '@/views/features/outside-mission/assign-work-mission-list/assign-work-mission-list.component';
-import { HrMissionApprovalsListComponent } from '@/views/features/outside-mission/hr-mission-approvals-list/hr-mission-approvals-list.component';
 import { PaginatedList } from '@/models/shared/response/paginated-list';
 import { WorkMission } from '@/models/features/business/work-mission';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
@@ -36,7 +35,6 @@ import { PaginationParams } from '@/models/shared/pagination-params';
     TranslatePipe,
     MyWorkMissionListComponent,
     AssignWorkMissionListComponent,
-    HrMissionApprovalsListComponent,
   ],
   templateUrl: './work-mission-container.component.html',
   styleUrl: './work-mission-container.component.scss',
@@ -54,13 +52,14 @@ export default class WorkMissionContainerComponent implements OnInit {
   workMissionService = inject(WorkMissionService); // Add this service injection
   @ViewChild(AssignWorkMissionListComponent) assignTabComponent!: AssignWorkMissionListComponent;
   @ViewChild(MyWorkMissionListComponent) myMissionsTabComponent!: MyWorkMissionListComponent;
-  @ViewChild(HrMissionApprovalsListComponent)
-  hrApprovalsTabComponent?: HrMissionApprovalsListComponent;
 
-  canAssign = false;
-  // HR decides missions sent by any department in its scope, whatever its own department's
-  // work-missions setting; the server checks the scope of each mission.
-  canReviewAsHr = false;
+  // "My following employees' missions": HR always sees it, because HR decides missions sent by any
+  // department in its scope whatever its own department's work-missions setting; a department
+  // manager sees it only when missions are enabled for their department. The server scopes rows
+  // and returns what the caller may do with each one.
+  canManage = false;
+  // Creating missions follows the department's work-missions setting.
+  canCreate = false;
   isAssignTabDataLoaded = false; // Track if assign tab data is loaded
   currentTabIndex = '0'; // Track current tab
 
@@ -68,11 +67,9 @@ export default class WorkMissionContainerComponent implements OnInit {
     // Only set departments from resolver, not missions
     const resolved = this.activatedRoute.snapshot.data['list'];
     this.departments.set(resolved?.departments || []);
-    // "My missions" stays visible; only the management tab follows the department setting.
-    this.canAssign =
-      !!(this.authService.isDepartmentManager || this.authService.isHROfficer) &&
-      resolved?.isWorkMissionEnabled === true;
-    this.canReviewAsHr = !!this.authService.isHROfficer;
+    const isManagerOrHr = !!(this.authService.isDepartmentManager || this.authService.isHROfficer);
+    this.canCreate = isManagerOrHr && resolved?.isWorkMissionEnabled === true;
+    this.canManage = this.canCreate || !!this.authService.isHROfficer;
   }
 
   // Method to handle tab change
@@ -85,15 +82,10 @@ export default class WorkMissionContainerComponent implements OnInit {
       this.myMissionsTabComponent?.loadMyMissions(); // fetch fresh data
     }
 
-    if (tabValue === '1' && this.canAssign) {
-      // Assign Missions tab
+    if (tabValue === '1' && this.canManage) {
+      // My following employees' missions tab
       this.assignTabComponent?.resetFilter();
       this.loadAssignTabData();
-    }
-
-    if (tabValue === '2' && this.canReviewAsHr) {
-      // HR approvals tab: always reopens on the pending missions
-      this.hrApprovalsTabComponent?.reload();
     }
   }
 

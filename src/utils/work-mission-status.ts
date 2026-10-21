@@ -18,8 +18,8 @@ export function workMissionStatusBadgeClass(status?: WorkMissionStatusEnum | nul
   const base =
     'text-[14px] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full font-medium';
   switch (status) {
+    // New (draft) and pending missions share the blue "in progress" style.
     case WorkMissionStatusEnum.Draft:
-      return `${base} text-gray-700 bg-gray-100`;
     case WorkMissionStatusEnum.PendingHrApproval:
       return `${base} text-[#1849a9] bg-[#eff8ff]`;
     case WorkMissionStatusEnum.Approved:
@@ -33,6 +33,7 @@ export function workMissionStatusBadgeClass(status?: WorkMissionStatusEnum | nul
 
 export function workMissionStatusDotClass(status?: WorkMissionStatusEnum | null): string {
   switch (status) {
+    case WorkMissionStatusEnum.Draft:
     case WorkMissionStatusEnum.PendingHrApproval:
       return 'w-[10px] h-[10px] bg-[#1849a9] rounded-full';
     case WorkMissionStatusEnum.Approved:
