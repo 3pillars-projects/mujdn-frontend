@@ -34,6 +34,7 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { AuthService } from '@/services/auth/auth.service';
 import { finalize, Observable } from 'rxjs';
 import { downloadBlobData } from '@/utils/utils';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-permissions-list',
@@ -49,6 +50,7 @@ import { downloadBlobData } from '@/utils/utils';
     PaginatorModule,
     TabsModule,
     InputTextModule,
+    ToggleSwitchModule,
     TranslatePipe,
   ],
 
@@ -183,6 +185,8 @@ export default class PermissionsListComponent
   clickIncomingPermissionTab() {
     this.isIncomingPermissions = true;
     this.filterModel = new PermissionFilter();
+    // Don't carry filters applied on "My Requests" into the first incoming load.
+    this.appliedFilterModel = new PermissionFilter();
     this.activeTabIndex == PERMISSION_TABS_ENUM.MY_PERMISSIONS && this.loadIncomingPermissions();
     this.activeTabIndex = PERMISSION_TABS_ENUM.INCOMING_PERMISSIONS;
   }

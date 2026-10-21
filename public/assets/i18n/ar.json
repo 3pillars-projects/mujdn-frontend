@@ -490,6 +490,7 @@
     "PERMISSIONS": "الاستئذانات",
     "MY_REQUESTS": "سجل طلباتي",
     "INCOMING_REQUESTS": "طلبات الاستئذان الواردة",
+    "AWAITING_MY_ACTION": "بانتظار إجرائي",
     "PERMISSION_TYPE": "نوع الإذن",
     "PERMISSION_DATE": "تاريخ الإذن",
     "PERMISSION_STATUS": "حالة الطلب",
