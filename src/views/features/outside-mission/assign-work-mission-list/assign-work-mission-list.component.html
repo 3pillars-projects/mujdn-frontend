@@ -181,7 +181,6 @@
             <th>{{ 'WORK_MISSIONS.STARTING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.ENDING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.MISSION_TYPE' | translate }}</th>
-            <th>{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.STATUS' | translate }}</th>
             <th class="w-10">{{ 'COMMON.ACTION' | translate }}</th>
           </tr>
@@ -214,7 +213,6 @@
                 >{{ getWorkMissionTypeName(mission) }}</span
               >
             </td>
-            <td>{{ lookupName(mission.creatorDepartment) || '-' }}</td>
             <td>
               @if (mission.status) {
                 <span [class]="statusBadgeClass(mission.status)">
@@ -224,7 +222,7 @@
               }
             </td>
             <td>
-              <!-- View, one main action for the mission's stage, then the rest in the ⋮ menu. -->
+              <!-- View, then the ⋮ menu (or its only item, Download), then the stage's main action. -->
               <div class="actions flex items-center gap-2">
                 <button
                   (click)="viewMission(mission)"
@@ -234,44 +232,68 @@
                 >
                   <img alt="" src="assets/icons/view-action.svg" />
                 </button>
-                <!-- Fixed width so the menu button lines up across rows. -->
-                <div class="flex min-w-[140px]">
-                  @if (canStartAssignment(mission)) {
-                    <button
-                      (click)="openAssignEmployeesDialog(mission)"
-                      class="black-table-btn-action justify-center w-full whitespace-nowrap"
-                    >
-                      <img
-                        class="invert brightness-0 w-4 h-4"
-                        src="assets/icons/leading.svg"
-                        alt=""
-                      />
-                      <span>{{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}</span>
-                    </button>
-                  } @else if (canDecide(mission)) {
-                    <button
-                      (click)="takeAction(mission)"
-                      class="black-table-btn-action justify-center w-full whitespace-nowrap"
-                    >
-                      <span>{{ 'WORK_MISSIONS.TAKE_ACTION' | translate }}</span>
-                      <i class="pi pi-arrow-right text-xs" aria-hidden="true"></i>
-                    </button>
-                  }
-                </div>
-                <button
-                  (click)="openRowMenu($event, mission)"
-                  class="table-action-gray-btn min-w-[36px]"
-                  aria-haspopup="true"
-                  [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
-                  [title]="'COMMON.MORE_ACTIONS' | translate"
-                  [attr.aria-busy]="downloadingMissionId === mission.id"
-                >
-                  @if (downloadingMissionId === mission.id) {
-                    <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
-                  } @else {
-                    <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
-                  }
-                </button>
+                @if (hasRowMenu(mission)) {
+                  <button
+                    (click)="openRowMenu($event, mission)"
+                    class="table-action-gray-btn min-w-[36px]"
+                    aria-haspopup="true"
+                    [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
+                    [title]="'COMMON.MORE_ACTIONS' | translate"
+                    [attr.aria-busy]="downloadingMissionId === mission.id"
+                  >
+                    @if (downloadingMissionId === mission.id) {
+                      <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+                    } @else {
+                      <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
+                    }
+                  </button>
+                } @else {
+                  <button
+                    (click)="downloadMissionPdf(mission)"
+                    class="table-action-green-btn"
+                    [disabled]="downloadingMissionId !== undefined"
+                    [attr.aria-busy]="downloadingMissionId === mission.id"
+                    [attr.aria-label]="
+                      (downloadingMissionId === mission.id
+                        ? 'WORK_MISSIONS.GENERATING_REPORT'
+                        : 'WORK_MISSIONS.DOWNLOAD_FILE'
+                      ) | translate
+                    "
+                    [title]="
+                      (downloadingMissionId === mission.id
+                        ? 'WORK_MISSIONS.GENERATING_REPORT'
+                        : 'WORK_MISSIONS.DOWNLOAD_FILE'
+                      ) | translate
+                    "
+                  >
+                    @if (downloadingMissionId === mission.id) {
+                      <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+                    } @else {
+                      <img alt="" src="assets/icons/download-qr.svg" />
+                    }
+                  </button>
+                }
+                @if (canStartAssignment(mission)) {
+                  <button
+                    (click)="openAssignEmployeesDialog(mission)"
+                    class="black-table-btn-action justify-center whitespace-nowrap"
+                  >
+                    <img
+                      class="invert brightness-0 w-4 h-4"
+                      src="assets/icons/leading.svg"
+                      alt=""
+                    />
+                    <span>{{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}</span>
+                  </button>
+                } @else if (canDecide(mission)) {
+                  <button
+                    (click)="takeAction(mission)"
+                    class="black-table-btn-action justify-center whitespace-nowrap"
+                  >
+                    <span>{{ 'WORK_MISSIONS.TAKE_ACTION' | translate }}</span>
+                    <i class="pi pi-arrow-right text-xs" aria-hidden="true"></i>
+                  </button>
+                }
               </div>
             </td>
           </tr>

@@ -181,19 +181,10 @@ export class AssignWorkMissionListComponent
         model.workMissionType,
         this.isCurrentLanguageEnglish()
       ),
-      [this.translateService.instant('WORK_MISSIONS.CREATOR_DEPARTMENT')]: this.lookupName(
-        model.creatorDepartment
-      ),
       [this.translateService.instant('WORK_MISSIONS.STATUS')]: model.status
         ? this.translateService.instant(workMissionStatusTextKey(model.status))
         : '',
     };
-  }
-
-  /** Department names in the current language. */
-  lookupName(item?: { nameAr?: string; nameEn?: string | null } | null): string {
-    if (!item) return '';
-    return (this.isCurrentLanguageEnglish() ? item.nameEn || item.nameAr : item.nameAr) ?? '';
   }
 
   /** Status options with their label resolved for the filter dropdown. */
@@ -235,6 +226,19 @@ export class AssignWorkMissionListComponent
   /** A pending mission's main action, for HR covering the creator's department. */
   canDecide(mission: WorkMission): boolean {
     return mission.status === WorkMissionStatusEnum.PendingHrApproval && !!mission.canTakeAction;
+  }
+
+  /** Pending missions move their assignment into the ⋮ menu. */
+  canEditAssignment(mission: WorkMission): boolean {
+    return !!mission.canAssign && mission.status === WorkMissionStatusEnum.PendingHrApproval;
+  }
+
+  /**
+   * Download is always available; the ⋮ menu shows only when there is something besides it.
+   * Otherwise the row shows the download button directly.
+   */
+  hasRowMenu(mission: WorkMission): boolean {
+    return !!mission.canEdit || !!mission.canDelete || this.canEditAssignment(mission);
   }
 
   openRowMenu(event: Event, mission: WorkMission): void {
@@ -291,7 +295,7 @@ export class AssignWorkMissionListComponent
       command: () => this.downloadMissionPdf(mission),
     });
     // A new mission's assignment is the main row action; once pending, it moves here.
-    if (mission.canAssign && mission.status === WorkMissionStatusEnum.PendingHrApproval) {
+    if (this.canEditAssignment(mission)) {
       items.push({
         label: label('WORK_MISSIONS.EDIT_ASSIGNMENT'),
         command: () => this.openAssignEmployeesDialog(mission),
