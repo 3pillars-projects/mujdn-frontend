@@ -16,6 +16,7 @@
 | Take action in the tab | `OtherLeavesComponent.openTakeActionDialog()`, row button gated by `canTakeAction`; `canChangeDates` from `canAmendDates` |
 | HR-only users | "Add new leave" and the `employees-lookup` call are DM only (`canAddLeave`). The employee search filter now uses `getMyDepartmentUsersLookup`. |
 | Service | `LeaveService.loadApprovalsPaginated` and `exportDepartmentLeavesPdf` removed |
+| Approval history removed | `views/features/leaves/leave-approval-timeline/` and `models/.../leave-approval-action.ts` deleted; removed from the view and add/edit/take-action popups. `Leave.approvalActions` and its interceptor mapping removed. Nine `LEAVES_PAGE` keys only the timeline used (`STAGE_*`, `APPROVAL_HISTORY`, `APPROVED_BY`, `REJECTED_BY`, `ACTED_AS_HR`, `AWAITING_DECISION`) removed from `en.json` and `ar.json`. |
 | Translations | Removed the six keys only the old screen used (`LEAVES_PAGE.HR_CONFIRMATIONS_TAB`, `AWAITING_MY_APPROVAL_TAB`, `AWAITING_MY_APPROVAL_LIST`, `INCOMING_LEAVES_LIST`, `LEAVES_CONFIRMATIONS`, `MENU.LEAVES_CONFIRMATIONS`) from `en.json` and `ar.json`. No new text. |
 
 ## Checks

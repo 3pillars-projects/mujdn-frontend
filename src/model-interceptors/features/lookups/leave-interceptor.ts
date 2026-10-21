@@ -27,10 +27,6 @@ export class LeaveInterceptor implements ModelInterceptorContract<Leave> {
     model.dateTo = toDateTime(model.dateTo);
     model.actionDate = toDateTime(model.actionDate);
     model.attachments = toAttachments(model.attachments);
-    model.approvalActions = (model.approvalActions ?? []).map((action) => ({
-      ...action,
-      actionDate: toDateTime(action.actionDate) ?? action.actionDate,
-    }));
     return model;
   }
 

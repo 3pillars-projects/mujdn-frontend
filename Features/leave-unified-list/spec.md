@@ -28,6 +28,7 @@
 | `GetMyCreatedLeavesWithPaging` / `ExportMyCreatedLeavesPdf`: DM only, subtree minus peer managers | DM **or HR**. Rows = union of: DM subtree minus peer managers (own leaves included); leaves waiting at a manager level the DM decides; HR scope minus own leave; any leave the caller decided. |
 | Following-employees tab: DM only | DM or HR. "Add new leave" (on behalf) stays DM only. |
 | HR in scope could approve or reject at any stage, and that approval was final (HR fallback) | **Sequential.** While a leave waits at a manager level, only that level's managers decide it. HR approves or rejects only at the HR stage. A user who is both DM and HR gets no shortcut at another manager's level. HR can still reject an accepted leave. |
+| The view and take-action popups showed an approval history timeline | **Removed** (not a business requirement). Decisions are still recorded in `Lookup.LeaveApprovalAction` and still drive `canEdit`/`canDelete`; the API still returns `approvalActions`, the UI ignores it. The current stage stays visible in the status badge. |
 | A level with no eligible manager waited, and HR could act on it | It waits until a manager is assigned or delegated (`TemporaryRoleAssignment`) for that department. Nobody else can move it. |
 
 Unchanged:

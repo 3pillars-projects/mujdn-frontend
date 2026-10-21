@@ -61,7 +61,7 @@ Each approver sees the requests waiting at their level, approves or rejects them
 | AC-09 | Rejection at any stage requires notes of 1–500 characters, makes the leave `Rejected` (final), and notifies the employee. | Service test |
 | AC-10 | The requester can never approve or reject their own leave at any stage, HR included. | Service test |
 | AC-11 | A self-submitted leave can be edited or withdrawn (deleted) only by its requester, and only while no approval has been recorded. An on-behalf leave stays editable/deletable by managers in scope until HR decides, as today. Otherwise the server returns `LEAVE_ALREADY_DECIDED`. | Service test; UI shows actions from server `canEdit` / `canDelete` |
-| AC-12 | Every approval and rejection is recorded (level, department, approver, decision, date, notes) and shown in the leave view as a timeline. | Service test; UI check |
+| AC-12 | Every approval and rejection is recorded (level, department, approver, decision, date, notes) and shown in the leave view as a timeline. **Superseded 2026-10-21 (`leave-unified-list`): decisions are still recorded, but no popup shows the history.** | Service test; UI check |
 | AC-13 | When a request reaches a level, that level's eligible managers are notified, or the HR officers in scope at the HR stage. On final approval or any rejection, the employee is notified (existing `LEAVE_RESULT`). | Service test with fake notification service |
 | AC-14 | Any employee can open "My leaves", submit a leave for themselves with type, dates, decision number (required) and attachments, and see each request's current stage. | Browser flow (EN + AR) |
 | AC-15 | A department manager sees an approvals list of requests waiting at a level they're eligible for, plus requests they already acted on, and can approve or reject from it. HR keeps the Leaves confirmations list. A user with both roles sees both. | Browser flow |
@@ -134,7 +134,7 @@ Each approver sees the requests waiting at their level, approves or rejects them
     - HR keeps "HR confirmations" (existing endpoint).
     - A user with both roles sees both tabs.
     - The accept dialog shows date amendment only on the HR tab.
-- **Status display**: `New` is shown as "Pending – direct manager / higher manager / HR", using `approvalStage` and `submissionType` (for a manager-self request, level 1 reads "supervisor"). `LeavesViewPopupComponent` shows the approval timeline.
+- **Status display**: `New` is shown as "Pending – direct manager / higher manager / HR", using `approvalStage` and `submissionType` (for a manager-self request, level 1 reads "supervisor"). `LeavesViewPopupComponent` shows the approval timeline. **Superseded 2026-10-21 (`leave-unified-list`): decisions are still recorded, but no popup shows the history.**
 - **Routes/menu**: `app.routes.ts` `leaves-confirmations` roles `[HR_OFFICER, DEPARTMENT_MANAGER]`; the sidebar item follows the route roles.
 - **Errors**: the new message keys are added to `en.json` and `ar.json`, and the existing `httpErrorInterceptor` shows them.
 - **Localization**: every new label exists in EN and AR, and RTL is checked. The department popup's one/two-level help text says the setting now covers both permissions and leave requests.

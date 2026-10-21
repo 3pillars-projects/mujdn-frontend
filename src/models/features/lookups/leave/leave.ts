@@ -8,7 +8,6 @@ import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
 import { LEAVE_APPROVAL_STAGE_ENUM } from '@/enums/leave-approval-stage-enum';
 import { LEAVE_SUBMISSION_TYPE_ENUM } from '@/enums/leave-submission-type-enum';
-import { LeaveApprovalAction } from '@/models/features/lookups/leave/leave-approval-action';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import {
   AttachmentSelection,
@@ -54,7 +53,6 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare approvalStage?: LEAVE_APPROVAL_STAGE_ENUM | null;
   declare level1ApprovalDepartment?: BaseLookupModel | null;
   declare level2ApprovalDepartment?: BaseLookupModel | null;
-  approvalActions: LeaveApprovalAction[] = [];
   // Opaque Base64 row-version; never generated or edited on the frontend
   declare concurrencyUpdateVersion?: string | null;
   // Files already stored against this leave; always present on read, never sent back as-is

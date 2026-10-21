@@ -31,7 +31,6 @@ import { AttachmentUploadComponent } from '@/views/shared/attachment-upload/atta
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { toDateOnly } from '@/utils/general-helper';
-import { LeaveApprovalTimelineComponent } from '../leave-approval-timeline/leave-approval-timeline.component';
 
 @Component({
   selector: 'app-leaves-add-edit-popup',
@@ -47,7 +46,6 @@ import { LeaveApprovalTimelineComponent } from '../leave-approval-timeline/leave
     ValidationMessagesComponent,
     AttachmentUploadComponent,
     AttachmentListComponent,
-    LeaveApprovalTimelineComponent,
   ],
   templateUrl: './leaves-add-edit-popup.component.html',
   styleUrl: './leaves-add-edit-popup.component.scss',
