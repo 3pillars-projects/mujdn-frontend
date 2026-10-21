@@ -51,8 +51,6 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare submissionType?: LEAVE_SUBMISSION_TYPE_ENUM;
   // The stage an in-progress leave waits at; null once accepted or rejected.
   declare approvalStage?: LEAVE_APPROVAL_STAGE_ENUM | null;
-  declare level1ApprovalDepartment?: BaseLookupModel | null;
-  declare level2ApprovalDepartment?: BaseLookupModel | null;
   // Opaque Base64 row-version; never generated or edited on the frontend
   declare concurrencyUpdateVersion?: string | null;
   // Files already stored against this leave; always present on read, never sent back as-is
