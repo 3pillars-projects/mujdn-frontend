@@ -93,7 +93,7 @@
           <label class="label" for="leaveType">{{ 'LEAVES_PAGE.LEAVE_TYPE' | translate }}</label>
           <p-select
             [(ngModel)]="filterModel.fkLeaveTypeId"
-            [options]="leaveTypes"
+            [options]="filterLeaveTypes"
             [optionLabel]="optionLabel"
             optionValue="id"
             [showClear]="true"

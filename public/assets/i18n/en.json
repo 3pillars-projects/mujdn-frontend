@@ -153,6 +153,7 @@
     "LEAVE_ALREADY_DECIDED": "This leave request has already been decided.",
     "LEAVE_DECISION_NUMBER_INVALID": "Decision/request number is required and must not exceed 100 characters.",
     "LEAVE_TYPE_NOT_FOUND": "Leave type not found.",
+    "LEAVE_TYPE_NOT_ACTIVE": "This leave type is no longer available for new leave requests.",
     "TEMPORARY_ROLE_SELF_ASSIGNMENT_NOT_ALLOWED": "You cannot assign a temporary role to yourself.",
     "TEMPORARY_ROLE_ASSIGNMENT_ONLY_FUTURE_RECORDS_CAN_BE_UPDATED": "Only future temporary role assignments can be fully updated.",
     "TEMPORARY_ROLE_ASSIGNMENT_ONLY_FUTURE_RECORDS_CAN_BE_DELETED": "Only temporary role assignments that start after today can be deleted.",

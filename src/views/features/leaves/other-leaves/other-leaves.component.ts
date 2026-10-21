@@ -68,7 +68,10 @@ export class OtherLeavesComponent
   authService = inject(AuthService);
   downloadingLeaveId?: number;
   filterModel: LeaveFilter = new LeaveFilter();
+  // Active types only: what a new leave may be filed under.
   leaveTypes: BaseLookupModel[] = [];
+  // Every type, deactivated ones included, so older leaves can still be filtered.
+  filterLeaveTypes: BaseLookupModel[] = [];
   // Employees a manager may file a leave for (the on-behalf picker); empty for HR-only users.
   employees: UsersWithDepartmentLookup[] = [];
   // Employees offered by the employee search filter: everyone in the caller's scope.
@@ -95,6 +98,9 @@ export class OtherLeavesComponent
   loadLookups(): void {
     this.leaveTypeService.getLookup().subscribe((res) => {
       this.leaveTypes = res;
+    });
+    this.leaveTypeService.getAllLookup().subscribe((res) => {
+      this.filterLeaveTypes = res;
     });
     // The on-behalf picker is a department manager endpoint; HR officers do not file leaves
     // for others from here.

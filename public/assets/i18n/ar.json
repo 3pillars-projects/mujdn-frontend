@@ -153,6 +153,7 @@
     "LEAVE_ALREADY_DECIDED": "تم البت في طلب الإجازة هذا بالفعل.",
     "LEAVE_DECISION_NUMBER_INVALID": "رقم القرار / رقم الطلب مطلوب ويجب ألا يتجاوز 100 حرف.",
     "LEAVE_TYPE_NOT_FOUND": "نوع الإجازة غير موجود.",
+    "LEAVE_TYPE_NOT_ACTIVE": "نوع الإجازة هذا لم يعد متاحاً لطلبات الإجازة الجديدة.",
     "TEMPORARY_ROLE_SELF_ASSIGNMENT_NOT_ALLOWED": "لا يمكنك إسناد دور مؤقت لنفسك.",
     "TEMPORARY_ROLE_ASSIGNMENT_ONLY_FUTURE_RECORDS_CAN_BE_UPDATED": "يمكن تحديث إسنادات الأدوار المؤقتة المستقبلية فقط بشكل كامل.",
     "TEMPORARY_ROLE_ASSIGNMENT_ONLY_FUTURE_RECORDS_CAN_BE_DELETED": "يمكن حذف إسنادات الأدوار المؤقتة التي تبدأ بعد اليوم فقط.",

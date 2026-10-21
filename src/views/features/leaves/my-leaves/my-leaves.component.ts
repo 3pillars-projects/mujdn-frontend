@@ -57,7 +57,10 @@ export class MyLeavesComponent
   leaveService = inject(LeaveService);
   leaveTypeService = inject(LeaveTypeService);
   filterModel: LeaveFilter = new LeaveFilter();
+  // Active types only: what a new leave may be filed under.
   leaveTypes: BaseLookupModel[] = [];
+  // Every type, deactivated ones included, so older leaves can still be filtered.
+  filterLeaveTypes: BaseLookupModel[] = [];
   leaveStatusEnum = LEAVE_STATUS_ENUM;
 
   override get service() {
@@ -67,6 +70,9 @@ export class MyLeavesComponent
   override initListComponent(): void {
     this.leaveTypeService.getLookup().subscribe((res) => {
       this.leaveTypes = res;
+    });
+    this.leaveTypeService.getAllLookup().subscribe((res) => {
+      this.filterLeaveTypes = res;
     });
   }
 
