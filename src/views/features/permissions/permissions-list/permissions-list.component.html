@@ -378,6 +378,24 @@
                         class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
                       ></span>
                     </div>
+                    <div class="relative">
+                      <label class="label" for="can-take-action-select">{{
+                        'PERMISSION_PAGE.ACTION_REQUIRED_FROM_ME' | translate
+                      }}</label>
+                      <p-select
+                        [(ngModel)]="filterModel.canTakeAction"
+                        [optionLabel]="getPropertyName()"
+                        [options]="canTakeActionOptions"
+                        [showClear]="true"
+                        class="w-full peer"
+                        id="can-take-action-select"
+                        optionValue="id"
+                        placeholder="{{ 'PERMISSION_PAGE.ACTION_REQUIRED_FROM_ME' | translate }}"
+                      ></p-select>
+                      <span
+                        class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+                      ></span>
+                    </div>
                   </div>
                   <div class="actions flex items-center gap-4 pt-6">
                     <button (click)="departmentPermissionSearch()" class="btn black-btn">

@@ -7,4 +7,6 @@ export class PermissionFilter {
   declare fkDepartmentId: number;
   declare fkPermissionTypeId: number;
   declare creationUserId: number;
+  /** Incoming tab only: true = requests the current user can act on now, false = the rest. */
+  declare canTakeAction?: boolean;
 }
