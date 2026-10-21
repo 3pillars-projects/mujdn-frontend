@@ -53,7 +53,13 @@ export default class WorkMissionContainerComponent implements OnInit {
   @ViewChild(AssignWorkMissionListComponent) assignTabComponent!: AssignWorkMissionListComponent;
   @ViewChild(MyWorkMissionListComponent) myMissionsTabComponent!: MyWorkMissionListComponent;
 
-  canAssign = false;
+  // "My following employees' missions": HR always sees it, because HR decides missions sent by any
+  // department in its scope whatever its own department's work-missions setting; a department
+  // manager sees it only when missions are enabled for their department. The server scopes rows
+  // and returns what the caller may do with each one.
+  canManage = false;
+  // Creating missions follows the department's work-missions setting.
+  canCreate = false;
   isAssignTabDataLoaded = false; // Track if assign tab data is loaded
   currentTabIndex = '0'; // Track current tab
 
@@ -61,10 +67,9 @@ export default class WorkMissionContainerComponent implements OnInit {
     // Only set departments from resolver, not missions
     const resolved = this.activatedRoute.snapshot.data['list'];
     this.departments.set(resolved?.departments || []);
-    // "My missions" stays visible; only the management tab follows the department setting.
-    this.canAssign =
-      !!(this.authService.isDepartmentManager || this.authService.isHROfficer) &&
-      resolved?.isWorkMissionEnabled === true;
+    const isManagerOrHr = !!(this.authService.isDepartmentManager || this.authService.isHROfficer);
+    this.canCreate = isManagerOrHr && resolved?.isWorkMissionEnabled === true;
+    this.canManage = this.canCreate || !!this.authService.isHROfficer;
   }
 
   // Method to handle tab change
@@ -77,8 +82,8 @@ export default class WorkMissionContainerComponent implements OnInit {
       this.myMissionsTabComponent?.loadMyMissions(); // fetch fresh data
     }
 
-    if (tabValue === '1' && this.canAssign) {
-      // Assign Missions tab
+    if (tabValue === '1' && this.canManage) {
+      // My following employees' missions tab
       this.assignTabComponent?.resetFilter();
       this.loadAssignTabData();
     }

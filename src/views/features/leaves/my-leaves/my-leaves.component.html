@@ -13,7 +13,7 @@
           <label class="label" for="leaveType">{{ 'LEAVES_PAGE.LEAVE_TYPE' | translate }}</label>
           <p-select
             [(ngModel)]="filterModel.fkLeaveTypeId"
-            [options]="leaveTypes"
+            [options]="filterLeaveTypes"
             [optionLabel]="optionLabel"
             optionValue="id"
             [showClear]="true"
@@ -76,7 +76,7 @@
             'LEAVES_PAGE.REQUEST_STATUS' | translate
           }}</label>
           <p-select
-            [(ngModel)]="filterModel.status"
+            [(ngModel)]="requestStatus"
             [options]="requestStatuses"
             optionLabel="label"
             optionValue="id"
@@ -123,6 +123,10 @@
         >
           <img alt="" src="assets/icons/pdf.svg" />
         </button>
+        <button (click)="addOrEditOwnLeave()" class="btn green-btn flex items-center">
+          <img alt="" src="assets/icons/plus.svg" />
+          <span>{{ 'LEAVES_PAGE.NEW_LEAVE_REQUEST' | translate }}</span>
+        </button>
       </div>
     </div>
 
@@ -145,16 +149,38 @@
             <td>{{ leave.dateFrom | date: 'dd/MM/yyyy' }}</td>
             <td>{{ leave.dateTo | date: 'dd/MM/yyyy' }}</td>
             <td>
-              <span [class]="getStatusBadgeClass(leave.status)">
-                <span [class]="getStatusBadgeDotClass(leave.status)"></span>
-                {{ getStatusText(leave.status) }}
+              <span [class]="getStatusBadgeClass(leave)">
+                <span [class]="getStatusBadgeDotClass(leave)"></span>
+                {{ getStatusText(leave) }}
               </span>
             </td>
             <td>
               <div class="actions flex items-center gap-2">
-                <button (click)="openDialog(leave)" class="table-action-gray-btn">
+                <button
+                  (click)="openDialog(leave)"
+                  class="table-action-gray-btn"
+                  [attr.aria-label]="'LEAVES_PAGE.VIEW_LEAVE' | translate"
+                >
                   <img alt="" src="assets/icons/view.svg" />
                 </button>
+                @if (leave.canEdit) {
+                  <button
+                    (click)="addOrEditOwnLeave(leave)"
+                    class="table-action-gray-btn"
+                    [attr.aria-label]="'LEAVES_PAGE.EDIT_LEAVE' | translate"
+                  >
+                    <img alt="" src="assets/icons/edit-action.svg" />
+                  </button>
+                }
+                @if (leave.canDelete) {
+                  <button
+                    (click)="deleteModel(leave.id)"
+                    class="table-action-red-btn"
+                    [attr.aria-label]="'LEAVES_PAGE.WITHDRAW_LEAVE' | translate"
+                  >
+                    <img alt="" src="assets/icons/delete-action.svg" />
+                  </button>
+                }
               </div>
             </td>
           </tr>

@@ -6,6 +6,8 @@ import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
+import { LEAVE_APPROVAL_STAGE_ENUM } from '@/enums/leave-approval-stage-enum';
+import { LEAVE_SUBMISSION_TYPE_ENUM } from '@/enums/leave-submission-type-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import {
   AttachmentSelection,
@@ -40,7 +42,15 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare creationUserId?: number | null;
   declare creationUser?: UsersWithDepartmentLookup | null;
   declare actionDate?: Date | string | null;
+  // Server-computed for the caller: decide the current stage / edit or withdraw the leave.
   declare canTakeAction?: boolean;
+  declare canEdit?: boolean;
+  declare canDelete?: boolean;
+  // True when the caller's approval is an HR decision, which may amend the dates.
+  declare canAmendDates?: boolean;
+  declare submissionType?: LEAVE_SUBMISSION_TYPE_ENUM;
+  // The stage an in-progress leave waits at; null once accepted or rejected.
+  declare approvalStage?: LEAVE_APPROVAL_STAGE_ENUM | null;
   // Opaque Base64 row-version; never generated or edited on the frontend
   declare concurrencyUpdateVersion?: string | null;
   // Files already stored against this leave; always present on read, never sent back as-is
@@ -51,10 +61,14 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   // until a form sets it, so `send()` can tell "not edited" from "user removed everything".
   declare attachmentSelection?: AttachmentSelection;
 
-  buildForm() {
+  /**
+   * @param forSelf the caller files his own leave: there is no employee to pick, and the API
+   * files a create without `fkEmployeeId` for the caller.
+   */
+  buildForm(forSelf = false) {
     const { fkEmployeeId, fkLeaveTypeId, dateFrom, dateTo, decisionNumber, attachments } = this;
     return {
-      fkEmployeeId: [fkEmployeeId, [Validators.required]],
+      ...(forSelf ? {} : { fkEmployeeId: [fkEmployeeId, [Validators.required]] }),
       fkLeaveTypeId: [fkLeaveTypeId, [Validators.required]],
       dateFrom: [dateFrom, [Validators.required]],
       dateTo: [dateTo, [Validators.required]],
@@ -74,5 +88,14 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
 
   isAccepted(): boolean {
     return this.status === LEAVE_STATUS_ENUM.Accepted;
+  }
+
+  /** Waiting for a manager level (as opposed to HR or a final decision). */
+  isAtManagerStage(): boolean {
+    return (
+      this.isNew() &&
+      (this.approvalStage === LEAVE_APPROVAL_STAGE_ENUM.ManagerLevel1 ||
+        this.approvalStage === LEAVE_APPROVAL_STAGE_ENUM.ManagerLevel2)
+    );
   }
 }

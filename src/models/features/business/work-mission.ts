@@ -6,6 +6,7 @@ import { Validators } from '@angular/forms';
 import { InterceptModel } from 'cast-response';
 import { BaseLookupModel } from '../lookups/base-lookup-model';
 import { WorkMissionTypesEnum } from '@/enums/work-mission-type-enum';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import {
   AttachmentSelection,
@@ -36,6 +37,20 @@ export class WorkMission extends BaseCrudModel<WorkMission, WorkMissionService> 
   // create sends only the staged ids, update also sends the keep-list. Left undefined on
   // purpose until a form sets it, so `send()` can tell "not edited" from "removed everything".
   declare attachmentSelection?: AttachmentSelection;
+
+  // HR approval workflow — response-only; never part of the create/update payloads.
+  declare status: WorkMissionStatusEnum;
+  // The creator's department when the mission was created.
+  declare creatorDepartment?: BaseLookupModel | null;
+  declare hrDecisionBy?: BaseLookupModel | null;
+  declare hrDecisionDate?: Date | string | null;
+  declare rejectionNotes?: string | null;
+  declare isAutoApproved?: boolean;
+  // What the current user may do with this mission, decided by the server.
+  declare canEdit?: boolean;
+  declare canDelete?: boolean;
+  declare canAssign?: boolean;
+  declare canTakeAction?: boolean;
 
   buildForm() {
     const { nameAr, nameEn, startDate, endDate, description, workMissionType, attachments } = this;

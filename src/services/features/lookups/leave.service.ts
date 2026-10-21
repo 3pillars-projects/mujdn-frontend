@@ -80,6 +80,10 @@ export class LeaveService extends BaseCrudService<Leave, number> {
       );
   }
 
+  /**
+   * DEPARTMENT_MANAGER or HR_OFFICER — the following-employees list, where they also approve
+   * and reject (`canTakeAction`). The route keeps its historical "MyCreated" name.
+   */
   @CastResponse(undefined, { fallback: '$pagination' })
   loadMyCreatedLeavesPaginated(
     paginationParams?: PaginationParams,
@@ -111,7 +115,7 @@ export class LeaveService extends BaseCrudService<Leave, number> {
       );
   }
 
-  // DEPARTMENT_MANAGER only — employees inside the caller's leave scope
+  // DEPARTMENT_MANAGER only — employees inside the caller's leave scope (never himself)
   @CastResponse(undefined, { fallback: '$employeesLookup' })
   getEmployeesLookup(): Observable<LeaveEmployeeLookup[]> {
     return this.http
@@ -158,13 +162,6 @@ export class LeaveService extends BaseCrudService<Leave, number> {
     filterOptions?: OptionsContract
   ): Observable<Blob> {
     return this.exportPdfByEndpoint('ExportMyCreatedLeavesPdf', language, filterOptions);
-  }
-
-  exportDepartmentLeavesPdf(
-    language: LANGUAGE_ENUM | string,
-    filterOptions?: OptionsContract
-  ): Observable<Blob> {
-    return this.exportPdfByEndpoint('ExportDepartmentLeavesPdf', language, filterOptions);
   }
 
   exportLeavePdf(

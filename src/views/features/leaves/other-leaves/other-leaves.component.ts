@@ -20,11 +20,22 @@ import { UserService } from '@/services/features/user.service';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
+import { LEAVE_SUBMISSION_TYPE_ENUM } from '@/enums/leave-submission-type-enum';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { LeavesViewPopupComponent } from '../leaves-view-popup/leaves-view-popup.component';
 import { LeavesAddEditPopupComponent } from '../leaves-add-edit-popup/leaves-add-edit-popup.component';
 import { formatDateOnly } from '@/utils/general-helper';
+import {
+  leaveStatusBadgeClass,
+  leaveStatusDotClass,
+  leaveStatusTextKey,
+} from '@/utils/leave-status';
+import {
+  getLeaveRequestStatus,
+  leaveRequestStatusOptions,
+  setLeaveRequestStatus,
+} from '@/utils/leave-status-filter';
 import { CustomValidators } from '@/validators/custom-validators';
 import { PaginationInfo } from '@/models/shared/response/pagination-info';
 
@@ -57,8 +68,14 @@ export class OtherLeavesComponent
   authService = inject(AuthService);
   downloadingLeaveId?: number;
   filterModel: LeaveFilter = new LeaveFilter();
+  // Active types only: what a new leave may be filed under.
   leaveTypes: BaseLookupModel[] = [];
+  // Every type, deactivated ones included, so older leaves can still be filtered.
+  filterLeaveTypes: BaseLookupModel[] = [];
+  // Employees a manager may file a leave for (the on-behalf picker); empty for HR-only users.
   employees: UsersWithDepartmentLookup[] = [];
+  // Employees offered by the employee search filter: everyone in the caller's scope.
+  filterEmployees: UsersWithDepartmentLookup[] = [];
   departments: BaseLookupModel[] = [];
   leaveStatusEnum = LEAVE_STATUS_ENUM;
 
@@ -82,12 +99,27 @@ export class OtherLeavesComponent
     this.leaveTypeService.getLookup().subscribe((res) => {
       this.leaveTypes = res;
     });
-    this.leaveService.getEmployeesLookup().subscribe((res) => {
-      this.employees = res;
+    this.leaveTypeService.getAllLookup().subscribe((res) => {
+      this.filterLeaveTypes = res;
+    });
+    // The on-behalf picker is a department manager endpoint; HR officers do not file leaves
+    // for others from here.
+    if (this.canAddLeave) {
+      this.leaveService.getEmployeesLookup().subscribe((res) => {
+        this.employees = res;
+      });
+    }
+    this.userService.getMyDepartmentUsersLookup().subscribe((res) => {
+      this.filterEmployees = res;
     });
     this.userService.getMyDepartmentsLookup().subscribe((res) => {
       this.departments = res;
     });
+  }
+
+  /** Filing a leave for another employee is a department manager action. */
+  get canAddLeave(): boolean {
+    return !!this.authService.isDepartmentManager;
   }
 
   override loadList() {
@@ -105,17 +137,52 @@ export class OtherLeavesComponent
   }
 
   addOrEditModel(leave?: Leave): void {
-    if (leave?.id && !leave.isNew()) {
+    // The server decides (`canEdit`): a leave filed on behalf of an employee until HR decides it,
+    // or the manager's own request (listed here too) until someone approves it.
+    if (leave?.id && !leave.canEdit) {
       this.openDialog(leave);
       return;
     }
     const model = leave ?? new Leave();
     const viewMode = model.id ? ViewModeEnum.EDIT : ViewModeEnum.CREATE;
-    this.openBaseDialog(LeavesAddEditPopupComponent as any, model, viewMode, {
-      employees: this.employees,
-      departments: this.departments,
-      leaveTypes: this.leaveTypes,
-    });
+    // His own request keeps its employee: edit it without the employee picker.
+    const isSelf = !!model.id && model.submissionType !== LEAVE_SUBMISSION_TYPE_ENUM.OnBehalf;
+    this.openBaseDialog(
+      LeavesAddEditPopupComponent as any,
+      model,
+      viewMode,
+      {
+        employees: this.employees,
+        departments: this.departments,
+        leaveTypes: this.leaveTypes,
+      },
+      { isSelf }
+    );
+  }
+
+  /**
+   * Approve or reject the leave. The server decides who may (`canTakeAction`): the manager of
+   * the level it waits at, or HR in scope once it reaches the HR stage (HR can also reject an
+   * accepted leave).
+   */
+  openTakeActionDialog(model: Leave): void {
+    if (!model.isNew() && !model.isAccepted()) {
+      this.openDialog(model);
+      return;
+    }
+    this.openBaseDialog(
+      LeavesAddEditPopupComponent as any,
+      model,
+      ViewModeEnum.TAKE_ACTION,
+      {
+        employees: this.employees,
+        departments: this.departments,
+        leaveTypes: this.leaveTypes,
+      },
+      // Only an HR decision may amend the dates; the server says which this caller's would be
+      // (a user who is also the stage's manager decides as manager).
+      { canChangeDates: !!model.canAmendDates }
+    );
   }
 
   protected override getBreadcrumbKeys() {
@@ -194,9 +261,7 @@ export class OtherLeavesComponent
       [this.translateService.instant('LEAVES_PAGE.LEAVE_TYPE')]: this.leaveTypeName(model),
       [this.translateService.instant('LEAVES_PAGE.DATE_FROM')]: formatDateOnly(model.dateFrom),
       [this.translateService.instant('LEAVES_PAGE.DATE_TO')]: formatDateOnly(model.dateTo),
-      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(
-        model.status
-      ),
+      [this.translateService.instant('LEAVES_PAGE.REQUEST_STATUS')]: this.getStatusText(model),
     };
   }
 
@@ -204,24 +269,25 @@ export class OtherLeavesComponent
     return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC ? 'nameAr' : 'nameEn';
   }
 
-  get requestStatuses(): { id: number; label: string }[] {
-    return [
-      { id: LEAVE_STATUS_ENUM.New, label: this.translateService.instant('LEAVES_PAGE.NEW') },
-      {
-        id: LEAVE_STATUS_ENUM.Accepted,
-        label: this.translateService.instant('LEAVES_PAGE.ACCEPTED'),
-      },
-      {
-        id: LEAVE_STATUS_ENUM.Rejected,
-        label: this.translateService.instant('LEAVES_PAGE.REJECTED'),
-      },
-    ];
+  get requestStatuses(): { id: string; label: string }[] {
+    return leaveRequestStatusOptions.map((option) => ({
+      id: option.id,
+      label: this.translateService.instant(`LEAVES_PAGE.${option.id}`),
+    }));
+  }
+
+  get requestStatus(): string | null {
+    return getLeaveRequestStatus(this.filterModel);
+  }
+
+  set requestStatus(id: string | null) {
+    setLeaveRequestStatus(this.filterModel, id);
   }
 
   get filteredEmployees(): UsersWithDepartmentLookup[] {
     return this.filterModel.fkDepartmentId
-      ? this.employees.filter((emp) => emp.departmentId === this.filterModel.fkDepartmentId)
-      : this.employees;
+      ? this.filterEmployees.filter((emp) => emp.departmentId === this.filterModel.fkDepartmentId)
+      : this.filterEmployees;
   }
 
   onDepartmentChange(): void {
@@ -260,42 +326,16 @@ export class OtherLeavesComponent
     );
   }
 
-  getStatusBadgeClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'text-[14px] text-[#1849a9] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#eff8ff] font-medium';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'text-[14px] text-[#085d3a] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#ecfdf3] font-medium';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'text-[14px] text-[#912018] min-h-[24px] inline-flex justify-center items-center gap-2 px-2 rounded-full bg-[#fef3f2] font-medium';
-      default:
-        return 'text-[14px] text-gray-600 px-2 py-1 rounded-full bg-gray-100 font-medium';
-    }
+  getStatusBadgeClass(leave: Leave): string {
+    return leaveStatusBadgeClass(leave);
   }
 
-  getStatusBadgeDotClass(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'w-[10px] h-[10px] bg-[#1849a9] rounded-full';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'w-[10px] h-[10px] bg-[#085d3a] rounded-full';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'w-[10px] h-[10px] bg-[#912018] rounded-full';
-      default:
-        return 'w-[10px] h-[10px] bg-gray-600 rounded-full';
-    }
+  getStatusBadgeDotClass(leave: Leave): string {
+    return leaveStatusDotClass(leave);
   }
 
-  getStatusText(status: number): string {
-    switch (status) {
-      case LEAVE_STATUS_ENUM.New:
-        return this.translateService.instant('LEAVES_PAGE.NEW');
-      case LEAVE_STATUS_ENUM.Accepted:
-        return this.translateService.instant('LEAVES_PAGE.ACCEPTED');
-      case LEAVE_STATUS_ENUM.Rejected:
-        return this.translateService.instant('LEAVES_PAGE.REJECTED');
-      default:
-        return '';
-    }
+  getStatusText(leave: Leave): string {
+    const key = leaveStatusTextKey(leave);
+    return key ? this.translateService.instant(key) : '';
   }
 }

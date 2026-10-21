@@ -5,4 +5,5 @@ export enum NotificationTypeEnum {
   HOLIDAY = 4,
   SHIFT_ASSIGNMENT = 5,
   DEFAULT_SHIFT_CHANGE = 6,
+  LEAVE_PENDING_APPROVAL = 11,
 }

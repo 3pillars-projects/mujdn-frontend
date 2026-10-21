@@ -83,11 +83,14 @@ export abstract class BaseListComponent<
     viewMode: ViewModeEnum,
     lookups?: {
       [key: string]: any[];
-    }
+    },
+    // Popup-specific flags merged into the dialog data next to model/lookups/viewMode.
+    extraData?: Record<string, unknown>
   ) {
     const clonedModel = Object.assign(Object.create(Object.getPrototypeOf(model)), model);
     let dialogConfig: MatDialogConfig = new MatDialogConfig();
     dialogConfig.data = {
+      ...extraData,
       model: clonedModel,
       lookups: lookups,
       viewMode: viewMode,

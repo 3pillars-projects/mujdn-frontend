@@ -9,7 +9,8 @@ import { PaginationParams } from '@/models/shared/pagination-params';
 import { ListResponseData } from '@/models/shared/response/list-response-data';
 import { PaginatedList } from '@/models/shared/response/paginated-list';
 import { PaginatedListResponseData } from '@/models/shared/response/paginated-list-response-data';
-import { toDateOnly } from '@/utils/general-helper';
+import { genericDateOnlyConvertor, toDateOnly } from '@/utils/general-helper';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AttachmentService } from '@/services/shared/attachment.service';
@@ -84,15 +85,38 @@ export class WorkMissionService extends LookupBaseService<WorkMission, number> {
     ) as unknown as Observable<PaginatedListResponseData<UserProfileDataWithNationalId>>;
   }
 
+  /**
+   * Saves the mission's assignees. `status` is the mission's status afterwards: the first
+   * assignment sends it to HR (or approves it outright for an HR creator), and removing every
+   * assignee from a pending mission returns it to draft.
+   */
   addUsersToMission(
     model: MissionEmployeesAssignement
-  ): Observable<{ conflictingUserIds?: number[] }> {
+  ): Observable<{ conflictingUserIds?: number[]; status?: WorkMissionStatusEnum }> {
     return this.http
       .post<{
-        data: { conflictingUserIds?: number[] };
+        data: { conflictingUserIds?: number[]; status?: WorkMissionStatusEnum };
         error: null;
       }>(this.getUrlSegment() + '/' + 'AddUsersToMission', model, { withCredentials: true })
       .pipe(map((res) => res.data ?? {}));
+  }
+
+  /** HR approves a pending mission; it then counts for attendance and its assignees are told. */
+  approveMission(missionId: number): Observable<void> {
+    return this.http
+      .put(`${this.getUrlSegment()}/${missionId}/approve`, null, { withCredentials: true })
+      .pipe(map(() => undefined));
+  }
+
+  /** HR rejects a pending mission; notes (1–500 characters) are required. */
+  rejectMission(missionId: number, rejectionNotes: string): Observable<void> {
+    return this.http
+      .put(
+        `${this.getUrlSegment()}/${missionId}/reject`,
+        { rejectionNotes },
+        { withCredentials: true }
+      )
+      .pipe(map(() => undefined));
   }
 
   /**
@@ -150,10 +174,9 @@ export class WorkMissionService extends LookupBaseService<WorkMission, number> {
 
   getMyMissionCreatorsLookup(): Observable<BaseLookupModel[]> {
     return this.http
-      .get<ListResponseData<BaseLookupModel>>(
-        this.getUrlSegment() + '/my-mission-creators-lookup',
-        { withCredentials: true }
-      )
+      .get<
+        ListResponseData<BaseLookupModel>
+      >(this.getUrlSegment() + '/my-mission-creators-lookup', { withCredentials: true })
       .pipe(map((response) => response.data ?? []));
   }
 

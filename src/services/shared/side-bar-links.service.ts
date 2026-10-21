@@ -107,25 +107,11 @@ export class SideBarLinksService {
       system: SystemTypeEnum.ATTENDANCE,
     },
     {
-      labelKey: 'MENU.LEAVES',
+      labelKey: 'MENU.LEAVES_REQUESTS',
       iconUrl: 'assets/icons/menu-icons/vacations.svg',
+      routerLink: ['/attendance/leaves'],
+      routeId: RouteIdsEnum.LEAVES,
       system: SystemTypeEnum.ATTENDANCE,
-      children: [
-        {
-          labelKey: 'MENU.LEAVES_REQUESTS',
-          iconUrl: 'assets/icons/menu-icons/vacations.svg',
-          routerLink: ['/attendance/leaves'],
-          routeId: RouteIdsEnum.LEAVES,
-          system: SystemTypeEnum.ATTENDANCE,
-        },
-        {
-          labelKey: 'MENU.LEAVES_CONFIRMATIONS',
-          iconUrl: 'assets/icons/menu-icons/vacations.svg',
-          routerLink: ['/attendance/leaves-confirmations'],
-          routeId: RouteIdsEnum.LEAVES_CONFIRMATIONS,
-          system: SystemTypeEnum.ATTENDANCE,
-        },
-      ],
     },
     {
       labelKey: 'MENU.VISITS',
