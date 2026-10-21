@@ -238,6 +238,7 @@
     "NO_DATA_TO_SHOW": "No data to display"
   },
   "LEAVES_PAGE": {
+    "PENDING": "Pending",
     "PENDING_DIRECT_MANAGER": "Pending direct manager",
     "PENDING_SUPERVISOR": "Pending direct supervisor",
     "PENDING_HIGHER_MANAGER": "Pending higher-level manager",

@@ -10,8 +10,7 @@ export interface LeaveStatusSource {
 }
 
 /**
- * Translation key for a leave's status. An in-progress leave names the stage it waits at; for a
- * manager's own leave the first level is his supervisor rather than his "direct manager".
+ * Translation key for a leave's status. An in-progress leave names the stage it waits at.
  */
 export function leaveStatusTextKey(leave: LeaveStatusSource): string {
   switch (leave.status) {
@@ -20,22 +19,17 @@ export function leaveStatusTextKey(leave: LeaveStatusSource): string {
     case LEAVE_STATUS_ENUM.Rejected:
       return 'LEAVES_PAGE.REJECTED';
     case LEAVE_STATUS_ENUM.New:
-      return leaveStageTextKey(leave.approvalStage, leave.submissionType) ?? 'LEAVES_PAGE.NEW';
+      return leaveStageTextKey(leave.approvalStage) ?? 'LEAVES_PAGE.PENDING';
     default:
       return '';
   }
 }
 
 /** Translation key for an approval stage ("Pending direct manager", ...), if any. */
-export function leaveStageTextKey(
-  stage?: LEAVE_APPROVAL_STAGE_ENUM | null,
-  submissionType?: LEAVE_SUBMISSION_TYPE_ENUM | null
-): string | null {
+export function leaveStageTextKey(stage?: LEAVE_APPROVAL_STAGE_ENUM | null): string | null {
   switch (stage) {
     case LEAVE_APPROVAL_STAGE_ENUM.ManagerLevel1:
-      return submissionType === LEAVE_SUBMISSION_TYPE_ENUM.ManagerSelf
-        ? 'LEAVES_PAGE.PENDING_SUPERVISOR'
-        : 'LEAVES_PAGE.PENDING_DIRECT_MANAGER';
+      return 'LEAVES_PAGE.PENDING_DIRECT_MANAGER';
     case LEAVE_APPROVAL_STAGE_ENUM.ManagerLevel2:
       return 'LEAVES_PAGE.PENDING_HIGHER_MANAGER';
     case LEAVE_APPROVAL_STAGE_ENUM.Hr:

@@ -238,6 +238,7 @@
     "NO_DATA_TO_SHOW": "لا توجد بيانات لعرضها"
   },
   "LEAVES_PAGE": {
+    "PENDING": "بانتظار الموافقة",
     "PENDING_DIRECT_MANAGER": "بانتظار موافقة المدير المباشر",
     "PENDING_SUPERVISOR": "بانتظار موافقة المدير المباشر",
     "PENDING_HIGHER_MANAGER": "بانتظار موافقة المدير الأعلى",

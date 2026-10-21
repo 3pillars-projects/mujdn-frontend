@@ -25,6 +25,11 @@ import {
   leaveStatusDotClass,
   leaveStatusTextKey,
 } from '@/utils/leave-status';
+import {
+  getLeaveRequestStatus,
+  leaveRequestStatusOptions,
+  setLeaveRequestStatus,
+} from '@/utils/leave-status-filter';
 import { CustomValidators } from '@/validators/custom-validators';
 
 @Component({
@@ -145,18 +150,19 @@ export class MyLeavesComponent
     return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC ? 'nameAr' : 'nameEn';
   }
 
-  get requestStatuses(): { id: number; label: string }[] {
-    return [
-      { id: LEAVE_STATUS_ENUM.New, label: this.translateService.instant('LEAVES_PAGE.NEW') },
-      {
-        id: LEAVE_STATUS_ENUM.Accepted,
-        label: this.translateService.instant('LEAVES_PAGE.ACCEPTED'),
-      },
-      {
-        id: LEAVE_STATUS_ENUM.Rejected,
-        label: this.translateService.instant('LEAVES_PAGE.REJECTED'),
-      },
-    ];
+  get requestStatuses(): { id: string; label: string }[] {
+    return leaveRequestStatusOptions.map((option) => ({
+      id: option.id,
+      label: this.translateService.instant(`LEAVES_PAGE.${option.id}`),
+    }));
+  }
+
+  get requestStatus(): string | null {
+    return getLeaveRequestStatus(this.filterModel);
+  }
+
+  set requestStatus(id: string | null) {
+    setLeaveRequestStatus(this.filterModel, id);
   }
 
   leaveTypeName(leave: Leave): string {
