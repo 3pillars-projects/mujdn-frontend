@@ -222,7 +222,7 @@
               }
             </td>
             <td>
-              <!-- View, then the ⋮ menu (or its only item, Download), then the stage's main action. -->
+              <!-- View, Download when it is the only other action, the stage's main action, then ⋮ at the end. -->
               <div class="actions flex items-center gap-2">
                 <button
                   (click)="viewMission(mission)"
@@ -232,22 +232,7 @@
                 >
                   <img alt="" src="assets/icons/view-action.svg" />
                 </button>
-                @if (hasRowMenu(mission)) {
-                  <button
-                    (click)="openRowMenu($event, mission)"
-                    class="table-action-gray-btn min-w-[36px]"
-                    aria-haspopup="true"
-                    [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
-                    [title]="'COMMON.MORE_ACTIONS' | translate"
-                    [attr.aria-busy]="downloadingMissionId === mission.id"
-                  >
-                    @if (downloadingMissionId === mission.id) {
-                      <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
-                    } @else {
-                      <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
-                    }
-                  </button>
-                } @else {
+                @if (!hasRowMenu(mission)) {
                   <button
                     (click)="downloadMissionPdf(mission)"
                     class="table-action-green-btn"
@@ -276,7 +261,7 @@
                 @if (canStartAssignment(mission)) {
                   <button
                     (click)="openAssignEmployeesDialog(mission)"
-                    class="black-table-btn-action justify-center whitespace-nowrap"
+                    class="black-table-btn-action justify-center whitespace-nowrap min-w-[140px]"
                   >
                     <img
                       class="invert brightness-0 w-4 h-4"
@@ -288,10 +273,26 @@
                 } @else if (canDecide(mission)) {
                   <button
                     (click)="takeAction(mission)"
-                    class="black-table-btn-action justify-center whitespace-nowrap"
+                    class="black-table-btn-action justify-center whitespace-nowrap min-w-[140px]"
                   >
                     <span>{{ 'WORK_MISSIONS.TAKE_ACTION' | translate }}</span>
                     <i class="pi pi-arrow-right text-xs" aria-hidden="true"></i>
+                  </button>
+                }
+                @if (hasRowMenu(mission)) {
+                  <button
+                    (click)="openRowMenu($event, mission)"
+                    class="table-action-gray-btn min-w-[36px] ms-auto"
+                    aria-haspopup="true"
+                    [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
+                    [title]="'COMMON.MORE_ACTIONS' | translate"
+                    [attr.aria-busy]="downloadingMissionId === mission.id"
+                  >
+                    @if (downloadingMissionId === mission.id) {
+                      <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+                    } @else {
+                      <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
+                    }
                   </button>
                 }
               </div>

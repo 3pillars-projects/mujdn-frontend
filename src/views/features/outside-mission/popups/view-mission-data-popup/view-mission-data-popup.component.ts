@@ -21,7 +21,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize, Observable } from 'rxjs';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
-import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import {
   workMissionStatusBadgeClass,
@@ -54,7 +53,6 @@ export class ViewMissionDataPopupComponent {
   isDownloadingPdf = false;
   isDeciding = false;
 
-  readonly statusEnum = WorkMissionStatusEnum;
   readonly statusTextKey = workMissionStatusTextKey;
   readonly statusBadgeClass = workMissionStatusBadgeClass;
   readonly statusDotClass = workMissionStatusDotClass;
@@ -109,7 +107,7 @@ export class ViewMissionDataPopupComponent {
     return `${missionName ? `${title} - ${missionName}` : title}.pdf`;
   }
 
-  /** Department and decider names in the current language. */
+  /** Department names in the current language. */
   lookupName(item?: { nameAr?: string; nameEn?: string | null } | null): string {
     if (!item) return '';
     return (this.isCurrentLanguageEnglish() ? item.nameEn || item.nameAr : item.nameAr) ?? '';

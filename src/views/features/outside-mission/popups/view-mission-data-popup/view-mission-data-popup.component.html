@@ -69,47 +69,6 @@
         </div>
       </div>
     </div>
-    <!-- HR decision: shown once the mission was approved (by HR or automatically) or rejected. -->
-    @if (model.status === statusEnum.Approved || model.status === statusEnum.Rejected) {
-      <div class="rounded-2xl p-6 mb-6 border border-[#d2d6db]">
-        <h4 class="text-[#1f2a37] font-semibold text-[16px] mb-4">
-          {{ 'WORK_MISSIONS.HR_DECISION' | translate }}
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex flex-col gap-1">
-            <span class="text-[#6c737f] text-[14px]">{{
-              'WORK_MISSIONS.DECIDED_BY' | translate
-            }}</span>
-            <span class="text-[#161616] font-semibold">
-              {{ lookupName(model.hrDecisionBy) || '-' }}
-              @if (model.isAutoApproved) {
-                <span class="text-[#6c737f] font-normal">
-                  ({{ 'WORK_MISSIONS.AUTO_APPROVED' | translate }})
-                </span>
-              }
-            </span>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-[#6c737f] text-[14px]">{{
-              'WORK_MISSIONS.DECISION_DATE' | translate
-            }}</span>
-            <span class="text-[#161616] font-semibold">{{
-              model.hrDecisionDate ? (model.hrDecisionDate | date: 'dd/MM/yyyy') : '-'
-            }}</span>
-          </div>
-          @if (model.status === statusEnum.Rejected && model.rejectionNotes) {
-            <div class="flex flex-col gap-1 md:col-span-2">
-              <span class="text-[#6c737f] text-[14px]">{{
-                'WORK_MISSIONS.REJECTION_NOTES' | translate
-              }}</span>
-              <p class="text-[#161616] font-semibold whitespace-pre-line">
-                {{ model.rejectionNotes }}
-              </p>
-            </div>
-          }
-        </div>
-      </div>
-    }
     <div class="bg-[#f3f4f6] rounded-2xl p-6">
       <h4 class="text-[#6c737f] text-[14px] mb-2">{{ 'WORK_MISSIONS.DESCRIPTION' | translate }}</h4>
       <p class="text-[#161616] text-[16px] font-semibold">
@@ -148,6 +107,30 @@
         </div>
       </div>
     }
+    <!-- Downloading the mission sits in its own card, apart from the decision buttons. -->
+    @if (showDownloadPdf) {
+      <div class="mt-6 rounded-lg border border-[#d2d6db] border-e-4 border-e-[#5b9bf5] p-6">
+        <h4 class="text-[#161616] font-semibold text-[16px] mb-4">
+          {{ 'WORK_MISSIONS.DOWNLOAD_MISSION_DATA' | translate }}
+        </h4>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-md bg-[#f3f4f6] hover:bg-[#e5e7eb] px-3 py-1.5 text-[14px] font-medium text-[#161616] disabled:opacity-60"
+          (click)="downloadAsPDF()"
+          [disabled]="isDownloadingPdf"
+          [attr.aria-busy]="isDownloadingPdf"
+        >
+          @if (isDownloadingPdf) {
+            <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+            {{ 'WORK_MISSIONS.GENERATING_REPORT' | translate }}
+          } @else {
+            <img class="w-4 h-4" src="assets/icons/download.svg" alt="" />
+            {{ 'WORK_MISSIONS.DOWNLOAD_MISSION' | translate }}
+          }
+        </button>
+      </div>
+    }
+    <!-- Cancel at the start; Reject and Approve at the end (bottom left in Arabic). -->
     <div class="actions mt-6 flex flex-wrap items-center justify-between gap-4">
       <button (click)="close()" class="btn gray-btn">{{ 'COMMON.CANCEL' | translate }}</button>
       @if (model.canTakeAction) {
@@ -171,22 +154,6 @@
             {{ 'WORK_MISSIONS.APPROVE' | translate }}
           </button>
         </div>
-      }
-      @if (showDownloadPdf) {
-        <button
-          class="btn green-btn"
-          (click)="downloadAsPDF()"
-          [disabled]="isDownloadingPdf"
-          [attr.aria-busy]="isDownloadingPdf"
-        >
-          @if (isDownloadingPdf) {
-            <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
-            {{ 'WORK_MISSIONS.GENERATING_REPORT' | translate }}
-          } @else {
-            <img src="assets/icons/download-qr.svg" alt="" />
-            {{ 'WORK_MISSIONS.DOWNLOAD_AS_FILE' | translate }}
-          }
-        </button>
       }
     </div>
   </div>
