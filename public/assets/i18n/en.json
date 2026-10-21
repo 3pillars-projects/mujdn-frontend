@@ -492,7 +492,7 @@
     "PERMISSIONS": "Permissions",
     "MY_REQUESTS": "My Requests Log",
     "INCOMING_REQUESTS": "Incoming Requests",
-    "AWAITING_MY_ACTION": "Awaiting my action",
+    "ACTION_REQUIRED_FROM_ME": "Action required from me",
     "PERMISSION_TYPE": "Permission Type",
     "PERMISSION_DATE": "Permission Date",
     "PERMISSION_STATUS": "Request Status",

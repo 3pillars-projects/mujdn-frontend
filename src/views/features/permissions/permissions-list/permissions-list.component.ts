@@ -34,7 +34,8 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { AuthService } from '@/services/auth/auth.service';
 import { finalize, Observable } from 'rxjs';
 import { downloadBlobData } from '@/utils/utils';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { BooleanOptionModel } from '@/models/shared/boolean-option';
+import { CAN_TAKE_ACTION_OPTIONS } from '@/models/shared/can-take-action-option';
 
 @Component({
   selector: 'app-permissions-list',
@@ -50,7 +51,6 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
     PaginatorModule,
     TabsModule,
     InputTextModule,
-    ToggleSwitchModule,
     TranslatePipe,
   ],
 
@@ -85,6 +85,7 @@ export default class PermissionsListComponent
   prmissionStatuses: BaseLookupModel[] = [];
   prmissionReasons: BaseLookupModel[] = [];
   filterModel: PermissionFilter = new PermissionFilter();
+  canTakeActionOptions: BooleanOptionModel[] = CAN_TAKE_ACTION_OPTIONS;
   viewMode = ViewModeEnum;
   isIncomingPermissions: boolean = false;
   authService = inject(AuthService);

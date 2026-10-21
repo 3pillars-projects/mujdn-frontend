@@ -7,6 +7,6 @@ export class PermissionFilter {
   declare fkDepartmentId: number;
   declare fkPermissionTypeId: number;
   declare creationUserId: number;
-  /** Incoming tab only: keep the requests the current user can approve or reject now. */
-  declare onlyActionable?: boolean;
+  /** Incoming tab only: true = requests the current user can act on now, false = the rest. */
+  declare canTakeAction?: boolean;
 }
