@@ -34,6 +34,7 @@ export class WorkMissionInterceptor implements ModelInterceptorContract<WorkMiss
   receive(model: WorkMission): WorkMission {
     model.endDate = toDateTime(model.endDate);
     model.startDate = toDateTime(model.startDate);
+    model.hrDecisionDate = model.hrDecisionDate ? toDateTime(model.hrDecisionDate) : null;
     model.attachments = toAttachments(model.attachments);
     return model;
   }

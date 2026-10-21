@@ -34,6 +34,8 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { AuthService } from '@/services/auth/auth.service';
 import { finalize, Observable } from 'rxjs';
 import { downloadBlobData } from '@/utils/utils';
+import { BooleanOptionModel } from '@/models/shared/boolean-option';
+import { CAN_TAKE_ACTION_OPTIONS } from '@/models/shared/can-take-action-option';
 
 @Component({
   selector: 'app-permissions-list',
@@ -83,6 +85,7 @@ export default class PermissionsListComponent
   prmissionStatuses: BaseLookupModel[] = [];
   prmissionReasons: BaseLookupModel[] = [];
   filterModel: PermissionFilter = new PermissionFilter();
+  canTakeActionOptions: BooleanOptionModel[] = CAN_TAKE_ACTION_OPTIONS;
   viewMode = ViewModeEnum;
   isIncomingPermissions: boolean = false;
   authService = inject(AuthService);
@@ -183,6 +186,8 @@ export default class PermissionsListComponent
   clickIncomingPermissionTab() {
     this.isIncomingPermissions = true;
     this.filterModel = new PermissionFilter();
+    // Don't carry filters applied on "My Requests" into the first incoming load.
+    this.appliedFilterModel = new PermissionFilter();
     this.activeTabIndex == PERMISSION_TABS_ENUM.MY_PERMISSIONS && this.loadIncomingPermissions();
     this.activeTabIndex = PERMISSION_TABS_ENUM.INCOMING_PERMISSIONS;
   }

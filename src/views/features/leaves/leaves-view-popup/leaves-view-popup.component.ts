@@ -14,6 +14,7 @@ import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
+import { leaveStatusTextKey } from '@/utils/leave-status';
 
 @Component({
   selector: 'app-leaves-view-popup',
@@ -38,7 +39,7 @@ export class LeavesViewPopupComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.model = data?.model;
     // Downloading the leave as a file is limited to department managers viewing
-    // accepted subordinate leaves; it is not offered on the HR confirmations view.
+    // accepted subordinate leaves; HR officers are not offered it.
     this.showDownloadPdf =
       !!this.data?.isSubordinateLeave &&
       !!this.authService.isDepartmentManager &&
@@ -99,16 +100,7 @@ export class LeavesViewPopupComponent {
   }
 
   get statusTextKey(): string {
-    switch (this.model?.status) {
-      case LEAVE_STATUS_ENUM.New:
-        return 'LEAVES_PAGE.NEW';
-      case LEAVE_STATUS_ENUM.Accepted:
-        return 'LEAVES_PAGE.ACCEPTED';
-      case LEAVE_STATUS_ENUM.Rejected:
-        return 'LEAVES_PAGE.REJECTED';
-      default:
-        return '';
-    }
+    return this.model ? leaveStatusTextKey(this.model) : '';
   }
 
   employeeName(): string {

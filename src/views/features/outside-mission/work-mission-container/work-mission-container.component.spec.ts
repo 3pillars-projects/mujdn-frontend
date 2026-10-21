@@ -24,22 +24,31 @@ describe('WorkMissionContainerComponent management tab visibility', () => {
     return component;
   };
 
-  it('shows the tab to a manager when the department setting is enabled', () => {
+  it('shows the tab and the add button to a manager when the department setting is enabled', () => {
     const component = create({ manager: true }, { departments: [], isWorkMissionEnabled: true });
-    expect(component.canAssign).toBeTrue();
+    expect(component.canManage).toBeTrue();
+    expect(component.canCreate).toBeTrue();
   });
 
-  it('hides the tab from a manager or HR officer when the setting is disabled', () => {
-    expect(create({ manager: true }, { isWorkMissionEnabled: false }).canAssign).toBeFalse();
-    TestBed.resetTestingModule();
-    expect(create({ hr: true }, { isWorkMissionEnabled: false }).canAssign).toBeFalse();
+  it('hides the tab from a manager when the setting is disabled', () => {
+    const component = create({ manager: true }, { isWorkMissionEnabled: false });
+    expect(component.canManage).toBeFalse();
+    expect(component.canCreate).toBeFalse();
   });
 
-  it('hides the tab when the resolver produced no data', () => {
-    expect(create({ manager: true }, null).canAssign).toBeFalse();
+  it('always shows the tab to an HR officer, who decides missions from their whole scope', () => {
+    const component = create({ hr: true }, { isWorkMissionEnabled: false });
+    expect(component.canManage).toBeTrue();
+    expect(component.canCreate).toBeFalse();
+  });
+
+  it('hides the tab when the resolver produced no data for a manager', () => {
+    expect(create({ manager: true }, null).canManage).toBeFalse();
   });
 
   it('hides the tab from an employee without a management role', () => {
-    expect(create({}, { isWorkMissionEnabled: true }).canAssign).toBeFalse();
+    const component = create({}, { isWorkMissionEnabled: true });
+    expect(component.canManage).toBeFalse();
+    expect(component.canCreate).toBeFalse();
   });
 });

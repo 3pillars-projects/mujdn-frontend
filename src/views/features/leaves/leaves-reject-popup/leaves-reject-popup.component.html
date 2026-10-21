@@ -1,10 +1,15 @@
 <div [dir]="direction">
   <div class="p-6">
-    <button (click)="close()" class="block ms-auto">
+    <button
+      (click)="close()"
+      class="block ms-auto"
+      type="button"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
       <i class="pi pi-times close-popup"></i>
     </button>
     <h3 class="text-[#1f2a37] font-semibold text-lg mb-6">
-      {{ 'LEAVES_PAGE.REJECT_LEAVE' | translate }}
+      {{ titleKey | translate }}
     </h3>
 
     <form [formGroup]="form">
@@ -34,7 +39,7 @@
           {{ 'COMMON.CANCEL' | translate }}
         </button>
         <button (click)="confirm()" class="btn red-btn" type="button">
-          {{ 'LEAVES_PAGE.REJECT' | translate }}
+          {{ confirmKey | translate }}
         </button>
       </div>
     </form>

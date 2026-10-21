@@ -17,19 +17,20 @@
     <p-tabs [(value)]="currentTabIndex" (valueChange)="onTabChange($event)">
       <p-tablist class="my-6">
         <p-tab value="0">{{ 'WORK_MISSIONS.MY_WORK_MISSIONS' | translate }}</p-tab>
-        @if (canAssign) {
-          <p-tab value="1">{{ 'WORK_MISSIONS.ASSIGN_WORK_MISSIONS' | translate }}</p-tab>
+        @if (canManage) {
+          <p-tab value="1">{{ 'WORK_MISSIONS.FOLLOWING_EMPLOYEES_MISSIONS' | translate }}</p-tab>
         }
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0">
           <app-my-work-mission-list></app-my-work-mission-list>
         </p-tabpanel>
-        @if (canAssign) {
+        @if (canManage) {
           <p-tabpanel value="1">
             <app-assign-work-mission-list
               [missionsSignal]="missions"
               [departmentsSignal]="departments"
+              [canCreate]="canCreate"
             >
             </app-assign-work-mission-list>
           </p-tabpanel>

@@ -39,7 +39,8 @@ export class LeaveInterceptor implements ModelInterceptorContract<Leave> {
     // the keep-list is authoritative, so defaulting to `[]` would wipe every file.
     const selection = model.attachmentSelection ?? toAttachmentSelection(model.attachments);
     const payload: LeaveRequestPayload = {
-      fkEmployeeId: model.fkEmployeeId,
+      // Left out when the caller files his own leave: the API then files it for him.
+      fkEmployeeId: model.fkEmployeeId || undefined,
       fkLeaveTypeId: model.fkLeaveTypeId,
       dateFrom: toDateOnly(model.dateFrom),
       dateTo: toDateOnly(model.dateTo),

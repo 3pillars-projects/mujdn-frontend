@@ -47,8 +47,9 @@ export default class LeavesContainerComponent implements OnInit, OnDestroy {
     this.activeTabIndex = Number(index);
   }
 
+  // Managers and HR officers decide their following employees' leaves from this tab.
   showOtherLeavesTab(): boolean {
-    return !!this.authService.isDepartmentManager;
+    return !!this.authService.isDepartmentManager || !!this.authService.isHROfficer;
   }
 
   private setHomeItem(): void {

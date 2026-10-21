@@ -1,15 +1,28 @@
 <div [dir]="direction">
   <div class="p-6">
-    <button class="block ms-auto" (click)="close()">
+    <button
+      class="block ms-auto"
+      type="button"
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
       <i class="pi pi-times close-popup"></i>
     </button>
-    <h3 class="text-[#1f2a37 font-[600] mb-4 text-lg sm:text-xl">
-      @if (model.isMyMission) {
-        {{ 'WORK_MISSIONS.MY_MISSION_DATA' | translate }}
-      } @else {
-        {{ 'WORK_MISSIONS.MISSION_DATA' | translate }}
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+      <h3 class="text-[#1f2a37] font-[600] text-lg sm:text-xl">
+        @if (model.isMyMission) {
+          {{ 'WORK_MISSIONS.MY_MISSION_DATA' | translate }}
+        } @else {
+          {{ 'WORK_MISSIONS.MISSION_DATA' | translate }}
+        }
+      </h3>
+      @if (model.status) {
+        <span [class]="statusBadgeClass(model.status)">
+          <span [class]="statusDotClass(model.status)" aria-hidden="true"></span>
+          {{ statusTextKey(model.status) | translate }}
+        </span>
       }
-    </h3>
+    </div>
     <div class="bg-[#074d31] rounded-2xl p-6 mb-6">
       <div class="bg-[#1B835433] border border-[#1b8354] rounded-2xl px-6 py-3">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -40,6 +53,12 @@
                 ? model.missionCreator?.nameEn
                 : model.missionCreator?.nameAr
             }}
+          </h4>
+        </div>
+        <div class="flex flex-col gap-1 text-white">
+          <span class="text-[14px]">{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</span>
+          <h4 class="font-semibold text-[16px]">
+            {{ lookupName(model.creatorDepartment) || '-' }}
           </h4>
         </div>
         <div class="flex flex-col gap-1 text-white">
@@ -88,11 +107,15 @@
         </div>
       </div>
     }
-    <div class="actions mt-6 flex items-center justify-between gap-4">
-      <button (click)="close()" class="btn gray-btn">{{ 'COMMON.CANCEL' | translate }}</button>
-      @if (showDownloadPdf) {
+    <!-- Downloading the mission sits in its own card, apart from the decision buttons. -->
+    @if (showDownloadPdf) {
+      <div class="mt-6 rounded-lg border border-[#d2d6db] border-e-4 border-e-[#5b9bf5] p-6">
+        <h4 class="text-[#161616] font-semibold text-[16px] mb-4">
+          {{ 'WORK_MISSIONS.DOWNLOAD_MISSION_DATA' | translate }}
+        </h4>
         <button
-          class="btn green-btn"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-md bg-[#f3f4f6] hover:bg-[#e5e7eb] px-3 py-1.5 text-[14px] font-medium text-[#161616] disabled:opacity-60"
           (click)="downloadAsPDF()"
           [disabled]="isDownloadingPdf"
           [attr.aria-busy]="isDownloadingPdf"
@@ -101,10 +124,36 @@
             <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
             {{ 'WORK_MISSIONS.GENERATING_REPORT' | translate }}
           } @else {
-            <img src="assets/icons/download-qr.svg" alt="" />
-            {{ 'WORK_MISSIONS.DOWNLOAD_AS_FILE' | translate }}
+            <img class="w-4 h-4" src="assets/icons/download.svg" alt="" />
+            {{ 'WORK_MISSIONS.DOWNLOAD_MISSION' | translate }}
           }
         </button>
+      </div>
+    }
+    <!-- Cancel at the start; Reject and Approve at the end (bottom left in Arabic). -->
+    <div class="actions mt-6 flex flex-wrap items-center justify-between gap-4">
+      <button (click)="close()" class="btn gray-btn">{{ 'COMMON.CANCEL' | translate }}</button>
+      @if (model.canTakeAction) {
+        <div class="flex flex-wrap items-center gap-4">
+          <button
+            type="button"
+            class="btn red-btn"
+            (click)="reject()"
+            [disabled]="isDeciding"
+            [attr.aria-busy]="isDeciding"
+          >
+            {{ 'WORK_MISSIONS.REJECT' | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn green-btn"
+            (click)="approve()"
+            [disabled]="isDeciding"
+            [attr.aria-busy]="isDeciding"
+          >
+            {{ 'WORK_MISSIONS.APPROVE' | translate }}
+          </button>
+        </div>
       }
     </div>
   </div>
