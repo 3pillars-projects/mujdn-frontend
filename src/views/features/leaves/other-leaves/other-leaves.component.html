@@ -183,10 +183,12 @@
         >
           <img alt="" src="assets/icons/pdf.svg" />
         </button>
-        <button (click)="addOrEditModel()" class="btn green-btn flex items-center">
-          <img alt="" src="assets/icons/plus.svg" />
-          <span>{{ 'LEAVES_PAGE.ADD_NEW_LEAVE' | translate }}</span>
-        </button>
+        @if (canAddLeave) {
+          <button (click)="addOrEditModel()" class="btn green-btn flex items-center">
+            <img alt="" src="assets/icons/plus.svg" />
+            <span>{{ 'LEAVES_PAGE.ADD_NEW_LEAVE' | translate }}</span>
+          </button>
+        }
       </div>
     </div>
 
@@ -222,9 +224,22 @@
             </td>
             <td>
               <div class="actions flex items-center gap-2">
-                <button (click)="openDialog(leave)" class="table-action-gray-btn">
+                <button
+                  (click)="openDialog(leave)"
+                  class="table-action-gray-btn"
+                  [attr.aria-label]="'LEAVES_PAGE.VIEW_LEAVE' | translate"
+                >
                   <img alt="" src="assets/icons/view.svg" />
                 </button>
+                @if (leave.canTakeAction) {
+                  <button
+                    (click)="openTakeActionDialog(leave)"
+                    class="table-action-gray-btn !min-w-[80px]"
+                  >
+                    <img alt="" src="assets/icons/edit-action.svg" />
+                    <span>{{ 'LEAVES_PAGE.TAKE_ACTION' | translate }}</span>
+                  </button>
+                }
                 @if (leave.canEdit) {
                   <button
                     (click)="addOrEditModel(leave)"

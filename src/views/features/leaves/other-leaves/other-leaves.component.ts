@@ -64,7 +64,10 @@ export class OtherLeavesComponent
   downloadingLeaveId?: number;
   filterModel: LeaveFilter = new LeaveFilter();
   leaveTypes: BaseLookupModel[] = [];
+  // Employees a manager may file a leave for (the on-behalf picker); empty for HR-only users.
   employees: UsersWithDepartmentLookup[] = [];
+  // Employees offered by the employee search filter: everyone in the caller's scope.
+  filterEmployees: UsersWithDepartmentLookup[] = [];
   departments: BaseLookupModel[] = [];
   leaveStatusEnum = LEAVE_STATUS_ENUM;
 
@@ -88,12 +91,24 @@ export class OtherLeavesComponent
     this.leaveTypeService.getLookup().subscribe((res) => {
       this.leaveTypes = res;
     });
-    this.leaveService.getEmployeesLookup().subscribe((res) => {
-      this.employees = res;
+    // The on-behalf picker is a department manager endpoint; HR officers do not file leaves
+    // for others from here.
+    if (this.canAddLeave) {
+      this.leaveService.getEmployeesLookup().subscribe((res) => {
+        this.employees = res;
+      });
+    }
+    this.userService.getMyDepartmentUsersLookup().subscribe((res) => {
+      this.filterEmployees = res;
     });
     this.userService.getMyDepartmentsLookup().subscribe((res) => {
       this.departments = res;
     });
+  }
+
+  /** Filing a leave for another employee is a department manager action. */
+  get canAddLeave(): boolean {
+    return !!this.authService.isDepartmentManager;
   }
 
   override loadList() {
@@ -131,6 +146,31 @@ export class OtherLeavesComponent
         leaveTypes: this.leaveTypes,
       },
       { isSelf }
+    );
+  }
+
+  /**
+   * Approve or reject the leave. The server decides who may (`canTakeAction`): the manager of
+   * the level it waits at, or HR in scope once it reaches the HR stage (HR can also reject an
+   * accepted leave).
+   */
+  openTakeActionDialog(model: Leave): void {
+    if (!model.isNew() && !model.isAccepted()) {
+      this.openDialog(model);
+      return;
+    }
+    this.openBaseDialog(
+      LeavesAddEditPopupComponent as any,
+      model,
+      ViewModeEnum.TAKE_ACTION,
+      {
+        employees: this.employees,
+        departments: this.departments,
+        leaveTypes: this.leaveTypes,
+      },
+      // Only an HR decision may amend the dates; the server says which this caller's would be
+      // (a user who is also the stage's manager decides as manager).
+      { canChangeDates: !!model.canAmendDates }
     );
   }
 
@@ -234,8 +274,8 @@ export class OtherLeavesComponent
 
   get filteredEmployees(): UsersWithDepartmentLookup[] {
     return this.filterModel.fkDepartmentId
-      ? this.employees.filter((emp) => emp.departmentId === this.filterModel.fkDepartmentId)
-      : this.employees;
+      ? this.filterEmployees.filter((emp) => emp.departmentId === this.filterModel.fkDepartmentId)
+      : this.filterEmployees;
   }
 
   onDepartmentChange(): void {

@@ -80,6 +80,10 @@ export class LeaveService extends BaseCrudService<Leave, number> {
       );
   }
 
+  /**
+   * DEPARTMENT_MANAGER or HR_OFFICER — the following-employees list, where they also approve
+   * and reject (`canTakeAction`). The route keeps its historical "MyCreated" name.
+   */
   @CastResponse(undefined, { fallback: '$pagination' })
   loadMyCreatedLeavesPaginated(
     paginationParams?: PaginationParams,
@@ -108,36 +112,6 @@ export class LeaveService extends BaseCrudService<Leave, number> {
         catchError((err) => {
           throw err;
         })
-      );
-  }
-
-  /**
-   * DEPARTMENT_MANAGER only — leaves waiting at a manager level the caller decides, plus the
-   * ones he already decided. HR confirmations use the inherited `loadPaginated` instead.
-   */
-  @CastResponse(undefined, { fallback: '$pagination' })
-  loadApprovalsPaginated(
-    paginationParams?: PaginationParams,
-    filterOptions?: OptionsContract | undefined
-  ): Observable<PaginatedList<Leave>> {
-    const httpParams = new HttpParams({
-      fromObject: paginationParams as unknown as never,
-    });
-    filterOptions = genericDateOnlyConvertor(filterOptions);
-    return this.http
-      .post<PaginatedListResponseData<Leave>>(
-        this.getUrlSegment() + '/GetApprovalsWithPaging',
-        filterOptions || {},
-        {
-          params: httpParams,
-          withCredentials: true,
-        }
-      )
-      .pipe(
-        map((response) => ({
-          list: response.data.list as Leave[],
-          paginationInfo: response.data.paginationInfo,
-        }))
       );
   }
 
@@ -188,13 +162,6 @@ export class LeaveService extends BaseCrudService<Leave, number> {
     filterOptions?: OptionsContract
   ): Observable<Blob> {
     return this.exportPdfByEndpoint('ExportMyCreatedLeavesPdf', language, filterOptions);
-  }
-
-  exportDepartmentLeavesPdf(
-    language: LANGUAGE_ENUM | string,
-    filterOptions?: OptionsContract
-  ): Observable<Blob> {
-    return this.exportPdfByEndpoint('ExportDepartmentLeavesPdf', language, filterOptions);
   }
 
   exportLeavePdf(

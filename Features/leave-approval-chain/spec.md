@@ -43,7 +43,7 @@ Each approver sees the requests waiting at their level, approves or rejects them
 | Manager on behalf of another employee | — | — | HR |
 
 - **Structural gap → skip.** If a level's department does not exist (no parent, or no grandparent), that level is dropped. The remaining levels move up in order; the chain always ends at HR. Example: the root department's manager filing for themselves goes straight to HR.
-- **Vacant seat → wait (Permission behaviour).** If the level's department exists but currently has no eligible manager, the request waits at that level. A newly assigned or acting manager can approve it, and HR can act on it at any time (see the HR fallback).
+- **Vacant seat → wait (Permission behaviour).** If the level's department exists but currently has no eligible manager, the request waits at that level. A newly assigned or acting manager can approve it, and HR can act on it at any time (see the HR fallback). **Superseded 2026-10-21 (`leave-unified-list`): the chain is sequential; HR acts only once the leave reaches the HR stage.**
 - The level departments are stored on the leave, so later department re-parenting (the `department-parent-editing` feature) or setting changes do not reroute requests already in progress. The eligible people are resolved when the decision is made, so manager changes and delegations take effect immediately.
 
 ## Acceptance criteria
@@ -144,7 +144,7 @@ Each approver sees the requests waiting at their level, approves or rejects them
 | Question | Evidence/options and impact | Resolution |
 |---|---|---|
 | Decision number for self-submitted requests | Today it is required at creation (`leave-decision-number` spec). | **Accepted 2026-10-20:** always required at submission, including employee self-requests. |
-| Missing approver at a level | Permission flow never skips: the request waits, and HR can act at any stage (`PermissionHelper.CanUserTakeAction`). | **Accepted 2026-10-20:** follow the Permission behaviour, but skip structurally missing levels (no parent/grandparent). Vacant seats wait. HR can act at any stage, and HR approval is final. |
+| Missing approver at a level | Permission flow never skips: the request waits, and HR can act at any stage (`PermissionHelper.CanUserTakeAction`). | **Accepted 2026-10-20:** follow the Permission behaviour, but skip structurally missing levels (no parent/grandparent). Vacant seats wait. HR can act at any stage, and HR approval is final. **Superseded 2026-10-21 (`leave-unified-list`): the chain is sequential; HR acts only once the leave reaches the HR stage.** |
 | Requester edit/withdraw window | — | **Accepted 2026-10-20:** until the first approval. On-behalf requests stay editable by managers until HR decides. |
 | Notifications | Only `LEAVE_RESULT` exists today. | **Accepted 2026-10-20:** notify the next level's approvers, and notify the employee on final approval or any rejection. Needs a new `LEAVE_PENDING_APPROVAL` notification type with EN/AR templates. |
 | Which department's setting applies? | Permission uses the requester's department. | **Accepted 2026-10-20:** the requester's department D, for both self routes. |

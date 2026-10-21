@@ -40,7 +40,7 @@ export class LeavesViewPopupComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     this.model = data?.model;
     // Downloading the leave as a file is limited to department managers viewing
-    // accepted subordinate leaves; it is not offered on the HR confirmations view.
+    // accepted subordinate leaves; HR officers are not offered it.
     this.showDownloadPdf =
       !!this.data?.isSubordinateLeave &&
       !!this.authService.isDepartmentManager &&
