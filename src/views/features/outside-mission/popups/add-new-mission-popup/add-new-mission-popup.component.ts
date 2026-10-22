@@ -25,6 +25,7 @@ import { RequiredMarkerDirective } from '../../../../../directives/required-mark
 import { CustomValidators } from '@/validators/custom-validators';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { WorkMissionTypesEnum } from '@/enums/work-mission-type-enum';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AlertService } from '@/services/shared/alert.service';
 import { WorkMissionService } from '@/services/features/business/work-mission.service';
@@ -66,6 +67,12 @@ export class AddNewMissionPopupComponent extends BasePopupComponent<WorkMission>
   alertService = inject(AlertService);
   service = inject(WorkMissionService);
   WorkMissionTypesEnum = WorkMissionTypesEnum;
+
+  /** Only Super HR can open the editor on an approved mission; their save applies at once. */
+  get isApprovedMission(): boolean {
+    return this.model?.status === WorkMissionStatusEnum.Approved;
+  }
+
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: { model: WorkMission; viewMode: ViewModeEnum }

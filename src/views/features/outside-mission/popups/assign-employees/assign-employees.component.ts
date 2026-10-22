@@ -47,6 +47,11 @@ import { getWorkMissionTypeName } from '@/models/features/business/work-mission-
 })
 export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
   override model: WorkMission = new WorkMission();
+
+  /** Only Super HR can reassign an approved mission; the change applies at once. */
+  get isApprovedMission(): boolean {
+    return this.model?.status === WorkMissionStatusEnum.Approved;
+  }
   override form: FormGroup<any> = new FormGroup({});
   declare viewMode: ViewModeEnum;
   isCreateMode = false;
