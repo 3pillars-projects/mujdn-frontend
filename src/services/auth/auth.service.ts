@@ -58,6 +58,12 @@ export class AuthService extends BaseCrudService<LoggedInUser, string> {
     return this.isActualDepartmentManager();
   }
 
+  /** The actual manager of the general (root) department. He cannot file his own
+   * permission or leave requests. */
+  get isRootDepartmentActualManager() {
+    return !!this.isdepartmentActualManager && !!this.isRootdepartment;
+  }
+
   get isFollowUpOfficer() {
     return this.loggedInUser.value?.roles.includes(ROLES_ENUM.FOLLOW_UP_OFFICER);
   }

@@ -13,6 +13,7 @@ import { Leave } from '@/models/features/lookups/leave/leave';
 import { LeaveFilter } from '@/models/features/lookups/leave/leave-filter';
 import { LeaveService } from '@/services/features/lookups/leave.service';
 import { LeaveTypeService } from '@/services/features/lookups/leave-type.service';
+import { AuthService } from '@/services/auth/auth.service';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
@@ -56,6 +57,7 @@ export class MyLeavesComponent
   };
   leaveService = inject(LeaveService);
   leaveTypeService = inject(LeaveTypeService);
+  private readonly authService = inject(AuthService);
   filterModel: LeaveFilter = new LeaveFilter();
   // Active types only: what a new leave may be filed under.
   leaveTypes: BaseLookupModel[] = [];
@@ -65,6 +67,11 @@ export class MyLeavesComponent
 
   override get service() {
     return this.leaveService;
+  }
+
+  /** Same rule as permissions: the root department's actual manager cannot file his own leave. */
+  get canAddOwnLeave(): boolean {
+    return !this.authService.isRootDepartmentActualManager;
   }
 
   override initListComponent(): void {
