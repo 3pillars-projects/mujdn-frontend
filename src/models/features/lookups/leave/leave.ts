@@ -11,7 +11,6 @@ import { LEAVE_SUBMISSION_TYPE_ENUM } from '@/enums/leave-submission-type-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import {
   AttachmentSelection,
-  attachmentsRequired,
   toAttachmentSelection,
 } from '@/models/shared/attachment/attachment-selection';
 
@@ -76,9 +75,10 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
         decisionNumber,
         [Validators.required, nonWhitespaceRequired, Validators.maxLength(100)],
       ],
-      // A leave must always carry at least one file — counting the ones it already has, so
-      // an edit that keeps the existing attachment does not demand a pointless re-upload.
-      attachmentSelection: [toAttachmentSelection(attachments), [attachmentsRequired]],
+      // TEMPORARY QC: attachments are optional for leave creation and editing.
+      // To undo, re-import attachmentsRequired and restore the original control below:
+      // attachmentSelection: [toAttachmentSelection(attachments), [attachmentsRequired]],
+      attachmentSelection: [toAttachmentSelection(attachments)],
     };
   }
 

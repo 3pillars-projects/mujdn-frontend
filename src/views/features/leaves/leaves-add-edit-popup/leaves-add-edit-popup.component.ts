@@ -117,7 +117,7 @@ export class LeavesAddEditPopupComponent extends BasePopupComponent<Leave> imple
       });
     } else {
       // The control is seeded from the leave's stored attachments, so editing starts from
-      // what the leave already has and stays valid while the user keeps at least one file.
+      // what the leave already has.
       this.form = this.fb.group(this.model.buildForm(this.isSelfMode));
     }
   }
