@@ -285,9 +285,7 @@ export default class PermissionsListComponent
   }
 
   showAddingPermissionButton(): boolean {
-    const isManagerOfRoot =
-      this.authService.isdepartmentActualManager && this.authService.isRootdepartment;
-    return !isManagerOfRoot;
+    return !this.authService.isRootDepartmentActualManager;
   }
 
   onIncomingPermissionPageChange(event: PaginatorState) {

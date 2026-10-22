@@ -228,9 +228,16 @@ export class AssignWorkMissionListComponent
     return mission.status === WorkMissionStatusEnum.PendingHrApproval && !!mission.canTakeAction;
   }
 
-  /** Pending missions move their assignment into the ⋮ menu. */
+  /**
+   * Once a mission leaves draft its assignment moves into the ⋮ menu: pending missions for their
+   * creator and covering HR, approved ones for Super HR only (the server sets `canAssign`).
+   */
   canEditAssignment(mission: WorkMission): boolean {
-    return !!mission.canAssign && mission.status === WorkMissionStatusEnum.PendingHrApproval;
+    return (
+      !!mission.canAssign &&
+      (mission.status === WorkMissionStatusEnum.PendingHrApproval ||
+        mission.status === WorkMissionStatusEnum.Approved)
+    );
   }
 
   /**
@@ -277,8 +284,8 @@ export class AssignWorkMissionListComponent
 
   /**
    * The ⋮ menu follows the server's per-row flags: the creator and HR covering the creator's
-   * department may edit, reassign or delete until HR decides; anyone who sees the row may
-   * download it.
+   * department may edit, reassign or delete until HR decides; after approval only Super HR may
+   * still edit or reassign (never delete); anyone who sees the row may download it.
    */
   private buildRowActions(mission: WorkMission): MenuItem[] {
     const label = (key: string) => this.translateService.instant(key);

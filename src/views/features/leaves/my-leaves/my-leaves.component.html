@@ -123,10 +123,12 @@
         >
           <img alt="" src="assets/icons/pdf.svg" />
         </button>
-        <button (click)="addOrEditOwnLeave()" class="btn green-btn flex items-center">
-          <img alt="" src="assets/icons/plus.svg" />
-          <span>{{ 'LEAVES_PAGE.NEW_LEAVE_REQUEST' | translate }}</span>
-        </button>
+        @if (canAddOwnLeave) {
+          <button (click)="addOrEditOwnLeave()" class="btn green-btn flex items-center">
+            <img alt="" src="assets/icons/plus.svg" />
+            <span>{{ 'LEAVES_PAGE.NEW_LEAVE_REQUEST' | translate }}</span>
+          </button>
+        }
       </div>
     </div>
 

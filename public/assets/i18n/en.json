@@ -902,6 +902,7 @@
     "MISSION_REJECTED": "The mission has been rejected.",
     "SENT_TO_HR": "The mission has been sent for approval.",
     "BACK_TO_DRAFT": "The mission has no assigned employees and has returned to draft.",
+    "APPROVED_MISSION_CHANGE_NOTICE": "This mission is already approved. Your changes apply immediately without a new approval, and attendance for the affected days will be recalculated.",
     "ASSIGNED_EMPLOYEES_COUNT": "Assigned employees",
     "EXPORT_EXCEL": "Export to Excel",
     "MISSION_NAME_AR": "Mission name in Arabic",
