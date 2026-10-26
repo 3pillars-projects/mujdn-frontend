@@ -279,6 +279,7 @@
     "NO_NOTES": "لا يوجد ملاحظات",
     "REJECTION_NOTES": "ملاحظات الرفض",
     "ACTION_DATE": "تاريخ الإجراء",
+    "REJECTED_BY": "تم الرفض بواسطة",
     "NO_DATA_TO_SHOW": "لا توجد بيانات لعرضها",
     "DOWNLOAD_AS_FILE": "تحميل كملف",
     "GENERATING_REPORT": "جارٍ إنشاء التقرير...",
