@@ -72,6 +72,12 @@
             model.dateTo | date: 'dd/MM/yyyy'
           }}</span>
         </div>
+        @if (model.status === leaveStatusEnum.Rejected) {
+          <div class="flex flex-col gap-2">
+            <span class="text-sm text-[#6c737f]">{{ 'LEAVES_PAGE.REJECTED_BY' | translate }}</span>
+            <span class="text-base font-semibold text-[#161616]">{{ rejectedByName() }}</span>
+          </div>
+        }
         @if (model.actionDate) {
           <!-- Action Date -->
           <div class="flex flex-col gap-2">

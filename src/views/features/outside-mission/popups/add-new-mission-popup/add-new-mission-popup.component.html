@@ -11,6 +11,14 @@
       <h3 class="text-[#1f2a37 font-[600] mb-4 text-lg sm:text-xl">
         {{ 'WORK_MISSIONS.EDIT_MISSION' | translate }}
       </h3>
+      @if (isApprovedMission) {
+        <p
+          role="note"
+          class="mb-6 px-4 py-3 rounded-lg border border-[#fedf89] border-s-[6px] border-s-[#dc6803] bg-[#fffaeb] text-sm text-[#384250]"
+        >
+          {{ 'WORK_MISSIONS.APPROVED_MISSION_CHANGE_NOTICE' | translate }}
+        </p>
+      }
     }
     <!-- MUJ-554 : the following section is hidden as per this card till we implement processing -->
     <!-- <div
