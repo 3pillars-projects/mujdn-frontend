@@ -893,6 +893,7 @@
     "APPROVE": "Approve",
     "REJECT": "Reject",
     "REJECT_MISSION": "Reject work mission",
+    "REJECTION_NOTES": "Rejection reason",
     "TAKE_ACTION": "Take action",
     "MORE_ACTIONS_PENDING": "More actions (action required)",
     "FOLLOWING_EMPLOYEES_MISSIONS": "My following employees' missions",

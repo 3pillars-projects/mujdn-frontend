@@ -22,6 +22,7 @@ import { finalize, Observable } from 'rxjs';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
+import { WorkMissionStatusEnum } from '@/enums/work-mission-status-enum';
 import {
   workMissionStatusBadgeClass,
   workMissionStatusDotClass,
@@ -53,6 +54,7 @@ export class ViewMissionDataPopupComponent {
   isDownloadingPdf = false;
   isDeciding = false;
 
+  readonly workMissionStatus = WorkMissionStatusEnum;
   readonly statusTextKey = workMissionStatusTextKey;
   readonly statusBadgeClass = workMissionStatusBadgeClass;
   readonly statusDotClass = workMissionStatusDotClass;
