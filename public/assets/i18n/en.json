@@ -894,6 +894,7 @@
     "REJECT": "Reject",
     "REJECT_MISSION": "Reject work mission",
     "TAKE_ACTION": "Take action",
+    "MORE_ACTIONS_PENDING": "More actions (action required)",
     "FOLLOWING_EMPLOYEES_MISSIONS": "My following employees' missions",
     "EDIT_ASSIGNMENT": "Edit assignment",
     "DELETE_MISSION": "Delete mission",
