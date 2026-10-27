@@ -6,6 +6,14 @@
     <h3 class="text-[#1f2a37 font-[600] mb-4 text-lg sm:text-xl">
       {{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}
     </h3>
+    @if (isApprovedMission) {
+      <p
+        role="note"
+        class="mb-6 px-4 py-3 rounded-lg border border-[#fedf89] border-s-[6px] border-s-[#dc6803] bg-[#fffaeb] text-sm text-[#384250]"
+      >
+        {{ 'WORK_MISSIONS.APPROVED_MISSION_CHANGE_NOTICE' | translate }}
+      </p>
+    }
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#074d31] rounded-2xl p-6 mb-6">
       <div class="flex flex-col gap-1 text-white">

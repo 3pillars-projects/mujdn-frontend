@@ -112,6 +112,16 @@ export class LeavesViewPopupComponent {
     );
   }
 
+  rejectedByName(): string {
+    const user = this.model?.rejectedBy;
+    const lang = this.languageService.getCurrentLanguage();
+    return (
+      (lang === LANGUAGE_ENUM.ARABIC
+        ? user?.nameAr || user?.nameEn
+        : user?.nameEn || user?.nameAr) || '-'
+    );
+  }
+
   departmentName(): string {
     const lang = this.languageService.getCurrentLanguage();
     return (

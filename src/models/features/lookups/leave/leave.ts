@@ -39,6 +39,7 @@ export class Leave extends BaseCrudModel<Leave, LeaveService> {
   declare leaveType?: BaseLookupModel | null;
   declare status: LEAVE_STATUS_ENUM;
   declare rejectionNotes?: string | null;
+  declare rejectedBy?: BaseLookupModel | null;
   declare creationUserId?: number | null;
   declare creationUser?: UsersWithDepartmentLookup | null;
   declare actionDate?: Date | string | null;
