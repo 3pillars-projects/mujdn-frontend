@@ -83,6 +83,8 @@ export class AssignWorkMissionListComponent
   /** Items of the row ⋮ menu, rebuilt for the row that opens it. */
   actionList: MenuItem[] = [];
   readonly dangerItemClass = 'mission-menu-danger';
+  /** Marks the Take action item, shown with the same red dot as the ⋮ button. */
+  readonly pendingItemClass = 'mission-menu-pending';
   @ViewChild('missionContainer', { static: true }) missionContainer!: ElementRef;
   @ViewChild('rowMenu') rowMenu?: Menu;
 
@@ -223,7 +225,7 @@ export class AssignWorkMissionListComponent
     return mission.status === WorkMissionStatusEnum.Draft && !!mission.canAssign;
   }
 
-  /** A pending mission's main action, for HR covering the creator's department. */
+  /** A pending mission HR covering the creator's department can decide; offered from the ⋮ menu. */
   canDecide(mission: WorkMission): boolean {
     return mission.status === WorkMissionStatusEnum.PendingHrApproval && !!mission.canTakeAction;
   }
@@ -241,11 +243,17 @@ export class AssignWorkMissionListComponent
   }
 
   /**
-   * Download is always available; the ⋮ menu shows only when there is something besides it.
-   * Otherwise the row shows the download button directly.
+   * Download sits in the row except on a new mission, where Assign employees takes its place and
+   * Download moves into the ⋮ menu. The menu shows only when it has something to offer.
    */
   hasRowMenu(mission: WorkMission): boolean {
-    return !!mission.canEdit || !!mission.canDelete || this.canEditAssignment(mission);
+    return (
+      this.canStartAssignment(mission) ||
+      this.canDecide(mission) ||
+      !!mission.canEdit ||
+      !!mission.canDelete ||
+      this.canEditAssignment(mission)
+    );
   }
 
   openRowMenu(event: Event, mission: WorkMission): void {
@@ -290,17 +298,27 @@ export class AssignWorkMissionListComponent
   private buildRowActions(mission: WorkMission): MenuItem[] {
     const label = (key: string) => this.translateService.instant(key);
     const items: MenuItem[] = [];
+    if (this.canDecide(mission)) {
+      items.push({
+        label: label('WORK_MISSIONS.TAKE_ACTION'),
+        styleClass: this.pendingItemClass,
+        command: () => this.takeAction(mission),
+      });
+    }
     if (mission.canEdit) {
       items.push({
         label: label('WORK_MISSIONS.EDIT_MISSION'),
         command: () => this.addOrEditModel(mission),
       });
     }
-    items.push({
-      label: label('WORK_MISSIONS.DOWNLOAD_FILE'),
-      disabled: this.downloadingMissionId !== undefined,
-      command: () => this.downloadMissionPdf(mission),
-    });
+    // Download is a row button unless Assign employees has taken its place.
+    if (this.canStartAssignment(mission)) {
+      items.push({
+        label: label('WORK_MISSIONS.DOWNLOAD_FILE'),
+        disabled: this.downloadingMissionId !== undefined,
+        command: () => this.downloadMissionPdf(mission),
+      });
+    }
     // A new mission's assignment is the main row action; once pending, it moves here.
     if (this.canEditAssignment(mission)) {
       items.push({

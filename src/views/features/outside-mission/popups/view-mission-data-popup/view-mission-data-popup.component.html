@@ -84,6 +84,18 @@
         />
       </div>
     </div>
+    <!-- HR's reason, shown once the mission is rejected. -->
+    @if (model.status === workMissionStatus.Rejected && model.rejectionNotes) {
+      <div class="mt-6 bg-[#fef3f2] border border-[#fecdca] rounded-2xl p-6">
+        <h4 class="flex items-center gap-2 text-[#b42318] text-[14px] font-semibold mb-2">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          {{ 'WORK_MISSIONS.REJECTION_NOTES' | translate }}
+        </h4>
+        <p class="text-[#161616] text-[16px] font-semibold whitespace-pre-line break-words">
+          {{ model.rejectionNotes }}
+        </p>
+      </div>
+    }
     @if (model.assignedEmployees && model.assignedEmployees.length > 0) {
       <div class="mt-6 pt-6 border-t border-[#d2d6db]">
         <h4 class="text-[#6c737f] text-[14px]">

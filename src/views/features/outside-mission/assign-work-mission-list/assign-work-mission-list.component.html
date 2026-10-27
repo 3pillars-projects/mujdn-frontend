@@ -222,7 +222,7 @@
               }
             </td>
             <td>
-              <!-- View, Download when it is the only other action, the stage's main action, then ⋮ at the end. -->
+              <!-- View, then Assign employees for a new mission or Download otherwise, then ⋮. -->
               <div class="actions flex items-center gap-2">
                 <button
                   (click)="viewMission(mission)"
@@ -232,7 +232,7 @@
                 >
                   <img alt="" src="assets/icons/view-action.svg" />
                 </button>
-                @if (!hasRowMenu(mission)) {
+                @if (!canStartAssignment(mission)) {
                   <button
                     (click)="downloadMissionPdf(mission)"
                     class="table-action-green-btn"
@@ -270,28 +270,39 @@
                     />
                     <span>{{ 'WORK_MISSIONS.ASSIGN_EMPLOYEES' | translate }}</span>
                   </button>
-                } @else if (canDecide(mission)) {
-                  <button
-                    (click)="takeAction(mission)"
-                    class="black-table-btn-action justify-center whitespace-nowrap min-w-[140px]"
-                  >
-                    <i class="pi pi-arrow-right !text-[10px]" aria-hidden="true"></i>
-                    <span>{{ 'WORK_MISSIONS.TAKE_ACTION' | translate }}</span>
-                  </button>
                 }
                 @if (hasRowMenu(mission)) {
+                  <!-- Take action lives in this menu; the red dot flags a mission waiting on the user. -->
                   <button
                     (click)="openRowMenu($event, mission)"
-                    class="table-action-gray-btn min-w-[36px] ms-auto"
+                    class="table-action-gray-btn relative min-w-[36px]"
                     aria-haspopup="true"
-                    [attr.aria-label]="'COMMON.MORE_ACTIONS' | translate"
-                    [title]="'COMMON.MORE_ACTIONS' | translate"
-                    [attr.aria-busy]="downloadingMissionId === mission.id"
+                    [attr.aria-label]="
+                      (canDecide(mission)
+                        ? 'WORK_MISSIONS.MORE_ACTIONS_PENDING'
+                        : 'COMMON.MORE_ACTIONS'
+                      ) | translate
+                    "
+                    [title]="
+                      (canDecide(mission)
+                        ? 'WORK_MISSIONS.MORE_ACTIONS_PENDING'
+                        : 'COMMON.MORE_ACTIONS'
+                      ) | translate
+                    "
+                    [attr.aria-busy]="
+                      downloadingMissionId === mission.id && canStartAssignment(mission)
+                    "
                   >
-                    @if (downloadingMissionId === mission.id) {
+                    @if (downloadingMissionId === mission.id && canStartAssignment(mission)) {
                       <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
                     } @else {
                       <i class="pi pi-ellipsis-v text-[#161616]" aria-hidden="true"></i>
+                    }
+                    @if (canDecide(mission)) {
+                      <span
+                        class="absolute -top-1 -end-1 w-2.5 h-2.5 rounded-full bg-[#d92d20]"
+                        aria-hidden="true"
+                      ></span>
                     }
                   </button>
                 }
@@ -308,6 +319,9 @@
             [ngClass]="item.styleClass === dangerItemClass ? 'text-[#b42318]' : 'text-[#161616]'"
           >
             <span>{{ item.label }}</span>
+            @if (item.styleClass === pendingItemClass) {
+              <span class="w-2 h-2 rounded-full bg-[#d92d20]" aria-hidden="true"></span>
+            }
           </a>
         </ng-template>
       </p-menu>
