@@ -74,7 +74,6 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
       phoneNumber: [
         phoneNumber,
         [
-          Validators.required,
           Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX),
           CustomValidators.pattern('PHONE_NUMBER'),
         ],
