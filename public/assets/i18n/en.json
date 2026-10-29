@@ -405,7 +405,8 @@
     "CANCEL": "Cancel"
   },
   "DEPARTMENT_TREE": {
-    "DEPARTMENTS_LIST": "Departments List"
+    "DEPARTMENTS_LIST": "Departments List",
+    "SUB_DEPARTMENTS_COUNT": "Sub-departments: {{count}}"
   },
   "REGIONS_PAGE": {
     "REGIONS_LIST": "Regions List",

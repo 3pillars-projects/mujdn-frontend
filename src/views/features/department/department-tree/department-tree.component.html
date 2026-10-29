@@ -1,4 +1,6 @@
-<aside class="w-full xl:w-[250px] border border-[#d2d6db] bg-white p-4 rounded-2xl">
+<aside
+  class="w-full xl:absolute xl:inset-0 flex flex-col border border-[#d2d6db] bg-white p-4 rounded-2xl"
+>
   <div class="flex items-center justify-between border-b border-[#d2d6db] pb-2 mb-2">
     <h4 class="text-[18px] font-bold text-[#1b8354] inline-flex items-center gap-3">
       {{ 'DEPARTMENT_TREE.DEPARTMENTS_LIST' | translate }}
@@ -20,25 +22,43 @@
       </svg>
     </button>
   </div>
-  <p-tree
-    [value]="departments"
-    selectionMode="single"
-    [(selection)]="selectedNode"
-    (onNodeSelect)="onNodeSelect($event)"
-    (onNodeExpand)="onNodeExpand($event)"
-    (onNodeUnselect)="unselectNode($event)"
+  <div
+    class="department-tree-scroll max-h-[70vh] xl:max-h-none flex-1 min-h-0 overflow-y-auto overflow-x-hidden"
   >
-    <ng-template pTemplate="default" let-node>
-      <span
-        #label
-        class="block truncate"
-        [pTooltip]="node.label"
-        tooltipPosition="top"
-        [showDelay]="300"
-        [tooltipDisabled]="!truncatedNodes.has(node)"
-        (mouseenter)="checkLabelTruncated(label, node)"
-        >{{ node.label }}</span
-      >
-    </ng-template>
-  </p-tree>
+    <p-tree
+      [value]="departments"
+      selectionMode="single"
+      [(selection)]="selectedNode"
+      (onNodeSelect)="onNodeSelect($event)"
+      (onNodeExpand)="onNodeExpand($event)"
+      (onNodeUnselect)="unselectNode($event)"
+    >
+      <ng-template pTemplate="default" let-node>
+        <div class="flex items-center gap-2 min-w-0">
+          <span
+            #label
+            class="block truncate min-w-0 flex-1"
+            [pTooltip]="node.label"
+            tooltipPosition="top"
+            [showDelay]="300"
+            [tooltipDisabled]="!truncatedNodes.has(node)"
+            (mouseenter)="checkLabelTruncated(label, node)"
+            >{{ node.label }}</span
+          >
+          @if (node.children?.length) {
+            <span
+              class="department-tree-count shrink-0 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-xs font-semibold"
+              aria-hidden="true"
+              [pTooltip]="
+                'DEPARTMENT_TREE.SUB_DEPARTMENTS_COUNT' | translate: { count: node.children.length }
+              "
+              tooltipPosition="top"
+              [showDelay]="300"
+              >{{ node.children.length }}</span
+            >
+          }
+        </div>
+      </ng-template>
+    </p-tree>
+  </div>
 </aside>

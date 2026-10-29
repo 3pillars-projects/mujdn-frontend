@@ -403,7 +403,8 @@
     "CANCEL": "إلغاء"
   },
   "DEPARTMENT_TREE": {
-    "DEPARTMENTS_LIST": "قائمة الإدارات"
+    "DEPARTMENTS_LIST": "قائمة الإدارات",
+    "SUB_DEPARTMENTS_COUNT": "عدد الإدارات الفرعية: {{count}}"
   },
   "REGIONS_PAGE": {
     "REGIONS_LIST": "قائمة المناطق",
