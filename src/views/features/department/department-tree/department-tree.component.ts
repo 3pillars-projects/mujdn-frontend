@@ -15,12 +15,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TreeNode } from 'primeng/api';
+import { PrimeTemplate, TreeNode } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 import { Tree } from 'primeng/tree';
 
 @Component({
   selector: 'app-department-tree',
-  imports: [Tree, TranslatePipe, CommonModule],
+  imports: [Tree, PrimeTemplate, TooltipModule, TranslatePipe, CommonModule],
   standalone: true,
   templateUrl: './department-tree.component.html',
   styleUrl: './department-tree.component.scss',
@@ -32,6 +33,9 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
   @Input() selectedDepartmentSignal!: Signal<Department | null>;
   @Output() departmentSelected = new EventEmitter<Department>();
   @Output() closed = new EventEmitter<void>();
+
+  // Nodes whose label is cut off by the ellipsis; only these show the full-name tooltip.
+  readonly truncatedNodes = new WeakSet<TreeNode>();
 
   languageService = inject(LanguageService);
   ngOnInit() {
@@ -221,6 +225,14 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
       }
     });
   }
+  checkLabelTruncated(label: HTMLElement, node: TreeNode) {
+    if (label.scrollWidth > label.clientWidth) {
+      this.truncatedNodes.add(node);
+    } else {
+      this.truncatedNodes.delete(node);
+    }
+  }
+
   toggleTree() {
     this.closed.emit(); // بلغ الأب بس
   }

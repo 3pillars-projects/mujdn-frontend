@@ -27,5 +27,18 @@
     (onNodeSelect)="onNodeSelect($event)"
     (onNodeExpand)="onNodeExpand($event)"
     (onNodeUnselect)="unselectNode($event)"
-  ></p-tree>
+  >
+    <ng-template pTemplate="default" let-node>
+      <span
+        #label
+        class="block truncate"
+        [pTooltip]="node.label"
+        tooltipPosition="top"
+        [showDelay]="300"
+        [tooltipDisabled]="!truncatedNodes.has(node)"
+        (mouseenter)="checkLabelTruncated(label, node)"
+        >{{ node.label }}</span
+      >
+    </ng-template>
+  </p-tree>
 </aside>
