@@ -12,6 +12,56 @@
         {{ 'DEPARTMENT_POPUP.EDIT_DEPARTMENT' | translate }}
       </h3>
     }
+    @if (showDepartmentCode) {
+      <div
+        class="flex items-center gap-3 mb-6 px-4 py-3 rounded-lg border border-[#d2d6db] bg-[#f9fafb]"
+      >
+        <dl class="flex items-center gap-2 min-w-0">
+          <dt class="text-sm text-[#6c737f]">
+            {{ 'DEPARTMENT_POPUP.DEPARTMENT_CODE' | translate }}
+          </dt>
+          <dd class="text-base font-bold text-[#161616] select-all" dir="ltr">
+            {{ model.id }}
+          </dd>
+        </dl>
+        <button
+          type="button"
+          class="ms-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-[#d2d6db] bg-white text-sm font-medium text-[#384250] hover:bg-[#f3f4f6]"
+          [attr.aria-label]="'DEPARTMENT_POPUP.COPY_DEPARTMENT_CODE' | translate"
+          (click)="copyDepartmentCode()"
+        >
+          <i
+            class="pi"
+            [class.pi-copy]="codeCopyState() === 'idle'"
+            [class.pi-check]="codeCopyState() === 'copied'"
+            [class.pi-times]="codeCopyState() === 'failed'"
+            [class.text-[#1b8354]]="codeCopyState() === 'copied'"
+            [class.text-[#b42318]]="codeCopyState() === 'failed'"
+            aria-hidden="true"
+          ></i>
+          <span>
+            @switch (codeCopyState()) {
+              @case ('copied') {
+                {{ 'DEPARTMENT_POPUP.CODE_COPIED' | translate }}
+              }
+              @case ('failed') {
+                {{ 'DEPARTMENT_POPUP.CODE_COPY_FAILED' | translate }}
+              }
+              @default {
+                {{ 'DEPARTMENT_POPUP.COPY' | translate }}
+              }
+            }
+          </span>
+        </button>
+        <span class="sr-only" aria-live="polite">
+          @if (codeCopyState() === 'copied') {
+            {{ 'DEPARTMENT_POPUP.CODE_COPIED' | translate }}
+          } @else if (codeCopyState() === 'failed') {
+            {{ 'DEPARTMENT_POPUP.CODE_COPY_FAILED' | translate }}
+          }
+        </span>
+      </div>
+    }
     <form [formGroup]="form" class="">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div>

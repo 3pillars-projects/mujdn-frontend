@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   effect,
+  ElementRef,
   EventEmitter,
   inject,
   Input,
@@ -15,12 +16,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TreeNode } from 'primeng/api';
+import { PrimeTemplate, TreeNode } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 import { Tree } from 'primeng/tree';
 
 @Component({
   selector: 'app-department-tree',
-  imports: [Tree, TranslatePipe, CommonModule],
+  imports: [Tree, PrimeTemplate, TooltipModule, TranslatePipe, CommonModule],
   standalone: true,
   templateUrl: './department-tree.component.html',
   styleUrl: './department-tree.component.scss',
@@ -33,7 +35,11 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
   @Output() departmentSelected = new EventEmitter<Department>();
   @Output() closed = new EventEmitter<void>();
 
+  // Nodes whose label is cut off by the ellipsis; only these show the full-name tooltip.
+  readonly truncatedNodes = new WeakSet<TreeNode>();
+
   languageService = inject(LanguageService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   ngOnInit() {
     this.translateDepartmentName();
   }
@@ -42,6 +48,7 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
     const selectedDepartment = this.selectedDepartmentSignal();
     if (selectedDepartment && this.departments.length > 0) {
       this.selectedNode = this.findTreeNodeByDepartment(selectedDepartment, this.departments);
+      this.scrollSelectedIntoView();
     }
   });
 
@@ -74,6 +81,7 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
         // لا تقم بعمل expand هنا
       }
       this.selectedNode = this.findTreeNodeByDepartment(selectedDepartment, this.departments);
+      this.scrollSelectedIntoView();
     } else if (this.departmentsTree.length > 0) {
       this.departments = this.mapDepartmentToTreeNodeArray(this.departmentsTree);
       // لا تقم بعمل expand هنا أيضًا
@@ -221,6 +229,24 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
       }
     });
   }
+  checkLabelTruncated(label: HTMLElement, node: TreeNode) {
+    if (label.scrollWidth > label.clientWidth) {
+      this.truncatedNodes.add(node);
+    } else {
+      this.truncatedNodes.delete(node);
+    }
+  }
+
+  // The tree scrolls inside its own panel, so a selection made from outside
+  // (initial load, header actions) may land below the visible area.
+  private scrollSelectedIntoView() {
+    setTimeout(() => {
+      this.host.nativeElement
+        .querySelector('.p-tree-node-selected')
+        ?.scrollIntoView({ block: 'nearest' });
+    });
+  }
+
   toggleTree() {
     this.closed.emit(); // بلغ الأب بس
   }

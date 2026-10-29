@@ -378,6 +378,11 @@
     "APPROVAL_LEVEL_HINT": "ينطبق على طلبات الاستئذان وعلى طلبات الإجازة التي يقدمها الموظفون لأنفسهم.",
     "ADD_DEPARTMENT": "إدارة جديدة",
     "EDIT_DEPARTMENT": "تعديل الإدارة",
+    "DEPARTMENT_CODE": "كود الإدارة",
+    "COPY_DEPARTMENT_CODE": "نسخ كود الإدارة",
+    "COPY": "نسخ",
+    "CODE_COPIED": "تم النسخ",
+    "CODE_COPY_FAILED": "تعذر النسخ",
     "DEPARTMENT_NAME_ARABIC": "اسم الإدارة بالعربية",
     "DEPARTMENT_NAME_ENGLISH": "اسم الإدارة بالانجليزية",
     "PHONE_NUMBER": "رقم الهاتف",
@@ -403,7 +408,8 @@
     "CANCEL": "إلغاء"
   },
   "DEPARTMENT_TREE": {
-    "DEPARTMENTS_LIST": "قائمة الإدارات"
+    "DEPARTMENTS_LIST": "قائمة الإدارات",
+    "SUB_DEPARTMENTS_COUNT": "عدد الإدارات الفرعية: {{count}}"
   },
   "REGIONS_PAGE": {
     "REGIONS_LIST": "قائمة المناطق",

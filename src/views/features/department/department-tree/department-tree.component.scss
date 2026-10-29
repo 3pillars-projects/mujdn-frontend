@@ -79,3 +79,62 @@ aside {
     }
   }
 }
+
+// Structure cues for large nested trees. Scoped to this component and limited to
+// the existing DGA palette (#d2d6db borders, #1b8354 primary, #f3f4f6 / #6c737f neutrals).
+:host {
+  display: block;
+
+  // Smaller chevron so the guide line can sit under it without widening each level much.
+  --p-tree-node-toggle-button-size: 1.25rem;
+}
+
+.department-tree-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d2d6db transparent;
+}
+
+:host ::ng-deep {
+  .p-tree-node-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  // Vertical guide line under the parent's chevron, linking it to its children.
+  .p-tree-node-children {
+    margin-inline-start: 17px;
+    padding-inline-start: 2px;
+    border-inline-start: 1px solid #d2d6db;
+  }
+
+  // Highlight the path that leads to the selected department.
+  .p-tree-node-children:has(.p-tree-node-selected) {
+    border-inline-start-color: #1b8354;
+  }
+
+  // Heading weight by depth: top level strongest, deep levels lighter.
+  .p-tree-node[aria-level='1'] > .p-tree-node-content .p-tree-node-label {
+    font-weight: 700;
+  }
+
+  .p-tree-node:not([aria-level='1']):not([aria-level='2'])
+    > .p-tree-node-content
+    .p-tree-node-label {
+    font-weight: 500;
+    color: #384250;
+  }
+
+  .p-tree-node-content.p-tree-node-selected .p-tree-node-label {
+    font-weight: 700;
+  }
+
+  .department-tree-count {
+    background-color: #f3f4f6;
+    color: #6c737f;
+  }
+
+  .p-tree-node-content.p-tree-node-selected .department-tree-count {
+    background-color: #fff;
+    color: #1b8354;
+  }
+}

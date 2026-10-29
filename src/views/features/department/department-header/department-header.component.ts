@@ -89,6 +89,7 @@ export class DepartmentHeaderComponent {
         model: this.departmentData ? new Department().clone(this.departmentData) : new Department(),
         lookups: lookups,
         viewMode: ViewModeEnum.EDIT,
+        showDepartmentCode: true,
       };
       dialogConfig.width = this.dialogSize.width;
       dialogConfig.maxWidth = this.dialogSize.maxWidth;

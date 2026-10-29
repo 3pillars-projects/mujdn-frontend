@@ -1,4 +1,5 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, Inject, inject, OnInit, signal } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   FormBuilder,
   FormControl,
@@ -58,8 +59,16 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
   filteredCities: City[] = [];
   levelType: string = 'one-level';
 
+  // Read-only department code (its id), used when importing employees from Excel.
+  // Shown only when the caller asks for it (the green department card).
+  showDepartmentCode = false;
+  readonly codeCopyState = signal<'idle' | 'copied' | 'failed'>('idle');
+  private readonly clipboard = inject(Clipboard);
+  private copyStateTimer?: ReturnType<typeof setTimeout>;
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     super();
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.copyStateTimer));
   }
   get nameArControl() {
     return this.form.get('nameAr') as FormControl;
@@ -105,6 +114,8 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
       ) || [];
     this.viewMode = this.data.viewMode;
     this.isCreateMode = this.viewMode == ViewModeEnum.CREATE;
+    this.showDepartmentCode =
+      !this.isCreateMode && !!this.data?.showDepartmentCode && !!this.model?.id;
 
     // Build the form first
     this.buildForm();
@@ -114,6 +125,13 @@ export class DepartmentPopupComponent extends BasePopupComponent<Department> imp
 
     // Finally, set up the region change listener
     this.setupRegionChangeListener();
+  }
+
+  copyDepartmentCode(): void {
+    const copied = this.clipboard.copy(String(this.model.id));
+    this.codeCopyState.set(copied ? 'copied' : 'failed');
+    clearTimeout(this.copyStateTimer);
+    this.copyStateTimer = setTimeout(() => this.codeCopyState.set('idle'), 2000);
   }
 
   onRegionChange(event: any): void {
