@@ -65,7 +65,6 @@ export class Department extends BaseCrudModel<Department, DepartmentService> {
       address: [
         address,
         [
-          Validators.required,
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
           Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           CustomValidators.pattern('ENG_AR_NUM_ONLY'),
