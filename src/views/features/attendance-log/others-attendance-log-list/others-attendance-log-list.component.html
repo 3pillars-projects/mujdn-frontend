@@ -199,9 +199,13 @@
             <img alt="" src="assets/icons/plus.svg" />
             <span>{{ 'ATTENDANCE_LOG_PAGE.ADD_NEW_ATTENDANCE_LOG' | translate }}</span>
           </button>
+          <button class="btn black-btn" (click)="openExcelImportDialog()">
+            <img src="/assets/icons/excel.svg" alt="" />
+            <span>{{ 'ATTENDANCE_LOG_PAGE.IMPORT_FINGERPRINTS_EXCEL' | translate }}</span>
+          </button>
           <button class="btn black-btn" (click)="openImportDialog()">
             <img src="/assets/icons/import-icon.svg" alt="" />
-            <span>{{ 'ATTENDANCE_LOG_PAGE.IMPORT_ATTENDANCE_LOG' | translate }}</span>
+            <span>{{ 'ATTENDANCE_LOG_PAGE.IMPORT_DEVICE_FILE' | translate }}</span>
           </button>
         }
       </div>
