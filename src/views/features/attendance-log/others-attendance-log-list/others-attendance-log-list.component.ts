@@ -31,6 +31,7 @@ import { formatSwipeTime } from '@/utils/general-helper';
 import { CustomValidators } from '@/validators/custom-validators';
 import { AuthService } from '@/services/auth/auth.service';
 import { ImportLogPopupComponent } from '../import-log-popup/import-log-popup.component';
+import { AttendanceLogExcelImportPopupComponent } from '../attendance-log-excel-import-popup/attendance-log-excel-import-popup.component';
 
 @Component({
   selector: 'app-others-attendance-log-list',
@@ -279,6 +280,19 @@ export default class OthersAttendanceLogListComponent
 
   openImportDialog() {
     const dialogRef = this.matDialog.open(ImportLogPopupComponent, {
+      width: '100%',
+      maxWidth: '1024px',
+    });
+
+    dialogRef.afterClosed().subscribe((result: DIALOG_ENUM) => {
+      if (result && result == DIALOG_ENUM.OK) {
+        this.loadDataIfNeeded();
+      }
+    });
+  }
+
+  openExcelImportDialog() {
+    const dialogRef = this.matDialog.open(AttendanceLogExcelImportPopupComponent, {
       width: '100%',
       maxWidth: '1024px',
     });

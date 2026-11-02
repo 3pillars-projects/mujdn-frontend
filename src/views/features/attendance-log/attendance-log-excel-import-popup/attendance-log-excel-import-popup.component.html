@@ -1,0 +1,266 @@
+<div [dir]="direction">
+  <div class="p-6">
+    <button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="isImporting()"
+      class="block ms-auto"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    >
+      <i class="pi pi-times close-popup" aria-hidden="true"></i>
+    </button>
+    <h3 class="text-[#1f2a37] font-[600] mb-4 text-lg sm:text-xl">
+      {{ 'IMPORT.ATTENDANCE_LOG_EXCEL.TITLE' | translate }}
+    </h3>
+    <div class="p-4 rounded-2xl border border-[#d2d6db] border-s-[8px] border-s-[#1570ef]">
+      <div class="flex gap-3">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 20C0 8.954 8.954 0 20 0s20 8.954 20 20-8.954 20-20 20S0 31.046 0 20z"
+            fill="#EFF8FF"
+          />
+          <path
+            d="M20 16.458c-.576 0-1.042.467-1.042 1.042a.625.625 0 0 1-1.25 0 2.292 2.292 0 1 1 4.22 1.239 7.508 7.508 0 0 1-.468.63l-.084.105c-.129.16-.247.306-.356.456-.27.37-.395.649-.395.903v.417a.625.625 0 1 1-1.25 0v-.417c0-.666.327-1.216.634-1.638.13-.179.272-.355.401-.515l.076-.094c.154-.192.286-.36.39-.523A1.042 1.042 0 0 0 20 16.459zM19.993 23.333a.833.833 0 0 0 0 1.667h.008a.833.833 0 0 0 0-1.667h-.008z"
+            fill="#175CD3"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M11.041 20a8.958 8.958 0 1 1 17.917 0 8.958 8.958 0 0 1-17.916 0zM20 12.292a7.708 7.708 0 1 0 0 15.416 7.708 7.708 0 0 0 0-15.416z"
+            fill="#175CD3"
+          />
+        </svg>
+        <div class="flex flex-col">
+          <h4 class="mat-body-2">{{ 'IMPORT.DOWNLOAD_IMPORT_TEMPLATE' | translate }}</h4>
+          <p class="text-[#384250] text-sm mb-2">
+            {{ 'IMPORT.THE_TEMPLATE_SHOWS_THE_REQUIRED_COLUMNS' | translate }}
+          </p>
+          <ul class="text-[#384250] text-sm mb-4 list-disc ps-5">
+            <li>{{ 'IMPORT.ATTENDANCE_LOG_EXCEL.COLUMNS_LEGEND' | translate }}</li>
+            <li>
+              {{ 'IMPORT.ATTENDANCE_LOG_EXCEL.DATE_FORMAT_HINT' | translate }}
+              <span dir="ltr" class="font-semibold">yyyy-mm-dd</span>
+              ({{ 'IMPORT.ATTENDANCE_LOG_EXCEL.EXAMPLE' | translate }}
+              <span dir="ltr">2026-01-31</span>)
+            </li>
+            <li>
+              {{ 'IMPORT.ATTENDANCE_LOG_EXCEL.TIME_FORMAT_HINT' | translate }}
+              <span dir="ltr" class="font-semibold">HH:mm</span>
+              ({{ 'IMPORT.ATTENDANCE_LOG_EXCEL.EXAMPLE' | translate }}
+              <span dir="ltr">08:30, 17:45</span>)
+            </li>
+          </ul>
+          <div>
+            <button
+              type="button"
+              (click)="downloadTemplate()"
+              class="btn gray-btn w-fit flex items-center gap-2"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.625 4.167a.625.625 0 1 0-1.25 0v7.051l-.005-.006c-.176-.207-.348-.426-.508-.63l-.038-.048a7.867 7.867 0 0 0-.46-.553.625.625 0 1 0-.896.871c.074.076.196.228.373.454l.04.05c.158.202.344.439.535.665.205.242.435.493.664.689.116.098.245.194.385.269.134.072.32.146.535.146.215 0 .4-.074.535-.146.14-.075.27-.171.384-.27.23-.195.46-.446.665-.688.191-.226.377-.463.535-.665l.04-.05c.177-.226.298-.378.372-.454a.625.625 0 0 0-.896-.87c-.13.134-.3.348-.46.552l-.037.047c-.16.205-.332.424-.508.631l-.005.006V4.167zM4.167 15.208a.625.625 0 1 0 0 1.25h11.666a.625.625 0 1 0 0-1.25H4.167z"
+                  fill="#161616"
+                />
+              </svg>
+              {{ 'IMPORT.DOWNLOAD_TEMPLATE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (result(); as importResult) {
+      <div class="mt-10 pt-6 border-t border-[#d2d6db]">
+        <div class="p-4 rounded-2xl border border-[#d2d6db] border-s-[8px] border-s-[#dc6803]">
+          <div class="flex gap-3">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 20C0 8.954 8.954 0 20 0s20 8.954 20 20-8.954 20-20 20S0 31.046 0 20z"
+                fill="#FFFAEB"
+              />
+              <path
+                d="M19.16 23.333c0-.46.373-.833.833-.833h.008a.833.833 0 0 1 0 1.667h-.008a.833.833 0 0 1-.833-.834zM19.375 20.833a.625.625 0 0 0 1.25 0V17.5a.625.625 0 1 0-1.25 0v3.333z"
+                fill="#B54708"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M18.635 11.68a4.329 4.329 0 0 1 2.73 0c.883.292 1.577.988 2.274 1.965.694.974 1.462 2.332 2.45 4.082l.04.069c.989 1.75 1.756 3.108 2.234 4.21.481 1.106.72 2.061.53 2.979a4.507 4.507 0 0 1-1.358 2.4c-.688.633-1.626.9-2.807 1.029-1.174.128-2.71.128-4.688.128h-.08c-1.978 0-3.514 0-4.688-.128-1.181-.129-2.119-.396-2.808-1.03a4.507 4.507 0 0 1-1.357-2.399c-.19-.918.049-1.873.53-2.98.477-1.1 1.245-2.459 2.234-4.21l.039-.068c.99-1.75 1.757-3.108 2.451-4.082.697-.977 1.39-1.673 2.274-1.966zm2.336 1.185a3.08 3.08 0 0 0-1.942 0c-.497.165-.996.589-1.65 1.506-.652.913-1.388 2.213-2.4 4.005-1.013 1.793-1.747 3.093-2.196 4.127-.45 1.036-.563 1.695-.452 2.227.14.672.484 1.278.98 1.735.389.358.996.587 2.096.706 1.099.12 2.567.12 4.593.12s3.494 0 4.593-.12c1.1-.12 1.707-.348 2.096-.706.496-.457.84-1.063.98-1.735.11-.532-.002-1.191-.452-2.227-.449-1.034-1.183-2.334-2.196-4.127-1.013-1.792-1.748-3.092-2.4-4.005-.654-.917-1.153-1.34-1.65-1.506z"
+                fill="#B54708"
+              />
+            </svg>
+
+            <div class="flex flex-col gap-2">
+              <h4>
+                {{
+                  (importResult.failureCount > 0
+                    ? 'IMPORT.UNABLE_TO_IMPORT_ALL_DATA'
+                    : 'IMPORT.ATTENDANCE_LOG_EXCEL.SOME_ROWS_SKIPPED'
+                  ) | translate
+                }}
+              </h4>
+              <p class="text-[#384250] text-sm">
+                <span>{{
+                  (importResult.failureCount > 0
+                    ? 'IMPORT.VALID_DATA_WAS_IMPORTED_SUCCESSFULLY'
+                    : 'IMPORT.ATTENDANCE_LOG_EXCEL.SKIPPED_DESCRIPTION_START'
+                  ) | translate
+                }}</span>
+                <span>{{ ' ' }}</span>
+                <button
+                  type="button"
+                  (click)="downloadReviewFile()"
+                  class="text-[#1b8354] underline"
+                >
+                  {{ 'IMPORT.DOWNLOAD_THE_REVIEW_FILE' | translate }}
+                </button>
+                <span>{{ ' ' }}</span>
+                <span>{{
+                  (importResult.failureCount > 0
+                    ? 'IMPORT.TO_VIEW_AND_CORRECT_THE_RECORDS'
+                    : 'IMPORT.ATTENDANCE_LOG_EXCEL.SKIPPED_DESCRIPTION_END'
+                  ) | translate
+                }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4" aria-live="polite">
+        <ul class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+          <li class="summary-tile">
+            <span class="summary-label">{{
+              'IMPORT.ATTENDANCE_LOG_EXCEL.TOTAL_ROWS' | translate
+            }}</span>
+            <span class="summary-value">{{ importResult.totalRows }}</span>
+          </li>
+          <li class="summary-tile">
+            <span class="summary-label">{{
+              'IMPORT.ATTENDANCE_LOG_EXCEL.IMPORTED' | translate
+            }}</span>
+            <span class="summary-value text-[#1b8354]">{{ importResult.successCount }}</span>
+          </li>
+          <li class="summary-tile">
+            <span class="summary-label">{{
+              'IMPORT.ATTENDANCE_LOG_EXCEL.SKIPPED' | translate
+            }}</span>
+            <span class="summary-value text-[#9a6700]">{{ importResult.skippedCount }}</span>
+          </li>
+          <li class="summary-tile">
+            <span class="summary-label">{{
+              'IMPORT.ATTENDANCE_LOG_EXCEL.REJECTED' | translate
+            }}</span>
+            <span class="summary-value text-[#b42318]">{{ importResult.failureCount }}</span>
+          </li>
+        </ul>
+        @if (importResult.rowErrors.length > 0) {
+          <p-table
+            [value]="importResult.rowErrors"
+            [scrollable]="true"
+            scrollHeight="300px"
+            styleClass="p-datatable-sm"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">{{ 'IMPORT.ATTENDANCE_LOG_EXCEL.ROW_NUMBER' | translate }}</th>
+                <th scope="col">{{ 'IMPORT.ATTENDANCE_LOG_EXCEL.NATIONAL_ID' | translate }}</th>
+                <th scope="col">{{ 'IMPORT.ATTENDANCE_LOG_EXCEL.STATUS' | translate }}</th>
+                <th scope="col">{{ 'IMPORT.ATTENDANCE_LOG_EXCEL.REASONS' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.rowNumber }}</td>
+                <td dir="ltr" class="text-start">{{ row.nationalId ?? '—' }}</td>
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.status-skipped]="row.status === 'Skipped'"
+                    [class.status-failed]="row.status !== 'Skipped'"
+                  >
+                    {{
+                      (row.status === 'Skipped'
+                        ? 'IMPORT.ATTENDANCE_LOG_EXCEL.STATUS_SKIPPED'
+                        : 'IMPORT.ATTENDANCE_LOG_EXCEL.STATUS_REJECTED'
+                      ) | translate
+                    }}
+                  </span>
+                </td>
+                <td>
+                  <ul class="list-disc ps-4">
+                    @for (message of row.errors; track $index) {
+                      <li>{{ translateMessage(message) }}</li>
+                    }
+                  </ul>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          @if (importResult.rowErrorsTruncated) {
+            <p class="text-[#64748b] text-xs mt-2">
+              {{
+                'IMPORT.ATTENDANCE_LOG_EXCEL.ROWS_TRUNCATED'
+                  | translate: { count: importResult.rowErrors.length }
+              }}
+            </p>
+          }
+        }
+      </div>
+    }
+    <div class="mt-6 flex flex-col">
+      <h4 class="text-[#161616] text-base mb-2">{{ 'IMPORT.UPLOAD_FILE' | translate }}</h4>
+      <p class="text-[#64748b] text-xs mb-4">
+        {{ getMaxAllowedFileSizeMessage() }}
+      </p>
+      <div>
+        <label for="browse-file" class="btn black-btn w-fit">{{
+          'IMPORT.BROWSE_FILES' | translate
+        }}</label>
+        <input
+          #fileInput
+          id="browse-file"
+          type="file"
+          accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+        @if (selectedFile(); as file) {
+          <p class="mt-2">{{ file.name }}</p>
+        }
+      </div>
+    </div>
+    <div class="actions mt-8 flex items-center justify-end gap-4">
+      <button class="btn gray-btn" type="button" (click)="onCancel()" [disabled]="isImporting()">
+        {{ (result() ? 'COMMON.CLOSE' : 'COMMON.CANCEL') | translate }}
+      </button>
+      <button
+        class="btn green-btn"
+        type="button"
+        [disabled]="!selectedFile() || isImporting()"
+        [attr.aria-busy]="isImporting()"
+        (click)="onImport()"
+      >
+        {{
+          (isImporting() ? 'IMPORT.ATTENDANCE_LOG_EXCEL.IMPORTING' : 'IMPORT.IMPORT') | translate
+        }}
+      </button>
+    </div>
+  </div>
+</div>
