@@ -1,5 +1,5 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
+import { Component, inject, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { Breadcrumb } from 'primeng/breadcrumb';
 import { FormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
@@ -9,7 +9,6 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PaginatorModule } from 'primeng/paginator';
-import { SplitButtonModule } from 'primeng/splitbutton';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { ConfirmationService } from '@/services/shared/confirmation.service';
@@ -54,7 +53,6 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
     CommonModule,
     RouterModule,
     CommonModule,
-    SplitButtonModule,
     PaginatorModule,
     TranslatePipe,
     InputTextModule,
@@ -69,13 +67,11 @@ export default class EmployeeListComponent
   extends BaseListComponent<User, AddNewEmployeePopupComponent, UserService, UserFilter>
   implements OnInit
 {
-  @ViewChild('employeeContainer', { static: true }) employeeContainer!: ElementRef;
   languageService = inject(LanguageService);
   cityService = inject(CityService);
   regionService = inject(RegionService);
   departmentService = inject(DepartmentService);
   authService = inject(AuthService);
-  actionList: MenuItem[] = [];
   cities: CityLookup[] = [];
   regions: BaseLookupModel[] = [];
   departments: BaseLookupModel[] = [];
@@ -125,12 +121,6 @@ export default class EmployeeListComponent
     });
     this.departmentService.getLookup().subscribe((res: BaseLookupModel[]) => {
       this.departments = res;
-    });
-    this.initializeActionList();
-
-    // Re-initialize action list when language changes
-    this.translateService.onLangChange.subscribe(() => {
-      this.initializeActionList();
     });
   }
 
@@ -267,8 +257,9 @@ export default class EmployeeListComponent
     });
   }
 
-  setSelectedModel(model: User) {
+  editEmployee(model: User): void {
     this.selectedModel = model;
+    this.openDialog();
   }
 
   getDepartmentName(department: BaseLookupModel): string {
@@ -315,55 +306,6 @@ export default class EmployeeListComponent
     };
   }
 
-  private initializeActionList(): void {
-    this.actionList = [
-      {
-        label: this.translateService.instant('EMPLOYEES_PAGE.EDIT_EMPLOYEE_DATA'),
-        command: () => this.openDialog(),
-      },
-      // **** hidden for now ****
-      // ,
-      // {
-      //   separator: true,
-      // },
-      // {
-      //   label: this.translateService.instant('EMPLOYEES_PAGE.VIEW_ATTENDANCE_REPORT'),
-      //   command: () => this.attendanceReportPopup(),
-      // },
-      // {
-      //   separator: true,
-      // },
-      // {
-      //   label: this.translateService.instant('EMPLOYEES_PAGE.ASSIGN_TASK'),
-      //   command: () => this.assignTaskPopup(),
-      // },
-      // {
-      //   separator: true,
-      // },
-      // {
-      //   label: this.translateService.instant('EMPLOYEES_PAGE.ASSIGN_SHIFT'),
-      //   command: () => this.assignShiftPopup(),
-      // },
-      // {
-      //   separator: true,
-      // },
-      // {
-      //   label: this.translateService.instant('EMPLOYEES_PAGE.TASKS_ASSIGNED_TO_EMPLOYEE'),
-      //   command: () => this.tasksAssignedToEmployee(),
-      // },
-
-      // **** hidden for now ****
-
-      // {
-      //   separator: true,
-      // },
-      // {
-      //   label: this.translateService.instant('EMPLOYEES_PAGE.DELETE_EMPLOYEE'),
-      //   styleClass: 'p-menuitem-danger',
-      //   command: () => this.openConfirmation(),
-      // },
-    ];
-  }
   isAdmin() {
     return this.authService.isAdmin;
   }
