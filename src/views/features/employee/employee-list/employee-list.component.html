@@ -1,4 +1,4 @@
-<div #employeeContainer class="bg-white">
+<div class="bg-white">
   <div class="bg-[#f9fafb] p-3 sm:p-6">
     <div class="header bg-white rounded-2xl p-4 sm:p-6 mb-6">
       <p-breadcrumb [home]="home" [model]="breadcrumbs" class="max-w-full">
@@ -360,12 +360,14 @@
                         </button>
                       }
                       @if (authService.isHROfficer) {
-                        <p-splitbutton
-                          [appendTo]="employeeContainer"
-                          (click)="setSelectedModel(user)"
-                          dropdownIcon="pi pi-ellipsis-v"
-                          [model]="actionList"
-                        />
+                        <button
+                          type="button"
+                          class="table-action-gray-btn"
+                          [attr.aria-label]="'EMPLOYEES_PAGE.EDIT_EMPLOYEE_DATA' | translate"
+                          (click)="editEmployee(user)"
+                        >
+                          <img src="assets/icons/edit-action.svg" alt="" />
+                        </button>
                       }
                     </div>
                   </td>

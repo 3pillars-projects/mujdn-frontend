@@ -165,6 +165,9 @@ export default class AttendanceReport extends BaseCrudModel<
     return this.lastLeaveFingerPrint ? new Date(this.lastLeaveFingerPrint) : null;
   }
 
+  // Hide the leave fingerprint and status while the current day's shift is still running.
+  // A cross-day shift starts on the processing date and ends the next day, so it counts as
+  // current both before midnight (processing date is today) and after it (departure is today).
   shouldHideLeaveFingerPrintAndStatus(now: Date = new Date()): boolean {
     if (!this.earliestAllowedDepartureDateTime) {
       return false;
@@ -176,11 +179,21 @@ export default class AttendanceReport extends BaseCrudModel<
       return false;
     }
 
-    const isEarliestAllowedDepartureToday =
-      earliestAllowedDeparture.getFullYear() === now.getFullYear() &&
-      earliestAllowedDeparture.getMonth() === now.getMonth() &&
-      earliestAllowedDeparture.getDate() === now.getDate();
+    const processingDate = this.processingDate ? new Date(this.processingDate) : null;
 
-    return isEarliestAllowedDepartureToday && now.getTime() <= earliestAllowedDeparture.getTime();
+    const isCurrentDayShift =
+      isSameCalendarDay(earliestAllowedDeparture, now) ||
+      (processingDate != null && isSameCalendarDay(processingDate, now));
+
+    return isCurrentDayShift && now.getTime() <= earliestAllowedDeparture.getTime();
   }
+}
+
+function isSameCalendarDay(a: Date, b: Date): boolean {
+  return (
+    !Number.isNaN(a.getTime()) &&
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
