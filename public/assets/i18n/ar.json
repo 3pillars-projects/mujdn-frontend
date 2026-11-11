@@ -1198,7 +1198,7 @@
   },
   "SHIFT_ASSIGNMENT_PANEL": {
     "SHIFT_WORKING_HOURS": "مواعيد العمل بالوردية: ",
-    "ROTATING_SHIFTS_WORK_WEEK_REST_WEEK": "نظام الورديات المتناوبة لساعات العمل (أسبوعين عمل / أسبوعين راحة)",
+    "ROTATING_SHIFTS_WORK_WEEK_REST_WEEK": "نظام الورديات المتناوبة لساعات العمل",
     "USERS_WILL_BE_ROTATED_BETWEEN_SHIFTS_IN_THE_FOLLOWING_ORDER": "سيتم تناوب الموظفين بين الورديات بالترتيب التالي: ",
     "ON_A_RECURRING_BASIS": "بشكل دوري."
   },
