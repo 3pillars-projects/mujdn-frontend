@@ -835,7 +835,7 @@
     "MY_SHIFT_SCHEDULE": "My Shift (periods)",
     "SHIFT_NAME": "Shift Name",
     "SHIFT_DETAILS": "Shift Details",
-    "REST_DAY": "Rest Day"
+    "REST_DAY": "Rest Period"
   },
   "RESET_PASSWORD": {
     "FORGOT_PASSWORD": "Forgot Password",
@@ -1199,7 +1199,7 @@
   },
   "SHIFT_ASSIGNMENT_PANEL": {
     "SHIFT_WORKING_HOURS": "Shift working hours: ",
-    "ROTATING_SHIFTS_WORK_WEEK_REST_WEEK": "Rotating shifts (2 weeks work / 2 weeks rest)",
+    "ROTATING_SHIFTS_WORK_WEEK_REST_WEEK": "Rotating shifts",
     "USERS_WILL_BE_ROTATED_BETWEEN_SHIFTS_IN_THE_FOLLOWING_ORDER": "Users will be rotated between shifts in the following order: ",
     "ON_A_RECURRING_BASIS": "on a recurring basis."
   },
