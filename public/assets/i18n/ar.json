@@ -834,7 +834,7 @@
     "MY_SHIFT_SCHEDULE": "وردياتي (فترات)",
     "SHIFT_NAME": "اسم الوردية",
     "SHIFT_DETAILS": "بيانات الوردية",
-    "REST_DAY": "يوم راحة"
+    "REST_DAY": "فترة راحة"
   },
   "RESET_PASSWORD": {
     "FORGOT_PASSWORD": "نسيت كلمة المرور",

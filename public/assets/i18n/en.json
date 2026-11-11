@@ -835,7 +835,7 @@
     "MY_SHIFT_SCHEDULE": "My Shift (periods)",
     "SHIFT_NAME": "Shift Name",
     "SHIFT_DETAILS": "Shift Details",
-    "REST_DAY": "Rest Day"
+    "REST_DAY": "Rest Period"
   },
   "RESET_PASSWORD": {
     "FORGOT_PASSWORD": "Forgot Password",
