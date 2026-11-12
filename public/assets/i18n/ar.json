@@ -472,6 +472,7 @@
     "ROLE_HR": "مسؤول HR",
     "ROLE_MP_MEMBER": "فرد شرطة عسكرية",
     "ROLE_MP_LEADER": "قائد شرطة عسكرية",
+    "ROLE_ATTENDANCE_COMPLIANCE": "مسؤول انتظام الدوام",
     "FINGERPRINT_EXEMPTION": "إعفاء من البصمة",
     "ADD_NEW_EMPLOYEE": "إضافة موظف جديد",
     "EDIT_EMPLOYEE": "تعديل بيانات الموظف",
@@ -807,7 +808,8 @@
     "FOLLOW_UP_OFFICER": "مسؤول قسم المتابعة",
     "HR_OFFICER": "مسؤول HR",
     "SECURITY_MEMBER": "فرد شرطة عسكرية",
-    "SECURITY_LEADER": "قائد شرطة عسكرية"
+    "SECURITY_LEADER": "قائد شرطة عسكرية",
+    "ATTENDANCE_COMPLIANCE_OFFICER": "مسؤول انتظام الدوام"
   },
   "MY_SHIFTS": {
     "MY_SHIFTS": "وردياتي",

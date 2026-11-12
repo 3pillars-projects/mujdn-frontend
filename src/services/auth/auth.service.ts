@@ -33,11 +33,18 @@ export class AuthService extends BaseCrudService<LoggedInUser, string> {
     return this.loggedInUser.value?.roles.includes(ROLES_ENUM.HR_OFFICER);
   }
 
+  /** HR officer with organisation-wide scope. The attendance compliance officer carries HR
+   * powers but is never Super HR, even in the root department (mirrors the backend policy). */
   get isSuperHROfficer() {
     return (
       this.loggedInUser.value?.roles.includes(ROLES_ENUM.HR_OFFICER) &&
-      this.loggedInUser.value?.isInRootDepartment
+      this.loggedInUser.value?.isInRootDepartment &&
+      !this.isAttendanceComplianceOfficer
     );
+  }
+
+  get isAttendanceComplianceOfficer() {
+    return this.loggedInUser.value?.roles.includes(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
   }
 
   get isRootdepartment() {
