@@ -7,9 +7,15 @@
           <span>{{ item.label | translate }}</span>
         </ng-template>
       </p-breadcrumb>
-      <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-[#161616]">
-        {{ 'MENU.VISIT_REQUEST' | translate }}
-      </h3>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-[#161616]">
+          {{ 'MENU.VISIT_REQUEST' | translate }}
+        </h3>
+        <button type="button" class="btn green-btn" (click)="openCardReaderDialog()">
+          <i class="pi pi-id-card" aria-hidden="true"></i>
+          {{ 'CARD_READER.READ_CARD' | translate }}
+        </button>
+      </div>
     </div>
 
     <p-tabs value="0">

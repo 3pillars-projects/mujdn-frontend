@@ -1037,6 +1037,27 @@
     "SELECTED_DEVICES_LOCATIONS": "مواقع أجهزة البصمة المختارة",
     "ATTENDANCE_STATUS": "حالة الحضور"
   },
+  "CARD_READER": {
+    "TITLE": "قراءة البطاقة",
+    "READ_CARD": "قراءة البطاقة",
+    "READ_ANOTHER": "قراءة بطاقة أخرى",
+    "STOP_READING": "إيقاف القراءة",
+    "CONNECT_READER": "توصيل القارئ",
+    "CARD_NUMBER": "رقم البطاقة",
+    "COPY": "نسخ",
+    "COPIED": "تم النسخ",
+    "TAP_CARD": "ضع البطاقة على القارئ",
+    "TAP_CARD_HINT": "يصدر القارئ صوتًا عند قراءة البطاقة.",
+    "CONNECTING": "جارٍ الاتصال بقارئ البطاقات...",
+    "READY": "قارئ البطاقات متصل.",
+    "NOT_CONNECTED": "لم يتم العثور على قارئ البطاقات",
+    "NOT_CONNECTED_HINT": "قم بتوصيل قارئ بطاقات Dahua بهذا الجهاز. إذا كانت هذه أول مرة على هذا المتصفح، اضغط \"توصيل القارئ\" واختر DaHua-Tech-HID.",
+    "ERROR": "تعذر الاتصال بقارئ البطاقات",
+    "ERROR_HINT": "افصل القارئ ثم أعد توصيله، ثم اضغط إعادة المحاولة.",
+    "UNAVAILABLE": "قراءة البطاقات غير متاحة هنا",
+    "INSECURE_CONTEXT_HINT": "يسمح المتصفح باستخدام قارئ البطاقات في الصفحات الآمنة فقط. افتح النظام عبر HTTPS.",
+    "UNSUPPORTED_HINT": "استخدم متصفح Google Chrome أو Microsoft Edge لقراءة البطاقات."
+  },
   "QR_CODE_POPUP": {
     "GENERAL_WARNINGS": "تحذيرات عامة",
     "NO_SMOKING": "ممنوع التدخين",

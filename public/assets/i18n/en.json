@@ -1038,6 +1038,27 @@
     "SELECTED_DEVICES_LOCATIONS": "Selected Devices Locations",
     "ATTENDANCE_STATUS": "Attendance Status"
   },
+  "CARD_READER": {
+    "TITLE": "Read Card",
+    "READ_CARD": "Read Card",
+    "READ_ANOTHER": "Read Another Card",
+    "STOP_READING": "Stop Reading",
+    "CONNECT_READER": "Connect Reader",
+    "CARD_NUMBER": "Card Number",
+    "COPY": "Copy",
+    "COPIED": "Copied",
+    "TAP_CARD": "Place the card on the reader",
+    "TAP_CARD_HINT": "The reader beeps when the card is read.",
+    "CONNECTING": "Connecting to the card reader...",
+    "READY": "The card reader is connected.",
+    "NOT_CONNECTED": "Card reader not detected",
+    "NOT_CONNECTED_HINT": "Plug the Dahua card reader into this computer. If this is the first time on this browser, click \"Connect Reader\" and choose DaHua-Tech-HID.",
+    "ERROR": "Could not communicate with the card reader",
+    "ERROR_HINT": "Unplug the reader, plug it back in, then click Retry.",
+    "UNAVAILABLE": "Card reading is not available here",
+    "INSECURE_CONTEXT_HINT": "The browser only allows card readers on secure pages. Open the system over HTTPS.",
+    "UNSUPPORTED_HINT": "Use Google Chrome or Microsoft Edge to read cards."
+  },
   "QR_CODE_POPUP": {
     "GENERAL_WARNINGS": "General Warnings",
     "NO_SMOKING": "No Smoking",
