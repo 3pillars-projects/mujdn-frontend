@@ -47,6 +47,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     isHR: false,
     isSecurityMember: false,
     isSecurityLeader: false,
+    isComplianceOfficer: false,
   };
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
@@ -82,6 +83,10 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     return this.form.get('isSecurityLeader') as FormControl;
   }
 
+  get isComplianceOfficerControl() {
+    return this.form.get('isComplianceOfficer') as FormControl;
+  }
+
   // Helper method to get department name based on current language
   get departmentName(): string {
     if (!this.model.department) return '';
@@ -107,6 +112,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
       isHR: [this.roleStates.isHR],
       isSecurityMember: [this.roleStates.isSecurityMember],
       isSecurityLeader: [this.roleStates.isSecurityLeader],
+      isComplianceOfficer: [this.roleStates.isComplianceOfficer],
     });
 
     // Subscribe to checkbox changes to update roleStates
@@ -140,6 +146,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     if (formValue.isHR) roleIds.push(ROLES_ENUM.HR_OFFICER);
     if (formValue.isSecurityMember) roleIds.push(ROLES_ENUM.SECURITY_MEMBER);
     if (formValue.isSecurityLeader) roleIds.push(ROLES_ENUM.SECURITY_LEADER);
+    if (formValue.isComplianceOfficer) roleIds.push(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
 
     // Update model with new roleIds
     this.model.roleIds = roleIds;
@@ -164,6 +171,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     if (formValue.isHR) roleIds.push(ROLES_ENUM.HR_OFFICER);
     if (formValue.isSecurityMember) roleIds.push(ROLES_ENUM.SECURITY_MEMBER);
     if (formValue.isSecurityLeader) roleIds.push(ROLES_ENUM.SECURITY_LEADER);
+    if (formValue.isComplianceOfficer) roleIds.push(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
 
     // user update role object
     const data: UpdateRolesModel = {
@@ -187,6 +195,9 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
       this.roleStates.isHR = this.model.roleIds.includes(ROLES_ENUM.HR_OFFICER);
       this.roleStates.isSecurityMember = this.model.roleIds.includes(ROLES_ENUM.SECURITY_MEMBER);
       this.roleStates.isSecurityLeader = this.model.roleIds.includes(ROLES_ENUM.SECURITY_LEADER);
+      this.roleStates.isComplianceOfficer = this.model.roleIds.includes(
+        ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER
+      );
     }
   }
 
@@ -219,6 +230,10 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
 
     this.form.get('isSecurityLeader')?.valueChanges.subscribe((value) => {
       this.roleStates.isSecurityLeader = value;
+    });
+
+    this.form.get('isComplianceOfficer')?.valueChanges.subscribe((value) => {
+      this.roleStates.isComplianceOfficer = value;
     });
   }
 }

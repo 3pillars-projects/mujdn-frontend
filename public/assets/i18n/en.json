@@ -474,6 +474,7 @@
     "ROLE_HR": "HR Officer",
     "ROLE_MP_MEMBER": "Military Police Member",
     "ROLE_MP_LEADER": "Military Police Leader",
+    "ROLE_ATTENDANCE_COMPLIANCE": "Attendance Compliance Officer",
     "FINGERPRINT_EXEMPTION": "Fingerprint Exemption",
     "ADD_NEW_EMPLOYEE": "Add New Employee",
     "EDIT_EMPLOYEE": "Edit Employee",
@@ -808,7 +809,8 @@
     "FOLLOW_UP_OFFICER": "Follow Up Officer",
     "HR_OFFICER": "HR Officer",
     "SECURITY_MEMBER": "Security Member",
-    "SECURITY_LEADER": "Security Leader"
+    "SECURITY_LEADER": "Security Leader",
+    "ATTENDANCE_COMPLIANCE_OFFICER": "Attendance Compliance Officer"
   },
   "MY_SHIFTS": {
     "MY_SHIFTS": "My shifts",
