@@ -15,6 +15,8 @@ import {
 } from '@/models/features/visit/visit-status-option';
 import { AuthService } from '@/services/auth/auth.service';
 import { UserService } from '@/services/features/user.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { CardReaderPopupComponent } from '../card-reader-popup/card-reader-popup.component';
 
 enum TabIndex {
   MY_VISITS = 0,
@@ -43,6 +45,7 @@ export default class VisitRequestContainerComponent implements OnInit, OnDestroy
   nationalityService = inject(NationalityService);
   authService = inject(AuthService);
   userService = inject(UserService);
+  matDialog = inject(MatDialog);
 
   private readonly translateService = inject(TranslateService);
   private readonly destroy$ = new Subject<void>();
@@ -64,6 +67,14 @@ export default class VisitRequestContainerComponent implements OnInit, OnDestroy
 
   clickAllVisitsTab(): void {
     this.switchToTab(TabIndex.ALL_VISITS);
+  }
+
+  openCardReaderDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '100%';
+    dialogConfig.maxWidth = '520px';
+    dialogConfig.ariaLabelledBy = 'card-reader-title';
+    this.matDialog.open(CardReaderPopupComponent, dialogConfig);
   }
 
   showAllVisitsTab() {

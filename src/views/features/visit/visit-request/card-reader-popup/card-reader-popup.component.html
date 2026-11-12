@@ -1,0 +1,102 @@
+<div [dir]="direction">
+  <div class="p-6">
+    <div class="flex items-center justify-between gap-4 pb-4 mb-6 border-b border-[#d2d6db]">
+      <h3 id="card-reader-title" class="text-xl font-semibold text-[#161616]">
+        {{ 'CARD_READER.TITLE' | translate }}
+      </h3>
+      <button
+        type="button"
+        (click)="close()"
+        [attr.aria-label]="'COMMON.CLOSE' | translate"
+        [title]="'COMMON.CLOSE' | translate"
+      >
+        <i class="pi pi-times close-popup" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="flex flex-col items-center text-center gap-4 min-h-[180px] justify-center" aria-live="polite">
+      @if (result) {
+        <i class="pi pi-check-circle text-5xl text-[#079455]" aria-hidden="true"></i>
+        <span class="text-[14px] text-[#6c737f]">{{ 'CARD_READER.CARD_NUMBER' | translate }}</span>
+        <output
+          id="card-reader-card-number"
+          class="text-3xl font-bold tracking-widest text-[#161616] select-all"
+          dir="ltr"
+          >{{ result.cardNumber }}</output
+        >
+        <button type="button" class="btn gray-btn border border-[#d2d6db]" (click)="copyCardNumber()">
+          <i class="pi" [class.pi-copy]="!copied" [class.pi-check]="copied" aria-hidden="true"></i>
+          {{ (copied ? 'CARD_READER.COPIED' : 'CARD_READER.COPY') | translate }}
+        </button>
+      } @else {
+        @switch (status) {
+          @case (statuses.READING) {
+            <i class="pi pi-id-card text-5xl text-[#1b8354] animate-pulse" aria-hidden="true"></i>
+            <p class="text-lg font-semibold text-[#161616]">{{ 'CARD_READER.TAP_CARD' | translate }}</p>
+            <p class="text-sm text-[#6c737f]">{{ 'CARD_READER.TAP_CARD_HINT' | translate }}</p>
+          }
+          @case (statuses.CONNECTING) {
+            <i class="pi pi-spin pi-spinner text-4xl text-[#6c737f]" aria-hidden="true"></i>
+            <p class="text-[#384250]">{{ 'CARD_READER.CONNECTING' | translate }}</p>
+          }
+          @case (statuses.READY) {
+            <i class="pi pi-id-card text-5xl text-[#6c737f]" aria-hidden="true"></i>
+            <p class="text-[#384250]">{{ 'CARD_READER.READY' | translate }}</p>
+          }
+          @case (statuses.NOT_CONNECTED) {
+            <i class="pi pi-exclamation-circle text-5xl text-[#dc6803]" aria-hidden="true"></i>
+            <p class="text-lg font-semibold text-[#161616]">{{ 'CARD_READER.NOT_CONNECTED' | translate }}</p>
+            <p class="text-sm text-[#6c737f]">{{ 'CARD_READER.NOT_CONNECTED_HINT' | translate }}</p>
+          }
+          @case (statuses.ERROR) {
+            <i class="pi pi-times-circle text-5xl text-[#d92d20]" aria-hidden="true"></i>
+            <p class="text-lg font-semibold text-[#161616]">{{ 'CARD_READER.ERROR' | translate }}</p>
+            <p class="text-sm text-[#6c737f]">{{ 'CARD_READER.ERROR_HINT' | translate }}</p>
+          }
+          @case (statuses.INSECURE_CONTEXT) {
+            <i class="pi pi-lock text-5xl text-[#dc6803]" aria-hidden="true"></i>
+            <p class="text-lg font-semibold text-[#161616]">{{ 'CARD_READER.UNAVAILABLE' | translate }}</p>
+            <p class="text-sm text-[#6c737f]">{{ 'CARD_READER.INSECURE_CONTEXT_HINT' | translate }}</p>
+          }
+          @default {
+            <i class="pi pi-ban text-5xl text-[#dc6803]" aria-hidden="true"></i>
+            <p class="text-lg font-semibold text-[#161616]">{{ 'CARD_READER.UNAVAILABLE' | translate }}</p>
+            <p class="text-sm text-[#6c737f]">{{ 'CARD_READER.UNSUPPORTED_HINT' | translate }}</p>
+          }
+        }
+      }
+    </div>
+
+    <div class="actions mt-6 flex flex-wrap gap-4 items-center justify-between">
+      <button type="button" class="btn gray-btn" (click)="close()">
+        {{ 'COMMON.CLOSE' | translate }}
+      </button>
+
+      <div class="flex flex-wrap gap-4">
+        @if (status === statuses.NOT_CONNECTED || status === statuses.ERROR) {
+          <button
+            type="button"
+            class="btn gray-btn border border-[#d2d6db]"
+            [disabled]="busy"
+            (click)="retry()"
+          >
+            {{ 'COMMON.RETRY' | translate }}
+          </button>
+          <button type="button" class="btn green-btn" [disabled]="busy" (click)="connectReader()">
+            <i class="pi pi-link" aria-hidden="true"></i>
+            {{ 'CARD_READER.CONNECT_READER' | translate }}
+          </button>
+        } @else if (status === statuses.READING) {
+          <button type="button" class="btn gray-btn border border-[#d2d6db]" (click)="cancelReading()">
+            {{ 'CARD_READER.STOP_READING' | translate }}
+          </button>
+        } @else if (status === statuses.READY) {
+          <button type="button" class="btn green-btn" [disabled]="busy" (click)="readCard()">
+            <i class="pi pi-id-card" aria-hidden="true"></i>
+            {{ (result ? 'CARD_READER.READ_ANOTHER' : 'CARD_READER.READ_CARD') | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
