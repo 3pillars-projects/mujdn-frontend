@@ -8,6 +8,7 @@ import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { LanguageService } from '@/services/shared/language.service';
 import { AlertService } from '@/services/shared/alert.service';
 import { formatDateOnly, formatTimeTo12Hour } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { QRCodeComponent } from 'angularx-qrcode';
@@ -66,20 +67,14 @@ export class QrcodeVisitRequestPopupComponent implements OnInit {
   }
 
   getDepartmentName(): string {
-    if (!this.model.targetDepartment) return '';
-    return this.isCurrentLanguageEnglish()
-      ? this.model.targetDepartment.nameEn || ''
-      : this.model.targetDepartment.nameAr || '';
+    return getLocalizedName(this.model.targetDepartment, this.languageService.getCurrentLanguage());
   }
 
   getLocationName(loc: BaseLookupModel): string {
-    return this.isCurrentLanguageEnglish() ? loc.nameEn || '' : loc.nameAr || '';
+    return getLocalizedName(loc, this.languageService.getCurrentLanguage());
   }
   getCreatorName(): string {
-    if (!this.model.creationUser) return '';
-    return this.isCurrentLanguageEnglish()
-      ? this.model.creationUser.nameEn || ''
-      : this.model.creationUser.nameAr || '';
+    return getLocalizedName(this.model.creationUser, this.languageService.getCurrentLanguage());
   }
 
   close() {

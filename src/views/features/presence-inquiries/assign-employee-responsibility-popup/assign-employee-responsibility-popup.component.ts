@@ -23,6 +23,9 @@ import { PresenceInquiryService } from '@/services/features/presence-inquiry.ser
 import { LanguageService } from '@/services/shared/language.service';
 import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
+import { getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-assign-employee-responsibility-popup',
@@ -36,6 +39,8 @@ import { DIALOG_ENUM } from '@/enums/dialog-enum';
     TableModule,
     PaginatorModule,
     TranslatePipe,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './assign-employee-responsibility-popup.component.html',
   styleUrl: './assign-employee-responsibility-popup.component.scss',
@@ -153,9 +158,7 @@ export class AssignEmployeeResponsibilityPopupComponent implements OnInit {
 
   getDepartmentName(id: number): string {
     const department = this.departments.find((d) => d.id === id);
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (department?.nameEn ?? '')
-      : (department?.nameAr ?? '');
+    return getLocalizedName(department, this.languageService.getCurrentLanguage());
   }
 
   search() {
@@ -187,8 +190,6 @@ export class AssignEmployeeResponsibilityPopupComponent implements OnInit {
   }
 
   getUserName(user: UserProfilePresenceInquiry) {
-    return this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? user.fullNameEn
-      : user.fullNameAr;
+    return getLocalizedName(user, this.languageService.getCurrentLanguage(), 'fullName');
   }
 }

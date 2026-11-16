@@ -113,7 +113,7 @@
           <ng-template #body let-shift>
             <tr>
               <td>{{ shift.nameAr }}</td>
-              <td>{{ shift.nameEn }}</td>
+              <td>{{ shift | englishName }}</td>
               <td>{{ shift.beforeAttendanceBuffer ?? 0 }}</td>
               <td>{{ shift.afterAttendanceBuffer ?? 0 }}</td>
               <td>{{ shift.beforeLeaveBuffer ?? 0 }}</td>

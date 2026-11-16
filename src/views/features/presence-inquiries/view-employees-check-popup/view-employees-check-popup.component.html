@@ -120,7 +120,7 @@
             @for (user of statusGroup.users; track $index) {
               <div class="bg-[#f3f4f6] rounded-full px-3">
                 <span class="text-[#161616] font-medium">
-                  {{ isArabicLang ? user.fullNameAr : user.fullNameEn }}
+                  {{ user | localizedName: 'fullName' }}
                 </span>
               </div>
             }

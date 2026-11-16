@@ -32,6 +32,8 @@ import {
   setLeaveRequestStatus,
 } from '@/utils/leave-status-filter';
 import { CustomValidators } from '@/validators/custom-validators';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-my-leaves',
@@ -43,6 +45,7 @@ import { CustomValidators } from '@/validators/custom-validators';
     DatePickerModule,
     SelectModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './my-leaves.component.html',
   styleUrl: './my-leaves.component.scss',
@@ -179,12 +182,7 @@ export class MyLeavesComponent
   }
 
   leaveTypeName(leave: Leave): string {
-    const lang = this.langService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? leave.leaveType?.nameAr
-        : (leave.leaveType?.nameEn ?? leave.leaveType?.nameAr)) ?? ''
-    );
+    return getLocalizedName(leave.leaveType, this.langService.getCurrentLanguage());
   }
 
   getStatusBadgeClass(leave: Leave): string {

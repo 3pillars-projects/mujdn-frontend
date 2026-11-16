@@ -13,7 +13,7 @@
           <label class="label">{{ 'EMPLOYEES_PAGE.DEPARTMENT' | translate }}</label>
           <div class="relative">
             <p-select
-              [options]="departments"
+              [options]="departments | withNameFallback"
               [(ngModel)]="filterModel.fkDepartmentId"
               [optionLabel]="getPropertyName()"
               [showClear]="true"
@@ -149,7 +149,7 @@
               </td>
               <td>{{ user.fullNameAr }}</td>
               <td>
-                <div>{{ user.fullNameEn }}</div>
+                <div>{{ user | englishName: 'fullName' }}</div>
               </td>
               <td>{{ getDepartmentName(user.fkDepartmentId) }}</td>
             </tr>

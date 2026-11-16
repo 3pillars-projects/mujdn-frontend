@@ -24,7 +24,7 @@
           ) | translate
         }}</span>
         <h4 class="font-semibold text-[16px]">
-          {{ isCurrentLanguageEnglish() ? model.nameEn : model.nameAr }}
+          {{ model | localizedName }}
         </h4>
       </div>
       <div class="flex flex-col gap-1 text-white">
@@ -78,7 +78,7 @@
         <label class="label">{{ 'WORK_MISSIONS.DEPARTMENT' | translate }}</label>
         <div class="relative">
           <p-select
-            [options]="departments"
+            [options]="departments | withNameFallback"
             [optionLabel]="getPropertyName()"
             optionValue="id"
             [placeholder]="'WORK_MISSIONS.DEPARTMENT' | translate"
@@ -228,10 +228,10 @@
             </td>
             <td>{{ employee.nameAr }}</td>
             <td>
-              <div>{{ employee.nameEn }}</div>
+              <div>{{ employee | englishName }}</div>
             </td>
             <td>{{ employee.departmentNameAr }}</td>
-            <td>{{ employee.departmentNameEn }}</td>
+            <td>{{ employee | englishName: 'departmentName' }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -260,7 +260,7 @@
             <li
               class="min-w-[142px] min-h-[21px] flex flex-row justify-center items-center gap-1 px-3 py-1 rounded-full bg-[#f3f4f6] text-[#161616] font-medium"
             >
-              <span>{{ isCurrentLanguageEnglish() ? employee.nameEn : employee.nameAr }}</span>
+              <span>{{ employee | localizedName }}</span>
               <button (click)="toggleUserSelection(employee.id!)">
                 <svg
                   width="18"

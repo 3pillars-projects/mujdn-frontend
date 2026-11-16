@@ -26,6 +26,8 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { LeavesViewPopupComponent } from '../leaves-view-popup/leaves-view-popup.component';
 import { LeavesAddEditPopupComponent } from '../leaves-add-edit-popup/leaves-add-edit-popup.component';
 import { formatDateOnly } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import {
   leaveStatusBadgeClass,
   leaveStatusDotClass,
@@ -50,6 +52,7 @@ import { PaginationInfo } from '@/models/shared/response/pagination-info';
     SelectModule,
     InputTextModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './other-leaves.component.html',
   styleUrl: './other-leaves.component.scss',
@@ -300,30 +303,15 @@ export class OtherLeavesComponent
   }
 
   employeeName(leave: Leave): string {
-    const lang = this.langService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? leave.employee?.nameAr
-        : (leave.employee?.nameEn ?? leave.employee?.nameAr)) ?? ''
-    );
+    return getLocalizedName(leave.employee, this.langService.getCurrentLanguage());
   }
 
   departmentName(leave: Leave): string {
-    const lang = this.langService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? leave.employee?.department?.nameAr
-        : (leave.employee?.department?.nameEn ?? leave.employee?.department?.nameAr)) ?? ''
-    );
+    return getLocalizedName(leave.employee?.department, this.langService.getCurrentLanguage());
   }
 
   leaveTypeName(leave: Leave): string {
-    const lang = this.langService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? leave.leaveType?.nameAr
-        : (leave.leaveType?.nameEn ?? leave.leaveType?.nameAr)) ?? ''
-    );
+    return getLocalizedName(leave.leaveType, this.langService.getCurrentLanguage());
   }
 
   getStatusBadgeClass(leave: Leave): string {

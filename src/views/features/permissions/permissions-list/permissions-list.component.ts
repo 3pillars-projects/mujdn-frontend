@@ -36,6 +36,7 @@ import { finalize, Observable } from 'rxjs';
 import { downloadBlobData } from '@/utils/utils';
 import { BooleanOptionModel } from '@/models/shared/boolean-option';
 import { CAN_TAKE_ACTION_OPTIONS } from '@/models/shared/can-take-action-option';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-permissions-list',
@@ -52,6 +53,7 @@ import { CAN_TAKE_ACTION_OPTIONS } from '@/models/shared/can-take-action-option'
     TabsModule,
     InputTextModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
 
   templateUrl: './permissions-list.component.html',

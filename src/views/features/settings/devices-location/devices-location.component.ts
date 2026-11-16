@@ -11,10 +11,20 @@ import { AccessLocationService } from '@/services/features/business/access-locat
 import { BaseListComponent } from '@/abstracts/base-components/base-list/base-list.component';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { AccessLocation } from '@/models/features/business/access-location';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-devices-location',
-  imports: [Breadcrumb, TableModule, PaginatorModule, InputTextModule, FormsModule, TranslatePipe],
+  imports: [
+    Breadcrumb,
+    TableModule,
+    PaginatorModule,
+    InputTextModule,
+    FormsModule,
+    TranslatePipe,
+    EnglishNamePipe,
+  ],
   templateUrl: './devices-location.component.html',
   styleUrl: './devices-location.component.scss',
 })
@@ -56,7 +66,7 @@ export default class DevicesLocationComponent
   protected override mapModelToExcelRow(model: AccessLocation): { [key: string]: any } {
     return {
       [this.translateService.instant('DEVICES_LOCATION_PAGE.LOCATION_NAME_AR')]: model.nameAr,
-      [this.translateService.instant('DEVICES_LOCATION_PAGE.LOCATION_NAME_EN')]: model.nameEn,
+      [this.translateService.instant('DEVICES_LOCATION_PAGE.LOCATION_NAME_EN')]: getEnglishName(model),
     };
   }
 }

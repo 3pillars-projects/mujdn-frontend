@@ -29,7 +29,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="getPropertyName()"
-              [options]="employees"
+              [options]="employees | withNameFallback"
               [virtualScroll]="true"
               [virtualScrollItemSize]="38"
               [filter]="true"

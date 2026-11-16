@@ -8,6 +8,8 @@ import { UserService } from '@/services/features/user.service';
 import { TemporaryRoleAssignmentService } from '@/services/features/temporary-role-assignment.service';
 import { AuthService } from '@/services/auth/auth.service';
 import { formatDateTime } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +34,7 @@ import { TemporaryRoleAssignmentPopupComponent } from '../temporary-role-assignm
     TranslatePipe,
     CommonModule,
     RouterModule,
+    WithNameFallbackPipe,
   ],
   providers: [TemporaryRoleAssignmentService],
   templateUrl: './temporary-role-assignment-list.component.html',
@@ -114,15 +117,11 @@ export default class TemporaryRoleAssignmentListComponent extends BaseListCompon
   }
 
   getEmployeeName(model: TemporaryRoleAssignment): string {
-    return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? model.userFullNameEn || model.userFullNameAr
-      : model.userFullNameAr;
+    return getLocalizedName(model, this.langService.getCurrentLanguage(), 'userFullName');
   }
 
   getDepartmentName(model: TemporaryRoleAssignment): string {
-    return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? model.departmentNameEn || model.departmentNameAr
-      : model.departmentNameAr;
+    return getLocalizedName(model, this.langService.getCurrentLanguage(), 'departmentName');
   }
 
   isCurrentLanguageEnglish(): boolean {

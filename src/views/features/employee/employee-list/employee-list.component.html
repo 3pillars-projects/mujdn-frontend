@@ -78,7 +78,7 @@
                 (ngModelChange)="onDepartmentChange($event)"
                 [(ngModel)]="filterModel.fkDepartmentId"
                 [optionLabel]="optionLabel"
-                [options]="departments"
+                [options]="departments | withNameFallback"
                 [placeholder]="'EMPLOYEES_PAGE.DEPARTMENT' | translate"
                 [showClear]="true"
                 class="w-full peer"
@@ -300,10 +300,10 @@
                     {{ user.fullNameAr }}
                   </td>
                   <td
-                    [title]="user.fullNameEn"
+                    [title]="user | englishName: 'fullName'"
                     class="max-w-[400px] whitespace-nowrap overflow-hidden text-ellipsis"
                   >
-                    {{ user.fullNameEn }}
+                    {{ user | englishName: 'fullName' }}
                   </td>
                   <td>{{ getDepartmentName(user.department) }}</td>
                   <td>

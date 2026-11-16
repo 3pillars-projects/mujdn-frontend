@@ -11,6 +11,8 @@ import { LanguageService } from '@/services/shared/language.service';
 import { AlertService } from '@/services/shared/alert.service';
 import { VisitService } from '@/services/features/visit/visit.service';
 import { formatDateOnly, formatTimeTo12Hour, toDateOnly } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 import { FormGroup } from '@angular/forms';
 import { M } from '@angular/material/dialog.d-B5HZULyo';
 import { Observable } from 'rxjs';
@@ -24,7 +26,7 @@ import { VISIT_ATTENDANCE_STATUS_ENUM } from '@/enums/visit-attendance-status-en
 
 @Component({
   selector: 'app-view-action-visit-request-popup',
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, LocalizedNamePipe],
   templateUrl: './view-action-visit-request-popup.component.html',
   styleUrl: './view-action-visit-request-popup.component.scss',
 })
@@ -79,14 +81,11 @@ export class ViewActionVisitRequestPopupComponent implements OnInit {
   }
 
   getDepartmentName(): string {
-    if (!this.model.targetDepartment) return '';
-    return this.isCurrentLanguageEnglish()
-      ? this.model.targetDepartment.nameEn || ''
-      : this.model.targetDepartment.nameAr || '';
+    return getLocalizedName(this.model.targetDepartment, this.languageService.getCurrentLanguage());
   }
 
   getLocationName(loc: AccessLocationLookup): string {
-    return this.isCurrentLanguageEnglish() ? loc.nameEn || '' : loc.nameAr || '';
+    return getLocalizedName(loc, this.languageService.getCurrentLanguage());
   }
   getStatusText(): string {
     switch (this.model.visitStatus) {

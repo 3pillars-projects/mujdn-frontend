@@ -130,7 +130,7 @@
               }}</label>
               <p-select
                 [optionLabel]="getPropertyName()"
-                [options]="notificationTypes"
+                [options]="notificationTypes | withNameFallback"
                 class="w-full peer"
                 [(ngModel)]="filterModel.notificationTypeId"
                 id="regionSelect"

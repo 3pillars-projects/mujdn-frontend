@@ -25,6 +25,8 @@ import { CommonModule } from '@angular/common';
 import { RequiredMarkerDirective } from '../../../../directives/required-marker.directive';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { LanguageService } from '@/services/shared/language.service';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-attendance-log-popup',
@@ -38,6 +40,7 @@ import { LanguageService } from '@/services/shared/language.service';
     RequiredMarkerDirective,
     TranslatePipe,
     ValidationMessagesComponent,
+    WithNameFallbackPipe,
   ],
   templateUrl: './attendance-log-popup.component.html',
   styleUrl: './attendance-log-popup.component.scss',
@@ -87,10 +90,11 @@ export class AttendanceLogPopupComponent
     return this.form.get('swipeTime') as FormControl;
   }
 
-  private sortByName<T extends { [key: string]: any }>(arr: T[], key: string): T[] {
+  private sortByName<T extends BaseLookupModel>(arr: T[]): T[] {
+    const language = this.getCurrentLanguage();
     return [...arr].sort((a, b) => {
-      const nameA = (a[key] || '').toString().toLowerCase();
-      const nameB = (b[key] || '').toString().toLowerCase();
+      const nameA = getLocalizedName(a, language).toLowerCase();
+      const nameB = getLocalizedName(b, language).toLowerCase();
       return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
     });
   }
@@ -99,14 +103,10 @@ export class AttendanceLogPopupComponent
     return this.langService.getCurrentLanguage();
   }
 
-  get optionLabel(): string {
-    return this.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC ? 'nameAr' : 'nameEn';
-  }
-
   override initPopup() {
     this.model = this.data.model;
     this.departments = this.data.lookups?.departments ?? [];
-    this.departments = this.sortByName(this.departments, this.optionLabel);
+    this.departments = this.sortByName(this.departments);
     this.employees = this.data.lookups?.employees ?? [];
     this.viewMode = this.data.viewMode;
     this.isCreateMode = this.viewMode == ViewModeEnum.CREATE;

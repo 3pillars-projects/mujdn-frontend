@@ -129,7 +129,7 @@
 
               <p-select
                 [(ngModel)]="filterOptions.fkDepartmentId"
-                [options]="departments"
+                [options]="departments | withNameFallback"
                 class="w-full peer"
                 [optionLabel]="optionLabel"
                 optionValue="id"
@@ -150,7 +150,7 @@
               </label>
 
               <p-select
-                [options]="filteredEmployees"
+                [options]="filteredEmployees | withNameFallback"
                 [(ngModel)]="filterOptions.fkAssignedUserId"
                 class="w-full peer"
                 [optionLabel]="optionLabel"

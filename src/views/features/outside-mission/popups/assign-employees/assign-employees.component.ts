@@ -28,6 +28,10 @@ import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { TooltipModule } from 'primeng/tooltip';
 import { AlertService } from '@/services/shared/alert.service';
 import { getWorkMissionTypeName } from '@/models/features/business/work-mission-type-option';
+import { getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 @Component({
   selector: 'app-assign-employees',
   imports: [
@@ -41,6 +45,9 @@ import { getWorkMissionTypeName } from '@/models/features/business/work-mission-
     PaginatorModule,
     TranslatePipe,
     TooltipModule,
+    EnglishNamePipe,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './assign-employees.component.html',
   styleUrl: './assign-employees.component.scss',
@@ -92,15 +99,13 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
   }
 
   private sortDepartments() {
-    this.departments.sort((a, b) => {
-      const currentLang = this.languageService.getCurrentLanguage();
-      const prop = currentLang === LANGUAGE_ENUM.ENGLISH ? 'nameEn' : 'nameAr';
-
-      return (a[prop] || '').localeCompare(
-        b[prop] || '',
+    const currentLang = this.languageService.getCurrentLanguage();
+    this.departments.sort((a, b) =>
+      getLocalizedName(a, currentLang).localeCompare(
+        getLocalizedName(b, currentLang),
         currentLang === LANGUAGE_ENUM.ENGLISH ? 'en' : 'ar'
-      );
-    });
+      )
+    );
   }
 
   override buildForm(): void {}
@@ -246,10 +251,7 @@ export class AssignEmployeesComponent extends BasePopupComponent<WorkMission> {
     }
 
     // Return name based on current language
-    const currentLang = this.languageService.getCurrentLanguage();
-    return currentLang === LANGUAGE_ENUM.ENGLISH
-      ? employee.nameEn || employee.nameAr || 'N/A'
-      : employee.nameAr || employee.nameEn || 'N/A';
+    return getLocalizedName(employee, this.languageService.getCurrentLanguage()) || 'N/A';
   }
   search() {
     this.first = 0;

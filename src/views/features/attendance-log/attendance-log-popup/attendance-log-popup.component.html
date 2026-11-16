@@ -22,7 +22,7 @@
             <p-select
               [disabled]="!isCreateMode"
               [optionLabel]="getPropertyName()"
-              [options]="departments"
+              [options]="departments | withNameFallback"
               class="w-full peer"
               formControlName="departmentId"
               id="attendance-department-popup"
@@ -48,7 +48,7 @@
             <p-select
               [disabled]="!isCreateMode || !departmentControl.value"
               [optionLabel]="getPropertyName()"
-              [options]="getFilteredEmployees()"
+              [options]="getFilteredEmployees() | withNameFallback"
               class="w-full peer"
               formControlName="employeeId"
               id="attendance-employee-popup"

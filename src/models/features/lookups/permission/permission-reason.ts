@@ -4,9 +4,9 @@ import { PermissionReasonService } from '@/services/features/lookups/permission-
 import { PermissionReasonInterceptor } from '@/model-interceptors/features/lookups/permission-reason.interceptor';
 import { CustomValidators } from '@/validators/custom-validators';
 import { Validators } from '@angular/forms';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { FactoryService } from '@/services/factory-service';
 import { LanguageService } from '@/services/shared/language.service';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new PermissionReasonInterceptor();
 
@@ -23,9 +23,7 @@ export class PermissionReason extends BaseCrudModel<PermissionReason, Permission
   }
 
   getName(): string {
-    return this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH && this.nameEn
-      ? this.nameEn
-      : this.nameAr;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '');
   }
 
   buildForm() {

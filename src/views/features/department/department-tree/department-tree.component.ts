@@ -1,6 +1,6 @@
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { Department } from '@/models/features/lookups/department/department';
 import { LanguageService } from '@/services/shared/language.service';
+import { getLocalizedName } from '@/utils/localized-name';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -142,10 +142,7 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
 
   private mapDepartmentToTreeNode = (department: Department): TreeNode => {
     return {
-      label:
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-          ? department.nameEn
-          : department.nameAr,
+      label: getLocalizedName(department, this.languageService.getCurrentLanguage()),
       data: department,
       children: department.childDepartments?.map(this.mapDepartmentToTreeNode) || [],
     };
@@ -194,10 +191,7 @@ export class DepartmentTreeComponent implements OnInit, OnChanges {
   updateTreeLabels() {
     const updateNodeLabelRecursively = (node: TreeNode): TreeNode => {
       const dept = node.data as Department;
-      const label =
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-          ? dept.nameEn
-          : dept.nameAr;
+      const label = getLocalizedName(dept, this.languageService.getCurrentLanguage());
 
       return {
         ...node,

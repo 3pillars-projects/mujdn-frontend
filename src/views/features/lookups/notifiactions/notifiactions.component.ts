@@ -22,6 +22,7 @@ import { NotificationTypeService } from '@/services/features/setting/notificatio
 import { LanguageService } from '@/services/shared/language.service';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { formatDateOnly, formatDateTo12Hour } from '@/utils/general-helper';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-notifiactions',
@@ -37,6 +38,7 @@ import { formatDateOnly, formatDateTo12Hour } from '@/utils/general-helper';
     FormsModule,
     TranslatePipe,
     Select,
+    WithNameFallbackPipe,
   ],
   templateUrl: './notifiactions.component.html',
   styleUrl: './notifiactions.component.scss',

@@ -16,7 +16,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="getPropertyName()"
-              [options]="permissionTypes"
+              [options]="permissionTypes | withNameFallback"
               class="w-full peer"
               formControlName="fkPermissionTypeId"
               id="permissionType"
@@ -64,7 +64,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="getPropertyName()"
-              [options]="prmissionReasons"
+              [options]="prmissionReasons | withNameFallback"
               class="w-full peer"
               formControlName="fkReasonId"
               id="prmissionReason"

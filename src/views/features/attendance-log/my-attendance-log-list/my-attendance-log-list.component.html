@@ -32,7 +32,7 @@
             (ngModelChange)="onCreatorChange($event)"
             [(ngModel)]="filterModel.creatorId"
             [optionLabel]="optionLabel"
-            [options]="creators"
+            [options]="creators | withNameFallback"
             [placeholder]="'ATTENDANCE_LOG_PAGE.CREATOR' | translate"
             class="w-full peer"
             id="creator"
@@ -174,7 +174,7 @@
             <td>{{ getDeviceName(attendanceLog) }}</td>
             @if (!attendanceLog.isRawData) {
               <td>{{ attendanceLog.creatorNameAr }}</td>
-              <td>{{ attendanceLog.creatorNameEn }}</td>
+              <td>{{ attendanceLog | englishName: 'creatorName' }}</td>
             } @else {
               <td>النظام</td>
               <td>System</td>

@@ -31,6 +31,7 @@ import { AttachmentUploadComponent } from '@/views/shared/attachment-upload/atta
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { toDateOnly } from '@/utils/general-helper';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-leaves-add-edit-popup',
@@ -46,6 +47,7 @@ import { toDateOnly } from '@/utils/general-helper';
     ValidationMessagesComponent,
     AttachmentUploadComponent,
     AttachmentListComponent,
+    WithNameFallbackPipe,
   ],
   templateUrl: './leaves-add-edit-popup.component.html',
   styleUrl: './leaves-add-edit-popup.component.scss',

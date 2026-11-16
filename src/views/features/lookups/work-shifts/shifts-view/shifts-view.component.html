@@ -34,7 +34,7 @@
               </label>
               <p-multiselect
                 [(ngModel)]="filterOptions.fkDepartmentIds"
-                [options]="departments"
+                [options]="departments | withNameFallback"
                 [optionLabel]="optionLabel"
                 [placeholder]="'SHIFTS_VIEW_PAGE.DEPARTMENT' | translate"
                 [showClear]="true"
@@ -57,7 +57,7 @@
               </label>
               <p-multiselect
                 [(ngModel)]="filterOptions.fkUserProfileIds"
-                [options]="filteredUsersProfiles"
+                [options]="filteredUsersProfiles | withNameFallback"
                 [optionLabel]="optionLabel"
                 [placeholder]="'SHIFTS_VIEW_PAGE.EMPLOYEE_NAME' | translate"
                 [showClear]="true"

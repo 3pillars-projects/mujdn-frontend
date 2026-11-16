@@ -11,11 +11,21 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NationalityService } from '@/services/features/lookups/nationality.service';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-nationality-list',
   standalone: true,
-  imports: [Breadcrumb, TableModule, PaginatorModule, InputTextModule, FormsModule, TranslatePipe],
+  imports: [
+    Breadcrumb,
+    TableModule,
+    PaginatorModule,
+    InputTextModule,
+    FormsModule,
+    TranslatePipe,
+    EnglishNamePipe,
+  ],
   providers: [NationalityService],
   templateUrl: './nationality-list.component.html',
   styleUrl: './nationality-list.component.scss',
@@ -58,7 +68,8 @@ export default class NationalityListComponent
   protected override mapModelToExcelRow(model: Nationality): { [key: string]: any } {
     return {
       [this.translateService.instant('NATIONALITIES_PAGE.NATIONALITY_IN_ARABIC')]: model.nameAr,
-      [this.translateService.instant('NATIONALITIES_PAGE.NATIONALITY_IN_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('NATIONALITIES_PAGE.NATIONALITY_IN_ENGLISH')]:
+        getEnglishName(model),
     };
   }
 }

@@ -15,6 +15,8 @@ import { BlacklistedNationalityPopupComponent } from '../blacklisted-nationality
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { PaginatedList } from '@/models/shared/response/paginated-list';
 import { takeUntil } from 'rxjs';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-blacklisted-nationality-list',
@@ -25,6 +27,7 @@ import { takeUntil } from 'rxjs';
     FormsModule,
     TranslatePipe,
     RouterModule,
+    EnglishNamePipe,
   ],
   templateUrl: './blacklisted-nationalities-list.component.html',
   styleUrl: './blacklisted-nationalities-list.component.scss',
@@ -103,7 +106,7 @@ export class BlacklistedNationalityListComponent
   protected override mapModelToExcelRow(model: BlacklistedNationality): { [key: string]: any } {
     return {
       [this.translateService.instant('BLACKLIST_PAGE.NATIONALITY_IN_ARABIC')]: model.nameAr,
-      [this.translateService.instant('BLACKLIST_PAGE.NATIONALITY_IN_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('BLACKLIST_PAGE.NATIONALITY_IN_ENGLISH')]: getEnglishName(model),
     };
   }
 }

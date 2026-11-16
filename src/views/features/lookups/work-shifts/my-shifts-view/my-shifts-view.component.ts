@@ -31,6 +31,7 @@ import { WorkDaysSetting } from '@/models/features/setting/work-days-setting';
 import EmployeeShift from '@/models/features/lookups/work-shifts/employee-shift';
 import { WorkShiftType } from '@/enums/work-shift-type';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
+import { isBlankText, localizeText } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-my-shifts-view',
@@ -199,15 +200,14 @@ export class MyShiftsViewComponent extends BaseListComponent<
       nameEn?: string;
     };
 
-    return this.isArabic
-      ? (shiftDay.shiftDetails?.nameAr ?? shiftDay.shiftNameAr ?? shiftDay.nameAr ?? '')
-      : (shiftDay.shiftDetails?.nameEn ??
-          shiftDay.shiftNameEn ??
-          shiftDay.nameEn ??
-          shiftDay.shiftDetails?.nameAr ??
-          shiftDay.shiftNameAr ??
-          shiftDay.nameAr ??
-          '');
+    const nameAr = [shiftDay.shiftDetails?.nameAr, shiftDay.shiftNameAr, shiftDay.nameAr].find(
+      (name) => !isBlankText(name)
+    );
+    const nameEn = [shiftDay.shiftDetails?.nameEn, shiftDay.shiftNameEn, shiftDay.nameEn].find(
+      (name) => !isBlankText(name)
+    );
+
+    return localizeText(nameAr, nameEn, this.langService.getCurrentLanguage());
   }
 
   getShiftTypeName(type: number): string {

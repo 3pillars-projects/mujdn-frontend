@@ -29,6 +29,9 @@ import { MatDialogConfig } from '@angular/material/dialog';
 import { ReportDetailsModalComponent } from '../report-details-modal/report-details-modal.component';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { downloadBlobData } from '@/utils/utils';
+import { getLocalizedName } from '@/utils/localized-name';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 @Component({
   selector: 'app-all-attendance-report-list',
   imports: [
@@ -43,6 +46,8 @@ import { downloadBlobData } from '@/utils/utils';
     Select,
     MultiSelectModule,
     TranslatePipe,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   providers: [DatePipe],
 
@@ -94,14 +99,10 @@ export class AllAttendanceReportListComponent extends BaseListComponent<
   protected override mapModelToExcelRow(model: AttendanceReport): { [key: string]: any } {
     return {
       [this.translateService.instant('ATTENDANCE_REPORT_PAGE.EMPLOYEE_NAME')]:
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-          ? model.fullNameEn || model.fullNameAr
-          : model.fullNameAr,
+        getLocalizedName(model, this.languageService.getCurrentLanguage(), 'fullName'),
       [this.translateService.instant('ATTENDANCE_REPORT_PAGE.NATIONAL_ID')]: model.nationalId,
       [this.translateService.instant('ATTENDANCE_REPORT_PAGE.DEPARTMENT')]:
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-          ? model.departmentNameEn || model.departmentNameAr
-          : model.departmentNameAr,
+        getLocalizedName(model, this.languageService.getCurrentLanguage(), 'departmentName'),
       [this.translateService.instant('ATTENDANCE_REPORT_PAGE.DATE')]: this.formatDate(
         model.processingDate
       ),

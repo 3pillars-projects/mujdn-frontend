@@ -6,9 +6,9 @@ import { DevicesConfigurationService } from '@/services/features/business/device
 import { DevicesConfigurationInterceptor } from '@/model-interceptors/features/business/devices-configuration.interceptor';
 import { A } from '@angular/cdk/activedescendant-key-manager.d-Bjic5obv';
 import { AccessLocation } from './access-location';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { FactoryService } from '@/services/factory-service';
 import { LanguageService } from '@/services/shared/language.service';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new DevicesConfigurationInterceptor();
 
@@ -38,8 +38,6 @@ export class DevicesConfiguration extends BaseCrudModel<
   }
 
   getAccessLocationName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.accessLocation?.nameEn ?? '')
-      : (this.accessLocation?.nameAr ?? '');
+    return getLocalizedName(this.accessLocation, this.languageService?.getCurrentLanguage() ?? '');
   }
 }
