@@ -79,8 +79,6 @@ export class MyShiftsViewComponent extends BaseListComponent<
 
     if (initialList?.list) {
       this.handleLoadListSuccess(initialList);
-    } else {
-      this.applyTimeFormatting(this.list);
     }
 
     this.workDaysSettingService.getWorkDays().subscribe({
@@ -119,11 +117,6 @@ export class MyShiftsViewComponent extends BaseListComponent<
         this.alertsService.showErrorMessage({ messages: ['COMMON.ERROR'] });
       },
     });
-  }
-
-  override handleLoadListSuccess(response: PaginatedList<EmployeeShiftDay>): void {
-    super.handleLoadListSuccess(response);
-    this.applyTimeFormatting(this.list);
   }
 
   override openDialog(_model: EmployeeShiftDay): void {
@@ -231,12 +224,5 @@ export class MyShiftsViewComponent extends BaseListComponent<
 
   getFormattedTimeRange(item: EmployeeShiftDay): string {
     return formatTimeRange(item.timeFrom, item.timeTo, this.isArabic ? 'ar-EG' : 'en-US');
-  }
-
-  private applyTimeFormatting(list: EmployeeShiftDay[]): void {
-    if (!list) return;
-    list.forEach((item) => {
-      item.formattedTimeRange = this.getFormattedTimeRange(item);
-    });
   }
 }
