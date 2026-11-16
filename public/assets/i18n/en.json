@@ -454,6 +454,7 @@
     "JOIN_DATE_FROM": "Join Date (From)",
     "JOIN_DATE_TO": "Join Date (To)",
     "ACCOUNT_STATUS": "Account Status",
+    "ACCOUNT_STATUS_INACTIVE": "Inactive",
     "JOB_TITLE": "Job Title",
     "JOB_TITLE_ARABIC": "Job Title in Arabic",
     "JOB_TITLE_ENGLISH": "Job Title in English",

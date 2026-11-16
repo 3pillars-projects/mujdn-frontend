@@ -452,6 +452,7 @@
     "JOIN_DATE_FROM": "تاريخ الالتحاق (من)",
     "JOIN_DATE_TO": "تاريخ الالتحاق (إلى)",
     "ACCOUNT_STATUS": "حالة الحساب",
+    "ACCOUNT_STATUS_INACTIVE": "غير نشط",
     "JOB_TITLE": "المسمى الوظيفي",
     "JOB_TITLE_ARABIC": "المسمى الوظيفي بالعربية",
     "JOB_TITLE_ENGLISH": "المسمى الوظيفي بالإنجليزية",

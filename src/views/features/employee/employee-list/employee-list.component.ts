@@ -277,11 +277,14 @@ export default class EmployeeListComponent
 
   // Excel Export Implementation
   protected override mapModelToExcelRow(model: User): { [key: string]: any } {
-    const formatBoolean = (value: boolean | undefined): string => {
+    const formatBoolean = (
+      value: boolean | undefined,
+      inactiveKey: string = 'COMMON.INACTIVE'
+    ): string => {
       if (value === undefined || value === null) return '';
       return value
         ? this.translateService.instant('COMMON.ACTIVE')
-        : this.translateService.instant('COMMON.INACTIVE');
+        : this.translateService.instant(inactiveKey);
     };
 
     return {
@@ -300,7 +303,8 @@ export default class EmployeeListComponent
       [this.translateService.instant('EMPLOYEES_PAGE.JOB_TITLE_ARABIC')]: model.jobTitleAr || '',
       [this.translateService.instant('EMPLOYEES_PAGE.JOB_TITLE_ENGLISH')]: model.jobTitleEn || '',
       [this.translateService.instant('EMPLOYEES_PAGE.ACCOUNT_STATUS')]: formatBoolean(
-        model.isActive
+        model.isActive,
+        'EMPLOYEES_PAGE.ACCOUNT_STATUS_INACTIVE'
       ),
       [this.translateService.instant('EMPLOYEES_PAGE.JOIN_DATE')]: formatDateOnly(model.joinDate),
     };
