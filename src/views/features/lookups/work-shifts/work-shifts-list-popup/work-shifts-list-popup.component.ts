@@ -173,7 +173,20 @@ export class WorkShiftsListPopupComponent extends BasePopupComponent<Shift> impl
   saveAndActivateShift() {
     this.form.get('isActive')?.setValue(true);
     this.isSaveAndActivateClicked = true;
-    this.save$.next();
+    const confirmMessage = this.translateService.instant(
+      'WORK_SHIFTS_POPUP.NEW_DEFAULT_SHIFT_TO_BE_ADDED'
+    );
+    const confirmationData = {
+      icon: CONFIRMATION_DIALOG_ICONS_ENUM.WARNING.toString(),
+      messages: [confirmMessage],
+    };
+
+    this.confirmationService
+      .open(confirmationData)
+      .afterClosed()
+      .pipe(filter((result) => result === DIALOG_ENUM.OK))
+      .subscribe((_) => this.save$.next());
+    // this.save$.next();
   }
   override initPopup(): void {
     this.model = this.data.model;
@@ -331,28 +344,7 @@ export class WorkShiftsListPopupComponent extends BasePopupComponent<Shift> impl
   updateShiftMainData() {
     this.form.get('isUpdateOnly')?.setValue(true);
 
-    if (
-      this.model.isAvailableDefaultShift &&
-      this.form.get('isDefaultShiftForm')?.value &&
-      this.model.id != this.model.defaultShiftId &&
-      !this.model.isActive
-    ) {
-      const confirmMessage = this.translateService.instant(
-        'WORK_SHIFTS_POPUP.NEW_DEFAULT_SHIFT_TO_BE_ADDED'
-      );
-      const confirmationData = {
-        icon: CONFIRMATION_DIALOG_ICONS_ENUM.WARNING.toString(),
-        messages: [confirmMessage],
-      };
-
-      this.confirmationService
-        .open(confirmationData)
-        .afterClosed()
-        .pipe(filter((result) => result === DIALOG_ENUM.OK))
-        .subscribe((_) => this.save$.next());
-    } else {
-      this.save$.next();
-    }
+    this.save$.next();
   }
   getShiftDuration() {
     if (!this.timeFromControl.value || !this.timeToControl.value) {
