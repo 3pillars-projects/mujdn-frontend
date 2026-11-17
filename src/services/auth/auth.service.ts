@@ -33,10 +33,14 @@ export class AuthService extends BaseCrudService<LoggedInUser, string> {
     return this.loggedInUser.value?.roles.includes(ROLES_ENUM.HR_OFFICER);
   }
 
+  /** HR officer with organisation-wide scope, as decided by the backend `isSuperHrOfficer` claim.
+   * HR that comes only from the attendance compliance officer role never counts. Cookies issued
+   * before the claim existed fall back to HR role + root department until the next refresh. */
   get isSuperHROfficer() {
+    const user = this.loggedInUser.value;
     return (
-      this.loggedInUser.value?.roles.includes(ROLES_ENUM.HR_OFFICER) &&
-      this.loggedInUser.value?.isInRootDepartment
+      user?.isSuperHrOfficer ??
+      (!!user?.roles.includes(ROLES_ENUM.HR_OFFICER) && !!user?.isInRootDepartment)
     );
   }
 
@@ -113,6 +117,9 @@ export class AuthService extends BaseCrudService<LoggedInUser, string> {
     if (loggedInUser) {
       loggedInUser.isDepartmentManager = loggedInUser.isDepartmentManager + '' == 'true';
       loggedInUser.isInRootDepartment = loggedInUser.isInRootDepartment + '' == 'true';
+      if (loggedInUser.isSuperHrOfficer !== undefined) {
+        loggedInUser.isSuperHrOfficer = loggedInUser.isSuperHrOfficer + '' == 'true';
+      }
     }
 
     const user = loggedInUser ? Object.assign(new LoggedInUser(), loggedInUser) : undefined;

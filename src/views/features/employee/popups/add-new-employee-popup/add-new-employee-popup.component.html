@@ -472,6 +472,27 @@
                 'EMPLOYEES_PAGE.ROLE_MP_LEADER' | translate
               }}</span>
             </label>
+            <label class="flex items-center space-x-2 cursor-pointer relative">
+              <input
+                [checked]="roleStates.isComplianceOfficer"
+                class="appearance-none w-6 h-6 border border-[#6c737f] rounded-[2px] checked:bg-[#1b8354] checked:border-transparent focus:outline-none peer"
+                type="checkbox"
+              />
+              <svg
+                class="absolute start-1 top-1 w-4 h-4 text-white pointer-events-none scale-0 peer-checked:scale-100 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                viewBox="0 0 24 24"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span class="text-base font-medium text-[#1f2a37]">{{
+                'EMPLOYEES_PAGE.ROLE_ATTENDANCE_COMPLIANCE' | translate
+              }}</span>
+            </label>
           </div>
         </div>
       </fieldset>
