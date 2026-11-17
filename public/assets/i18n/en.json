@@ -205,7 +205,19 @@
     "TEMPORARY_UPLOAD_ALREADY_CONSUMED": "This file is already attached to a request.",
     "TEMPORARY_UPLOAD_NOT_AVAILABLE": "One of the attached files has expired. Please attach it again and resubmit.",
     "TEMPORARY_UPLOAD_FILE_NOT_AVAILABLE": "One of the attached files is no longer available. Please attach it again and resubmit.",
-    "TEMPORARY_UPLOAD_IDS_INVALID": "The attached files are invalid. Please attach them again."
+    "TEMPORARY_UPLOAD_IDS_INVALID": "The attached files are invalid. Please attach them again.",
+    "VISIT_CARD_NOT_FOUND": "No card is registered with this short number.",
+    "VISIT_CARD_ID_ALREADY_EXISTS": "A card with this card ID is already registered.",
+    "VISIT_CARD_FRIENDLY_NUMBER_ALREADY_EXISTS": "This short number is already used by another card.",
+    "VISIT_CARD_ID_INVALID_FORMAT": "The card ID must be a hexadecimal value of up to 32 characters.",
+    "VISIT_CARD_FRIENDLY_NUMBER_OUT_OF_RANGE": "The short number must be between 1 and 9999.",
+    "VISIT_CARD_NUMBERS_EXHAUSTED": "All short numbers from 1 to 9999 are already used.",
+    "VISIT_CARD_IN_USE": "This card is linked to a visit and cannot be changed or deleted.",
+    "VISIT_CARD_ASSIGNED_TO_ANOTHER_VISIT": "This card is linked to another visit ({{visitorName}} - {{visitDate}}).",
+    "VISIT_NOT_APPROVED_FOR_CARD": "A card can only be linked to an approved visit.",
+    "VISIT_ENDED": "The visit time has already ended.",
+    "VISIT_HAS_NO_CARD": "No card is linked to this visit.",
+    "DSS_CARD_ASSIGNMENT_FAILED": "The access control system could not update the visitor's card. Please try again."
   },
   "ATTACHMENTS": {
     "ATTACHMENTS": "Attachments",
@@ -693,7 +705,8 @@
     "VISIT_REQUEST": "Visit Requests",
     "ACCESS_LOCATIONS": "Access Locations",
     "DEVICES_CONFIGURATION": "Devices Configuration",
-    "ATTENDANCE_REPORT_PROCESSING": "Attendance Report Processing"
+    "ATTENDANCE_REPORT_PROCESSING": "Attendance Report Processing",
+    "VISIT_CARDS": "Visit cards"
   },
   "NOTIFICATION": {
     "GENERAL_SETTINGS": "General Settings",
@@ -1039,7 +1052,22 @@
     "DO_YOU_WANT_TO_CONTINUE": "Visitor with this National ID already exists, Do you want to continue to update the visitor data?",
     "DEVICES_LOCATIONS": "Devices Locations",
     "SELECTED_DEVICES_LOCATIONS": "Selected Devices Locations",
-    "ATTENDANCE_STATUS": "Attendance Status"
+    "ATTENDANCE_STATUS": "Attendance Status",
+    "CARD_DATA": "Card data",
+    "CONFIRM_CARD_DATA": "Confirm card data",
+    "MOVE_AND_CONFIRM_CARD": "Move card to this visit",
+    "MOVE_CARD": "Move card",
+    "MOVE_CARD_CONFIRM": "Card {{friendlyNumber}} is linked to another visit ({{holder}}). Move it to this visit? The previous visitor will no longer be able to use it.",
+    "UNLINK_CARD": "Unlink card",
+    "UNLINK_CARD_CONFIRM": "Unlink the card from this visit? The visitor will no longer be able to use it.",
+    "CARD_LINKED_TO_OTHER_VISIT": "This card is currently linked to another visit: {{holder}}",
+    "CARD_ALREADY_LINKED_HERE": "This card is linked to this visit",
+    "CARD_LINKED_SUCCESSFULLY": "The card was linked to the visit successfully",
+    "CARD_UNLINKED_SUCCESSFULLY": "The card was unlinked from the visit",
+    "CARD_NOT_FOUND": "Short number not found, please try another number",
+    "CARD_LOOKUP_FAILED": "Could not check the card.",
+    "LINK_CARD": "Link card",
+    "LINKED_CARD": "Linked card {{friendlyNumber}}"
   },
   "QR_CODE_POPUP": {
     "GENERAL_WARNINGS": "General Warnings",
@@ -1211,11 +1239,25 @@
     "WORK_DAYS_LABEL": "Shift working days:",
     "NO_SHIFT": "No shift assigned for today"
   },
-
   "CHOOSE_SYSTEM_SCREEN": {
     "CHOOSE_SYSTEM": "Choose The System",
     "CHOOSE_THE_SYSTEM_YOU_WANT_TO_USE": "Select the system you want to use. You can switch between the two systems at any time.",
     "ATTENDANCE_SYSTEM": "Attendance System",
     "VISITS_SYSTEM": "Visits System"
+  },
+  "VISIT_CARDS_PAGE": {
+    "TITLE": "Visit cards",
+    "VISIT_CARDS_LIST": "Registered visit cards",
+    "ADD_NEW_CARD": "Register new card",
+    "EDIT_CARD": "Edit card",
+    "CARD_ID": "Card ID",
+    "FRIENDLY_NUMBER": "Card short number",
+    "MAX_4_DIGITS_HINT": "Up to 4 digits only",
+    "CARD_IN_USE_TOOLTIP": "This card is linked to a visit. Unlink it before editing or deleting.",
+    "EXPORT_EXCEL": "Export to Excel",
+    "CHECKING": "Checking...",
+    "CARD_ID_HEX_ONLY": "The card ID must be hexadecimal (0-9, A-F)",
+    "CARD_ID_TAKEN": "This card ID is already registered",
+    "FRIENDLY_NUMBER_TAKEN": "This short number is already used by another card"
   }
 }

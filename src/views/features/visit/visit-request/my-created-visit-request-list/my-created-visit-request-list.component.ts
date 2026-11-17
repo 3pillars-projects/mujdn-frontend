@@ -13,6 +13,7 @@ import { VisitorSelectionPopupComponent } from '../visitor-selection-popup/visit
 import { Select } from 'primeng/select';
 import { AddEditVisitRequestPopupComponent } from '../add-edit-visit-request-popup/add-edit-visit-request-popup.component';
 import { ViewActionVisitRequestPopupComponent } from '../view-action-visit-request-popup/view-action-visit-request-popup.component';
+import { LinkVisitCardPopupComponent } from '../link-visit-card-popup/link-visit-card-popup.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { BaseListComponent } from '@/abstracts/base-components/base-list/base-list.component';
 import { Visit } from '@/models/features/visit/visit';
@@ -202,6 +203,34 @@ export class MyCreatedVisitRequestListComponent
     routerLink?: string;
   }[] {
     return [{ labelKey: 'VISIT_REQUEST_PAGE.MY_VISITS' }];
+  }
+
+  /** Gate: security staff link an access card to an approved visit that has not ended. */
+  showLinkCardButton(visit: Visit): boolean {
+    if (!this.authService.isSecurityLeader && !this.authService.isSecurityMember) {
+      return false;
+    }
+    if (visit?.visitStatus !== VisitStatusEnum.APPROVED || !visit.visitDate) {
+      return false;
+    }
+    return !didVisitTimePassed(visit);
+  }
+
+  openLinkCardDialog(model: Visit) {
+    this.setNationalityNames(model);
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.data = { model };
+    dialogConfig.width = this.dialogSize.width;
+    dialogConfig.maxWidth = this.dialogSize.maxWidth;
+
+    this.matDialog
+      .open(LinkVisitCardPopupComponent as any, dialogConfig)
+      .afterClosed()
+      .subscribe((result: DIALOG_ENUM) => {
+        if (result === DIALOG_ENUM.OK) {
+          this.loadDataIfNeeded();
+        }
+      });
   }
 
   showActionsButton(visit: Visit): boolean {

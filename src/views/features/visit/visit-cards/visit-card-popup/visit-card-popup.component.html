@@ -1,0 +1,103 @@
+<div [dir]="direction">
+  <div class="p-6">
+    <button
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+      class="block ms-auto"
+      type="button"
+    >
+      <i class="pi pi-times close-popup"></i>
+    </button>
+    <h3 class="text-[#1f2a37] font-[600] mb-4 text-lg sm:text-xl">
+      {{
+        (isCreateMode ? 'VISIT_CARDS_PAGE.ADD_NEW_CARD' : 'VISIT_CARDS_PAGE.EDIT_CARD') | translate
+      }}
+    </h3>
+    <form [formGroup]="form" class="mt-6" (ngSubmit)="save$.next()">
+      <div class="grid gap-6">
+        <div>
+          <label class="label" for="visitCardId-popup">{{
+            'VISIT_CARDS_PAGE.CARD_ID' | translate
+          }}</label>
+          <div class="relative">
+            <input
+              (blur)="normalizeCardIdInput()"
+              [attr.aria-busy]="cardIdControl.pending"
+              autocomplete="off"
+              class="peer"
+              dir="ltr"
+              fluid="true"
+              formControlName="cardId"
+              id="visitCardId-popup"
+              pInputText
+              placeholder="{{ 'VISIT_CARDS_PAGE.CARD_ID' | translate }}"
+              type="text"
+            />
+            <span
+              class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+            ></span>
+          </div>
+          @if (cardIdControl.pending) {
+            <p class="text-[#64748b] text-xs mt-2 flex items-center gap-1" aria-live="polite">
+              <i class="pi pi-spin pi-spinner text-xs"></i>
+              {{ 'VISIT_CARDS_PAGE.CHECKING' | translate }}
+            </p>
+          }
+          <div aria-live="polite">
+            <app-validation-messages [control]="cardIdControl"></app-validation-messages>
+          </div>
+        </div>
+        <div>
+          <label class="label" for="visitCardFriendlyNumber-popup">{{
+            'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate
+          }}</label>
+          <div class="relative">
+            <input
+              [attr.aria-busy]="friendlyNumberControl.pending"
+              aria-describedby="visitCardFriendlyNumber-hint"
+              autocomplete="off"
+              class="peer"
+              fluid="true"
+              formControlName="friendlyNumber"
+              id="visitCardFriendlyNumber-popup"
+              inputmode="numeric"
+              max="9999"
+              min="1"
+              pInputText
+              placeholder="{{ 'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate }}"
+              type="number"
+            />
+            <span
+              class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+            ></span>
+          </div>
+          <p
+            class="text-[#64748b] text-xs mt-2 flex items-center gap-1"
+            id="visitCardFriendlyNumber-hint"
+          >
+            <i class="pi pi-question-circle text-xs"></i>
+            {{ 'VISIT_CARDS_PAGE.MAX_4_DIGITS_HINT' | translate }}
+          </p>
+          @if (friendlyNumberControl.pending) {
+            <p class="text-[#64748b] text-xs mt-1 flex items-center gap-1" aria-live="polite">
+              <i class="pi pi-spin pi-spinner text-xs"></i>
+              {{ 'VISIT_CARDS_PAGE.CHECKING' | translate }}
+            </p>
+          }
+          <div aria-live="polite">
+            <app-validation-messages [control]="friendlyNumberControl"></app-validation-messages>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions mt-8 flex items-center justify-between gap-4">
+        <button (click)="close()" class="btn gray-btn" type="button">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button class="btn green-btn" type="submit">
+          {{ (isCreateMode ? 'COMMON.ADD' : 'COMMON.SAVE') | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<div
+  class="bg-white py-3 px-6 rounded-2xl flex justify-between items-start sm:items-center mb-8 flex-col sm:flex-row gap-4"
+>
+  <div class="flex items-center gap-2">
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISITOR_NAME' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.fullName }}</h4>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISIT_STATUS' | translate }}:
+    </span>
+    <div>
+      <span [class]="getStatusBadgeClass()">
+        <span class="w-[10px] h-[10px] bg-[#ffffff99] rounded-full"></span>
+        {{ getStatusText() }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  <!-- National ID -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.NATIONAL_ID' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.nationalId }}</h4>
+  </div>
+
+  <!-- National ID Expiry Date -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.NATIONAL_ID_EXPIRY_DATE' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ formatDate(model.nationalIdExpiryDate) }}</h4>
+  </div>
+
+  <!-- Nationality -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.NATIONALITY' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">
+      {{ model | localizedName: 'nationalityName' }}
+    </h4>
+  </div>
+
+  <!-- Mobile Number -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.MOBILE_NUMBER' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.phoneNumber }}</h4>
+  </div>
+
+  <!-- Address -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.ADDRESS' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.address }}</h4>
+  </div>
+
+  <!-- Email -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]"> {{ 'VISIT_REQUEST_PAGE.EMAIL' | translate }}: </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.email }}</h4>
+  </div>
+
+  <!-- Visitor Organization -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISITOR_ORGANIZATION' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.visitorOrganization }}</h4>
+  </div>
+
+  <!-- Target Department -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.TARGET_DEPARTMENT' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ getDepartmentName() }}</h4>
+  </div>
+
+  <!-- Visit Date -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISIT_DATE' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ formatDate(model.visitDate) }}</h4>
+  </div>
+
+  <!-- Visit Time -->
+  <div>
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISIT_TIME_FROM_TO' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">
+      {{ formatTime(model.visitTimeFrom) }} - {{ formatTime(model.visitTimeTo) }}
+    </h4>
+  </div>
+
+  @if (showAttendanceStatus && model.attendanceStatus) {
+    <!-- Attendance Status -->
+    <div>
+      <span class="text-[14px] text-[#6c737f]">
+        {{ 'VISIT_REQUEST_PAGE.ATTENDANCE_STATUS' | translate }}:
+      </span>
+      <div class="mt-1">
+        <span [class]="getAttendanceBadgeClass()">
+          <span [class]="getAttendanceBadgeDotClass()"></span>
+          {{ getAttendanceStatusText() }}
+        </span>
+      </div>
+    </div>
+  }
+
+  <!-- Visit Purpose -->
+  <div class="xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1">
+    <span class="text-[14px] text-[#6c737f]">
+      {{ 'VISIT_REQUEST_PAGE.VISIT_PURPOSE' | translate }}:
+    </span>
+    <h4 class="font-semibold text-[#161616]">{{ model.visitPurpose }}</h4>
+  </div>
+</div>

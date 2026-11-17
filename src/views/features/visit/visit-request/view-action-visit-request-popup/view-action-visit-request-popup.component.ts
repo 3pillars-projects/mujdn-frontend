@@ -12,7 +12,6 @@ import { AlertService } from '@/services/shared/alert.service';
 import { VisitService } from '@/services/features/visit/visit.service';
 import { formatDateOnly, formatTimeTo12Hour, toDateOnly } from '@/utils/general-helper';
 import { getLocalizedName } from '@/utils/localized-name';
-import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 import { FormGroup } from '@angular/forms';
 import { M } from '@angular/material/dialog.d-B5HZULyo';
 import { Observable } from 'rxjs';
@@ -23,10 +22,11 @@ import { BlacklistedNationalIdService } from '@/services/features/visit/blacklis
 import { BlacklistedNationalId } from '@/models/features/visit/blacklisted-national-id';
 import { AccessLocationLookup } from '@/models/features/business/access-location-lookup';
 import { VISIT_ATTENDANCE_STATUS_ENUM } from '@/enums/visit-attendance-status-enum';
+import { VisitDetailsSectionComponent } from '../visit-details-section/visit-details-section.component';
 
 @Component({
   selector: 'app-view-action-visit-request-popup',
-  imports: [CommonModule, TranslatePipe, LocalizedNamePipe],
+  imports: [CommonModule, TranslatePipe, VisitDetailsSectionComponent],
   templateUrl: './view-action-visit-request-popup.component.html',
   styleUrl: './view-action-visit-request-popup.component.scss',
 })

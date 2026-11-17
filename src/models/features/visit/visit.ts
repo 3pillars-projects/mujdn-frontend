@@ -7,6 +7,7 @@ import { BaseLookupModel } from '../lookups/base-lookup-model';
 import { CustomValidators } from '@/validators/custom-validators';
 import { timeStringToDate } from '@/utils/general-helper';
 import { VisitCreatorModel } from './visit-creator';
+import { AssignedVisitCard } from './visit-card-assignment';
 
 const { send, receive } = new VisitInterceptor();
 
@@ -39,6 +40,8 @@ export class Visit extends BaseCrudModel<Visit, VisitService> {
   declare nationalityNameAr?: string;
   declare nationalityNameEn?: string;
   declare attendanceStatus: number;
+  /** Read-only: the access card currently linked to this visit, if any. */
+  declare assignedCard: AssignedVisitCard | null;
 
   constructor() {
     super();

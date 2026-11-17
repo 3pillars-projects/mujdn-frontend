@@ -226,6 +226,32 @@
                 <button class="table-action-gray-btn" (click)="openViewDialog(visit)">
                   <img alt="" src="assets/icons/view.svg" />
                 </button>
+                @if (showLinkCardButton(visit)) {
+                  <button
+                    class="table-action-green-btn"
+                    (click)="openLinkCardDialog(visit)"
+                    [attr.aria-label]="
+                      (visit.assignedCard
+                        ? 'VISIT_REQUEST_PAGE.LINKED_CARD'
+                        : 'VISIT_REQUEST_PAGE.LINK_CARD'
+                      ) | translate: { friendlyNumber: visit.assignedCard?.friendlyNumber }
+                    "
+                    [title]="
+                      (visit.assignedCard
+                        ? 'VISIT_REQUEST_PAGE.LINKED_CARD'
+                        : 'VISIT_REQUEST_PAGE.LINK_CARD'
+                      ) | translate: { friendlyNumber: visit.assignedCard?.friendlyNumber }
+                    "
+                    type="button"
+                  >
+                    <i class="pi pi-id-card text-white"></i>
+                    @if (visit.assignedCard) {
+                      <span class="text-white text-[12px] font-semibold ms-1">{{
+                        visit.assignedCard.friendlyNumber
+                      }}</span>
+                    }
+                  </button>
+                }
                 @if (showActionsButton(visit)) {
                   <button
                     class="black-table-btn-action !min-w-[92px] justify-center"
