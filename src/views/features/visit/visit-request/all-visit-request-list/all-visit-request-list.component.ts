@@ -269,6 +269,8 @@ export class AllVisitRequestListComponent
       ),
       [this.translateService.instant('VISIT_REQUEST_PAGE.ATTENDANCE_STATUS')]:
         this.getAttendanceStatusText(model.attendanceStatus),
+      [this.translateService.instant('VISIT_CARDS_PAGE.FRIENDLY_NUMBER')]:
+        model.assignedCard?.friendlyNumber ?? '',
     };
   }
 

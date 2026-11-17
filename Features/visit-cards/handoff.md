@@ -15,7 +15,7 @@
 | AC-01–AC-04 | Visit cards list and add/edit popup: card ID (hex, normalized on blur and before sending), friendly number (1–9999, "up to 4 digits" hint), debounced uniqueness check on both fields, next number pre-filled in create mode, edit/delete disabled with a tooltip while `isInUse`, Excel export | `visit-cards-list`, `visit-card-popup`, `VisitCardValidators` spec (9 tests) |
 | AC-05 | Routes `/attendance/visit-cards` (ADMIN, Settings menu) and `/visits/visit-cards` (SECURITY_LEADER, Visits menu), separate route ids `VISIT_CARDS_SETTINGS` / `VISIT_CARDS` | build; review |
 | AC-06–AC-11 | Link-card dialog: visit details (shared `visit-details-section`, with attendance status), debounced friendly-number lookup (spinner, not-found field error, retry on failure), read-only hex card ID, move warning with holder details and confirmation, `moveFromOtherVisit` on confirm, handles 409 by refreshing the holder, unlink with confirmation | `link-visit-card-popup`; review |
-| AC-13 | Green card button on approved, not-ended visits in both "My visits" and "All visits" tabs for SECURITY_MEMBER / SECURITY_LEADER; shows the linked short number | both list components; review |
+| AC-13 | Green card button on approved, not-ended visits in both "My visits" and "All visits" tabs for SECURITY_MEMBER / SECURITY_LEADER (icon `assets/icons/card-link.svg`); a "card short number" column (also in the Excel export) shows the linked card | both list components; review |
 | AC-14 | Button hidden for other roles; the server enforces the roles | review |
 
 ## Implementation notes
