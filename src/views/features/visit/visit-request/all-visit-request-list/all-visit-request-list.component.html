@@ -210,6 +210,7 @@
             <th>{{ 'VISIT_REQUEST_PAGE.ENTRY' | translate }}</th>
             <th>{{ 'VISIT_REQUEST_PAGE.EXIT' | translate }}</th>
             <th>{{ 'VISIT_REQUEST_PAGE.ATTENDANCE_STATUS' | translate }}</th>
+            <th>{{ 'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate }}</th>
             <th class="w-[36px] whitespace-nowrap">
               {{ 'VISIT_REQUEST_PAGE.ACTION' | translate }}
             </th>
@@ -241,11 +242,33 @@
                 </span>
               </div>
             </td>
+            <td>{{ visit.assignedCard?.friendlyNumber ?? '' }}</td>
             <td>
               <div class="actions flex gap-2">
                 <button class="table-action-gray-btn" (click)="openViewDialog(visit)">
                   <img alt="" src="assets/icons/view.svg" />
                 </button>
+                @if (showLinkCardButton(visit)) {
+                  <button
+                    class="table-action-green-btn"
+                    (click)="openLinkCardDialog(visit)"
+                    [attr.aria-label]="
+                      (visit.assignedCard
+                        ? 'VISIT_REQUEST_PAGE.LINKED_CARD'
+                        : 'VISIT_REQUEST_PAGE.LINK_CARD'
+                      ) | translate: { friendlyNumber: visit.assignedCard?.friendlyNumber }
+                    "
+                    [title]="
+                      (visit.assignedCard
+                        ? 'VISIT_REQUEST_PAGE.LINKED_CARD'
+                        : 'VISIT_REQUEST_PAGE.LINK_CARD'
+                      ) | translate: { friendlyNumber: visit.assignedCard?.friendlyNumber }
+                    "
+                    type="button"
+                  >
+                    <img alt="" src="assets/icons/card-link.svg" />
+                  </button>
+                }
                 @if (showActionsButton(visit)) {
                   <button
                     class="black-table-btn-action !min-w-[92px] justify-center"

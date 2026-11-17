@@ -130,6 +130,12 @@ export class SideBarLinksService {
           routeId: RouteIdsEnum.BLACKLIST,
           system: SystemTypeEnum.VISITS,
         },
+        {
+          labelKey: 'MENU.VISIT_CARDS',
+          routerLink: ['/visits/visit-cards'],
+          routeId: RouteIdsEnum.VISIT_CARDS,
+          system: SystemTypeEnum.VISITS,
+        },
       ],
     },
     {
@@ -228,6 +234,12 @@ export class SideBarLinksService {
           labelKey: 'MENU.DEVICES_CONFIGURATION',
           routerLink: ['/attendance/devices-configuration'],
           routeId: RouteIdsEnum.DEVICES_CONFIGURATION,
+          system: SystemTypeEnum.ATTENDANCE,
+        },
+        {
+          labelKey: 'MENU.VISIT_CARDS',
+          routerLink: ['/attendance/visit-cards'],
+          routeId: RouteIdsEnum.VISIT_CARDS_SETTINGS,
           system: SystemTypeEnum.ATTENDANCE,
         },
       ],

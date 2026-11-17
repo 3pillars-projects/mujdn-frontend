@@ -9,7 +9,7 @@
     <form [formGroup]="form" class="mt-6">
       <!-- Work Shift Type Selection -->
       <div class="mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           <!-- Standard -->
           <label class="flex items-start cursor-pointer gap-2">
             <input
@@ -34,6 +34,34 @@
               }}</span>
               <span class="block text-[#384250] mt-2">{{
                 'USER_WORK_SHIFT_ASSIGNMENT.SHIFT_HOURS' | translate
+              }}</span>
+            </div>
+          </label>
+
+          <!-- WeekOnWeekOff: one fixed shift with a work period then a rest period -->
+          <label class="flex items-start cursor-pointer gap-2">
+            <input
+              type="radio"
+              class="hidden peer"
+              name="workShiftType"
+              [value]="workShiftType.WeekOnWeekOff"
+              id="work-rest-cycle-radio"
+              formControlName="workShiftType"
+            />
+            <span
+              class="w-6 h-6 shrink-0 rounded-full border-2 border-[#64748b] flex items-center justify-center peer-checked:border-[#22a06b]"
+            >
+              <span
+                class="w-4 h-4 rounded-full bg-[#22a06b] block"
+                *ngIf="form.get('workShiftType')?.value === workShiftType.WeekOnWeekOff"
+              ></span>
+            </span>
+            <div>
+              <span class="font-medium text-[#1f2a37]">{{
+                'USER_WORK_SHIFT_ASSIGNMENT.WORK_WEEK_REST_WEEK' | translate
+              }}</span>
+              <span class="block text-[#384250] mt-2">{{
+                'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_DESC' | translate
               }}</span>
             </div>
           </label>
@@ -187,6 +215,7 @@
                 max="30"
                 step="1"
                 [placeholder]="'USER_WORK_SHIFT_ASSIGNMENT.SHIFT_PERIOD_DURATION' | translate"
+                [attr.aria-describedby]="isFixedCycleType ? 'legacyDaysCountHint' : null"
               />
               <span
                 class="absolute top-1/2 -translate-y-1/2 end-[2px] w-[47px] h-[calc(100%-2px)] !bg-[#f3f4f6] text-[#d2d6db] flex justify-center items-center rounded-[4px] pointer-events-none"
@@ -197,6 +226,18 @@
                 class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
               ></span>
             </div>
+            @if (isFixedCycleType) {
+              <p id="legacyDaysCountHint" class="mt-2 text-sm text-[#6c737f]" aria-live="polite">
+                @if (cycleDays) {
+                  {{
+                    'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_SUMMARY'
+                      | translate: { days: cycleDays }
+                  }}
+                } @else {
+                  {{ 'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_HINT' | translate }}
+                }
+              </p>
+            }
             <app-validation-messages [control]="legacyDaysCountControl"></app-validation-messages>
           </div>
         }

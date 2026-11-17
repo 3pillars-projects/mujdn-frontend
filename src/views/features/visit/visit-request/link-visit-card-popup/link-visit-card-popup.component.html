@@ -1,0 +1,132 @@
+<div [dir]="direction">
+  <div class="p-6">
+    <button
+      (click)="close()"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+      class="block ms-auto"
+      type="button"
+    >
+      <i class="pi pi-times close-popup"></i>
+    </button>
+
+    <h3 class="text-[#1f2a37] font-[600] mb-4 text-lg sm:text-xl">
+      {{ 'VISIT_REQUEST_PAGE.VISIT_DATA' | translate }}
+    </h3>
+    <div class="bg-[#f3f4f6] p-6 rounded-4xl">
+      <app-visit-details-section [model]="model" [showAttendanceStatus]="true" />
+    </div>
+
+    <h3 class="text-[#1f2a37] font-[600] mt-6 mb-4 text-lg sm:text-xl">
+      {{ 'VISIT_REQUEST_PAGE.CARD_DATA' | translate }}
+    </h3>
+    <div class="bg-[#f3f4f6] p-6 rounded-4xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <!-- Friendly number (typed at the gate) -->
+        <div>
+          <label class="label" for="linkCardFriendlyNumber">{{
+            'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate
+          }}</label>
+          <div class="relative">
+            <input
+              [attr.aria-busy]="lookupState === 'loading'"
+              [formControl]="friendlyNumberControl"
+              [placeholder]="'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate"
+              (keydown.enter)="confirm()"
+              autocomplete="off"
+              class="peer"
+              fluid="true"
+              id="linkCardFriendlyNumber"
+              inputmode="numeric"
+              max="9999"
+              min="1"
+              pInputText
+              type="number"
+            />
+            <span
+              class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+            ></span>
+          </div>
+          <div aria-live="polite">
+            @if (lookupState === 'loading') {
+              <p class="text-[#64748b] text-xs mt-2 flex items-center gap-1">
+                <i class="pi pi-spin pi-spinner text-xs"></i>
+                {{ 'VISIT_CARDS_PAGE.CHECKING' | translate }}
+              </p>
+            }
+            @if (lookupState === 'error') {
+              <p class="validation-message flex items-center gap-2">
+                {{ 'VISIT_REQUEST_PAGE.CARD_LOOKUP_FAILED' | translate }}
+                <button (click)="retryLookup()" class="underline font-semibold" type="button">
+                  {{ 'COMMON.RETRY' | translate }}
+                </button>
+              </p>
+            }
+            <app-validation-messages [control]="friendlyNumberControl"></app-validation-messages>
+          </div>
+        </div>
+
+        <!-- Hexadecimal card ID (read-only, from the lookup) -->
+        <div>
+          <span class="text-[14px] text-[#6c737f]">{{
+            'VISIT_CARDS_PAGE.CARD_ID' | translate
+          }}</span>
+          <h4 class="font-semibold text-[#161616] mt-2 min-h-[24px]" dir="ltr">
+            {{ lookup?.cardId ?? '-' }}
+          </h4>
+        </div>
+      </div>
+
+      <div aria-live="polite">
+        @if (linkedHere) {
+          <p class="mt-4 text-[14px] text-[#085d3a] flex items-center gap-2">
+            <i class="pi pi-check-circle"></i>
+            {{ 'VISIT_REQUEST_PAGE.CARD_ALREADY_LINKED_HERE' | translate }}
+          </p>
+        }
+        @if (heldElsewhere; as holder) {
+          <p
+            class="mt-4 text-[14px] text-[#b54708] bg-[#fffaeb] border border-[#fedf89] rounded-lg p-3 flex items-start gap-2"
+          >
+            <i class="pi pi-exclamation-triangle mt-0.5"></i>
+            <span>{{
+              'VISIT_REQUEST_PAGE.CARD_LINKED_TO_OTHER_VISIT'
+                | translate: { holder: holderDescription(holder) }
+            }}</span>
+          </p>
+        }
+      </div>
+    </div>
+
+    <div class="actions flex items-center justify-between gap-4 mt-6">
+      <div class="flex gap-2">
+        <button (click)="close()" class="btn gray-btn" type="button">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        @if (model.assignedCard) {
+          <button
+            (click)="unlink()"
+            [disabled]="!canUnlink"
+            class="btn border border-[#fecdca] !text-[#b42318] hover:!bg-[#fee4e2] disabled:opacity-50"
+            type="button"
+          >
+            {{ 'VISIT_REQUEST_PAGE.UNLINK_CARD' | translate }}
+          </button>
+        }
+      </div>
+      <button
+        (click)="confirm()"
+        [attr.aria-busy]="busy"
+        [disabled]="!canConfirm"
+        class="btn green-btn disabled:opacity-50 disabled:cursor-not-allowed"
+        type="button"
+      >
+        {{
+          (heldElsewhere
+            ? 'VISIT_REQUEST_PAGE.MOVE_AND_CONFIRM_CARD'
+            : 'VISIT_REQUEST_PAGE.CONFIRM_CARD_DATA'
+          ) | translate
+        }}
+      </button>
+    </div>
+  </div>
+</div>

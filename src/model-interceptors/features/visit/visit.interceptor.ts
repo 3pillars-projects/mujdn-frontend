@@ -38,6 +38,7 @@ export class VisitInterceptor implements ModelInterceptorContract<Visit> {
     delete model.creationUser;
     delete model.nationalityNameAr;
     delete model.nationalityNameEn;
+    delete model.assignedCard;
     return model;
   }
 }

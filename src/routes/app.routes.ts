@@ -26,6 +26,7 @@ import { temporaryRoleAssignmentsResolver } from '@/resolvers/features/temporary
 import { visitResolver } from '@/resolvers/features/visit/visit.resolver';
 import { accessLocationResolver } from '@/resolvers/business/access-location.resolver';
 import { devicesConfigurationResolver } from '@/resolvers/business/devices-configuration.resolver';
+import { visitCardResolver } from '@/resolvers/features/visit/visit-card.resolver';
 import { attendanceReportResolver } from '@/resolvers/business/attendance-report.resolver';
 import { employeeShiftDaysResolver } from '@/resolvers/lookups/employee-shift-days.resolver';
 import { workShiftsAssignmentContainerResolver } from '@/resolvers/lookups/work-shifts-assignment-container.resolver';
@@ -204,6 +205,14 @@ export const routes: Routes = [
         resolve: { list: accessLocationResolver },
         loadComponent: () =>
           import('@/views/features/settings/devices-location/devices-location.component'),
+      },
+      {
+        path: 'visit-cards',
+        canActivate: [authGuard],
+        data: { roles: [ROLES_ENUM.ADMIN], routeId: RouteIdsEnum.VISIT_CARDS_SETTINGS },
+        resolve: { list: visitCardResolver },
+        loadComponent: () =>
+          import('@/views/features/visit/visit-cards/visit-cards-list/visit-cards-list.component'),
       },
       {
         path: 'permissions',
@@ -398,6 +407,17 @@ export const routes: Routes = [
           import(
             '@/views/features/visit/blacklist/blacklisted-container/blacklisted-container.component'
           ),
+      },
+      {
+        path: 'visit-cards',
+        canActivate: [authGuard],
+        resolve: { list: visitCardResolver },
+        data: {
+          roles: [ROLES_ENUM.SECURITY_LEADER],
+          routeId: RouteIdsEnum.VISIT_CARDS,
+        },
+        loadComponent: () =>
+          import('@/views/features/visit/visit-cards/visit-cards-list/visit-cards-list.component'),
       },
     ],
   },
