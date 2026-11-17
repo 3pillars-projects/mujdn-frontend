@@ -1,0 +1,174 @@
+<div class="bg-white">
+  <div class="bg-[#f9fafb] p-3 sm:p-6">
+    <div class="header bg-white rounded-2xl p-4 sm:p-6 mb-6">
+      <p-breadcrumb [home]="home" [model]="breadcrumbs" class="max-w-full">
+        <ng-template let-item pTemplate="item">
+          <a [routerLink]="item.url" class="cursor-pointer">
+            <span>{{ item.label | translate }}</span>
+          </a>
+        </ng-template>
+      </p-breadcrumb>
+      <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-[#161616]">
+        {{ 'VISIT_CARDS_PAGE.TITLE' | translate }}
+      </h3>
+    </div>
+    <div class="bg-white rounded-2xl p-4 sm:p-8 border border-[#d2d6db]">
+      <div class="p-6 sm:p-8 rounded-2xl bg-[#f3f4f6]">
+        <div class="flex items-center justify-between">
+          <h5 class="text-base sm:text-lg md:text-xl font-bold text-[#161616]">
+            {{ 'COMMON.SEARCH_FILTERS' | translate }}
+          </h5>
+        </div>
+        <div class="pt-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="relative">
+              <label class="label" for="visitCardIdFilter">{{
+                'VISIT_CARDS_PAGE.CARD_ID' | translate
+              }}</label>
+              <input
+                [(ngModel)]="filterModel.cardId"
+                [placeholder]="'VISIT_CARDS_PAGE.CARD_ID' | translate"
+                class="peer"
+                dir="ltr"
+                fluid="true"
+                id="visitCardIdFilter"
+                pInputText
+                type="text"
+              />
+              <span
+                class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+              ></span>
+            </div>
+            <div class="relative">
+              <label class="label" for="visitCardFriendlyNumberFilter">{{
+                'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate
+              }}</label>
+              <input
+                [(ngModel)]="filterModel.friendlyNumber"
+                [placeholder]="'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate"
+                class="peer"
+                fluid="true"
+                id="visitCardFriendlyNumberFilter"
+                inputmode="numeric"
+                min="1"
+                max="9999"
+                pInputText
+                type="number"
+              />
+              <span
+                class="absolute bottom-0 left-1/2 w-0 h-0.5 bg-black transition-all duration-500 peer-focus-within:left-0 peer-focus-within:w-full"
+              ></span>
+            </div>
+          </div>
+
+          <div class="actions flex items-center gap-4 pt-6">
+            <button (click)="search()" class="btn black-btn" type="button">
+              {{ 'COMMON.SEARCH' | translate }}
+            </button>
+            <button
+              (click)="resetSearch()"
+              class="btn gray-btn border border-[#d2d6db]"
+              type="button"
+            >
+              {{ 'COMMON.RESET_SEARCH' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6">
+        <div
+          class="flex items-start xl:items-center justify-between flex-col xl:flex-row gap-4 bg-[#e5e7eb] rounded-lg p-4 sm:p-6 mb-4"
+        >
+          <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-[#161616]">
+            {{ 'VISIT_CARDS_PAGE.VISIT_CARDS_LIST' | translate }}
+          </h4>
+          <div class="actions flex items-center gap-4 ms-auto">
+            <button
+              (click)="
+                exportExcel(getTranslatedFileName('VISIT_CARDS_PAGE.VISIT_CARDS_LIST', 'xlsx'))
+              "
+              [attr.aria-label]="'VISIT_CARDS_PAGE.EXPORT_EXCEL' | translate"
+              [pTooltip]="'VISIT_CARDS_PAGE.EXPORT_EXCEL' | translate"
+              class="table-head-action-btn min-w-[40px]"
+              tooltipPosition="top"
+              type="button"
+            >
+              <img alt="" src="assets/icons/excel.svg" />
+            </button>
+            <button
+              (click)="addOrEditModel()"
+              class="btn green-btn flex items-center"
+              type="button"
+            >
+              <img alt="" src="assets/icons/plus.svg" />
+              <span>{{ 'VISIT_CARDS_PAGE.ADD_NEW_CARD' | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        @if (list && list.length > 0) {
+          <p-table [value]="list">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ 'VISIT_CARDS_PAGE.CARD_ID' | translate }}</th>
+                <th>{{ 'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate }}</th>
+                <th class="w-[36px] whitespace-nowrap">{{ 'COMMON.ACTIONS' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-card>
+              <tr>
+                <td>
+                  <span dir="ltr">{{ card.cardId }}</span>
+                </td>
+                <td>{{ card.friendlyNumber }}</td>
+                <td>
+                  <div
+                    class="actions flex gap-2"
+                    [pTooltip]="
+                      card.isInUse ? ('VISIT_CARDS_PAGE.CARD_IN_USE_TOOLTIP' | translate) : ''
+                    "
+                    tooltipPosition="top"
+                  >
+                    <button
+                      (click)="addOrEditModel(card)"
+                      [attr.aria-label]="'COMMON.EDIT' | translate"
+                      [disabled]="card.isInUse"
+                      class="table-action-gray-btn disabled:opacity-50 disabled:cursor-not-allowed"
+                      type="button"
+                    >
+                      <img src="assets/icons/edit-action.svg" alt="" />
+                    </button>
+                    <button
+                      (click)="deleteCard(card)"
+                      [attr.aria-label]="'COMMON.DELETE' | translate"
+                      [disabled]="card.isInUse"
+                      class="table-action-red-btn disabled:opacity-50 disabled:cursor-not-allowed"
+                      type="button"
+                    >
+                      <img src="assets/icons/delete-action.svg" alt="" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <div class="flex items-center justify-center h-64">
+            <p class="text-gray-500">{{ 'COMMON.NO_DATA_TO_SHOW' | translate }}</p>
+          </div>
+        }
+        @if (paginationInfo) {
+          <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="first"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [rows]="rows"
+            [showCurrentPageReport]="false"
+            [totalRecords]="paginationInfo.totalItems"
+            class="mt-6"
+          />
+        }
+      </div>
+    </div>
+  </div>
+</div>

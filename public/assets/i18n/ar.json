@@ -205,7 +205,19 @@
     "TEMPORARY_UPLOAD_ALREADY_CONSUMED": "هذا الملف مرتبط بالفعل بأحد الطلبات.",
     "TEMPORARY_UPLOAD_NOT_AVAILABLE": "انتهت صلاحية أحد الملفات المرفقة. يرجى إرفاقه مرة أخرى وإعادة إرسال الطلب.",
     "TEMPORARY_UPLOAD_FILE_NOT_AVAILABLE": "أحد الملفات المرفقة لم يعد متاحاً. يرجى إرفاقه مرة أخرى وإعادة إرسال الطلب.",
-    "TEMPORARY_UPLOAD_IDS_INVALID": "الملفات المرفقة غير صالحة. يرجى إرفاقها مرة أخرى."
+    "TEMPORARY_UPLOAD_IDS_INVALID": "الملفات المرفقة غير صالحة. يرجى إرفاقها مرة أخرى.",
+    "VISIT_CARD_NOT_FOUND": "لا توجد بطاقة مسجلة بهذا الرمز المختصر.",
+    "VISIT_CARD_ID_ALREADY_EXISTS": "الرمز التعريفي مسجل مسبقاً لبطاقة أخرى.",
+    "VISIT_CARD_FRIENDLY_NUMBER_ALREADY_EXISTS": "الرمز المختصر مستخدم لبطاقة أخرى.",
+    "VISIT_CARD_ID_INVALID_FORMAT": "يجب أن يكون الرمز التعريفي قيمة ست عشرية بحد أقصى 32 خانة.",
+    "VISIT_CARD_FRIENDLY_NUMBER_OUT_OF_RANGE": "يجب أن يكون الرمز المختصر بين 1 و 9999.",
+    "VISIT_CARD_NUMBERS_EXHAUSTED": "تم استخدام جميع الأرقام المختصرة من 1 إلى 9999.",
+    "VISIT_CARD_IN_USE": "البطاقة مرتبطة بزيارة ولا يمكن تعديلها أو حذفها.",
+    "VISIT_CARD_ASSIGNED_TO_ANOTHER_VISIT": "البطاقة مرتبطة بزيارة أخرى ({{visitorName}} - {{visitDate}}).",
+    "VISIT_NOT_APPROVED_FOR_CARD": "يمكن ربط البطاقة بالزيارات المقبولة فقط.",
+    "VISIT_ENDED": "انتهى وقت الزيارة.",
+    "VISIT_HAS_NO_CARD": "لا توجد بطاقة مرتبطة بهذه الزيارة.",
+    "DSS_CARD_ASSIGNMENT_FAILED": "تعذر على نظام التحكم في الدخول تحديث بطاقة الزائر، برجاء المحاولة مرة أخرى."
   },
   "ATTACHMENTS": {
     "ATTACHMENTS": "المرفقات",
@@ -692,7 +704,8 @@
     "VISIT_REQUEST": "طلبات الزيارات",
     "ACCESS_LOCATIONS": "مواقع أجهزة البصمة",
     "DEVICES_CONFIGURATION": "إعدادات أجهزة البصمة",
-    "ATTENDANCE_REPORT_PROCESSING": "معالجة بيانات تقارير الموظفين"
+    "ATTENDANCE_REPORT_PROCESSING": "معالجة بيانات تقارير الموظفين",
+    "VISIT_CARDS": "بطاقات الزيارات"
   },
   "NOTIFICATION": {
     "GENERAL_SETTINGS": "الإعدادات العامة",
@@ -1038,7 +1051,22 @@
     "DO_YOU_WANT_TO_CONTINUE": "الزائر الذي يحمل هذا الرقم الوطني موجود بالفعل، هل تريد الاستمرار في تحديث بيانات الزائر؟",
     "DEVICES_LOCATION": "مواقع أجهزة البصمة",
     "SELECTED_DEVICES_LOCATIONS": "مواقع أجهزة البصمة المختارة",
-    "ATTENDANCE_STATUS": "حالة الحضور"
+    "ATTENDANCE_STATUS": "حالة الحضور",
+    "CARD_DATA": "بيانات البطاقة",
+    "CONFIRM_CARD_DATA": "تأكيد بيانات البطاقة",
+    "MOVE_AND_CONFIRM_CARD": "نقل البطاقة إلى هذه الزيارة",
+    "MOVE_CARD": "نقل البطاقة",
+    "MOVE_CARD_CONFIRM": "البطاقة {{friendlyNumber}} مرتبطة بزيارة أخرى ({{holder}}). هل تريد نقلها إلى هذه الزيارة؟ لن يتمكن الزائر السابق من استخدامها.",
+    "UNLINK_CARD": "إلغاء ربط البطاقة",
+    "UNLINK_CARD_CONFIRM": "هل تريد إلغاء ربط البطاقة بهذه الزيارة؟ لن يتمكن الزائر من استخدامها.",
+    "CARD_LINKED_TO_OTHER_VISIT": "البطاقة مرتبطة حالياً بزيارة أخرى: {{holder}}",
+    "CARD_ALREADY_LINKED_HERE": "البطاقة مرتبطة بهذه الزيارة",
+    "CARD_LINKED_SUCCESSFULLY": "تم ربط البطاقة بالزيارة بنجاح",
+    "CARD_UNLINKED_SUCCESSFULLY": "تم إلغاء ربط البطاقة بالزيارة",
+    "CARD_NOT_FOUND": "الرقم المختصر غير موجود، برجاء المحاولة برقم اخر",
+    "CARD_LOOKUP_FAILED": "تعذر التحقق من البطاقة.",
+    "LINK_CARD": "ربط بطاقة",
+    "LINKED_CARD": "البطاقة المرتبطة {{friendlyNumber}}"
   },
   "QR_CODE_POPUP": {
     "GENERAL_WARNINGS": "تحذيرات عامة",
@@ -1210,11 +1238,25 @@
     "WORK_DAYS_LABEL": "أيام العمل بالوردية:",
     "NO_SHIFT": "لا توجد وردية معينة لهذا اليوم"
   },
-
   "CHOOSE_SYSTEM_SCREEN": {
     "CHOOSE_SYSTEM": "اختر النظام",
     "CHOOSE_THE_SYSTEM_YOU_WANT_TO_USE": "اختر النظام الذي ترغب في استخدامه. يمكنك التبديل بين النظامين في اى وقت",
     "ATTENDANCE_SYSTEM": "نظام الحضور والانصراف",
     "VISITS_SYSTEM": "نظام الزيارات"
+  },
+  "VISIT_CARDS_PAGE": {
+    "TITLE": "بطاقات الزيارات",
+    "VISIT_CARDS_LIST": "بطاقات الزيارات المسجلة",
+    "ADD_NEW_CARD": "تسجيل بطاقة جديدة",
+    "EDIT_CARD": "تعديل البطاقة",
+    "CARD_ID": "الرمز التعريفي للبطاقة",
+    "FRIENDLY_NUMBER": "الرمز المختصر للبطاقة",
+    "MAX_4_DIGITS_HINT": "بحد اقصى 4 ارقام فقط",
+    "CARD_IN_USE_TOOLTIP": "البطاقة مرتبطة بزيارة، يجب إلغاء ربطها قبل التعديل أو الحذف",
+    "EXPORT_EXCEL": "تصدير إلى Excel",
+    "CHECKING": "جارٍ التحقق...",
+    "CARD_ID_HEX_ONLY": "يجب أن يتكون الرمز التعريفي من أرقام وحروف ست عشرية فقط (0-9، A-F)",
+    "CARD_ID_TAKEN": "الرمز التعريفي مسجل مسبقاً",
+    "FRIENDLY_NUMBER_TAKEN": "الرمز المختصر مستخدم لبطاقة أخرى"
   }
 }

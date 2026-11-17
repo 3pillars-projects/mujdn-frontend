@@ -26,4 +26,8 @@ export enum ValidationErrorKeyEnum {
   SHIFTING_PERIOD_MAX_ONE_YEAR = 'shiftingPeriodMaxOneYear',
   INVALID_SHIFT_CONFIGURATION = 'invalidShiftConfiguration',
   GRACE_MONTHLY_LESS_THAN_DAILY = 'graceMonthlyMinutesLessThanDaily',
+  HEX_CARD_ID = 'hexCardId',
+  CARD_ID_TAKEN = 'cardIdTaken',
+  FRIENDLY_NUMBER_TAKEN = 'friendlyNumberTaken',
+  CARD_NOT_FOUND = 'cardNotFound',
 }
