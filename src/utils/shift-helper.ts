@@ -58,7 +58,8 @@ export function calculateBufferedShiftWindow(
  * Determines if a given date is a working day based on the WorkShiftType.
  * Supports:
  * 1. Standard (1): Checks against employee specific working days or organization default settings.
- * 2. WeekOnWeekOff (2) & WeekOnWeekOff24 (3): Follows a 28-day cycle (14 days work / 14 days off).
+ * 2. WeekOnWeekOff (2) & WeekOnWeekOff24 (3): Approximates the cycle as 14 days work / 14 days off.
+ *    The real cycle length is configurable per assignment; prefer the backend `isRestDay` flag.
  *
  * @param workShiftType The type of work shift
  * @param startDate The start date of the shift cycle (required for cycle-based shifts)

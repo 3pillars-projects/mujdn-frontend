@@ -758,7 +758,7 @@
     "WORKING_DAYS": "Shift Working Days",
     "STANDARD_SHIFT": "Standard Work Hours Shift",
     "SHIFT_HOURS": "Shift Work Hours",
-    "WORK_WEEK_REST_WEEK": "2 Weeks Work / 2 Weeks Rest",
+    "WORK_WEEK_REST_WEEK": "Work / Rest Cycle Shift",
     "WORK_WEEK_REST_2WEEK": "2 Weeks Work / 2 Weeks Rest",
     "SHIFT_24_HOURS": "24-Hour Rest Shift",
     "ATTENDANCE_DOCUMENTATION_TIME": "Daily attendance proof Time (for 24-hour rest system)",
@@ -779,7 +779,10 @@
     "ROTATING_SHIFTS": "Rotating Shifts",
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "Shift period cannot exceed one year",
     "SHIFT_PERIOD_DURATION": "Shift / rest duration in days",
-    "DAYS_UNIT": "days"
+    "DAYS_UNIT": "days",
+    "WORK_REST_CYCLE_DESC": "One fixed shift: work days followed by rest days",
+    "WORK_REST_CYCLE_HINT": "The same number of days applies to the work period and the rest period.",
+    "WORK_REST_CYCLE_SUMMARY": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s)."
   },
   "USER_WORK_SHIFT_PAGE": {
     "WORK_SHIFT_ASSIGNMENT_TAB": "Employees Assigned Work Shifts",

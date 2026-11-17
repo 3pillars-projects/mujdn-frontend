@@ -43,6 +43,9 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { getLocalizedName } from '@/utils/localized-name';
 import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
+/** Cycle length used by WeekOnWeekOff assignments created before the duration was configurable. */
+const LEGACY_WEEK_ON_WEEK_OFF_DAYS = 14;
+
 @Component({
   selector: 'app-work-shifts-assignment-popup',
   imports: [
@@ -111,6 +114,15 @@ export class WorkShiftsAssignmentPopupComponent
 
   override initPopup(): void {
     this.model = this.data.model || new UserWorkShift();
+    // Work / rest cycle assignments saved before the duration was configurable ran on a
+    // fixed 14-day cycle; show that value instead of an empty required field.
+    if (
+      this.model.workShiftType === WorkShiftType.WeekOnWeekOff &&
+      this.model.legacyDaysCount == null &&
+      this.viewMode !== ViewModeEnum.CREATE
+    ) {
+      this.model.legacyDaysCount = LEGACY_WEEK_ON_WEEK_OFF_DAYS;
+    }
     this.usersProfiles = this.data.lookups?.usersProfiles || [];
     this.departments = this.data.lookups?.departments || [];
     this.shifts = this.data.lookups?.shifts || [];
@@ -509,9 +521,10 @@ export class WorkShiftsAssignmentPopupComponent
 
   onWorkShiftTypeChange(type: WorkShiftType): void {
     const isStandard = type === WorkShiftType.Standard;
+    const isWeekOnOff = type === WorkShiftType.WeekOnWeekOff;
     const isWeekOnOff24 = type === WorkShiftType.WeekOnWeekOff24;
     const isRotating = type === WorkShiftType.Rotating;
-    const isSingle = isStandard || isWeekOnOff24;
+    const isSingle = isStandard || isWeekOnOff || isWeekOnOff24;
 
     // Working days: shown and required only for Standard
     const workingDaysCtrl = this.form.get('employeeWorkingDays');
@@ -540,9 +553,9 @@ export class WorkShiftsAssignmentPopupComponent
     presenceTimeCtrl?.updateValueAndValidity();
     presenceBufferCtrl?.updateValueAndValidity();
 
-    // Shift / rest duration: shown and required for the rotation based types
+    // Shift / rest duration: shown and required for the cycle based types
     const legacyDaysCountCtrl = this.form.get('legacyDaysCount');
-    if (isRotating || isWeekOnOff24) {
+    if (isRotating || isWeekOnOff || isWeekOnOff24) {
       legacyDaysCountCtrl?.setValidators([
         Validators.required,
         Validators.min(1),
@@ -663,7 +676,26 @@ export class WorkShiftsAssignmentPopupComponent
 
   get isSingleShiftType(): boolean {
     const type = this.form?.get('workShiftType')?.value;
-    return type === WorkShiftType.Standard || type === WorkShiftType.WeekOnWeekOff24;
+    return (
+      type === WorkShiftType.Standard ||
+      type === WorkShiftType.WeekOnWeekOff ||
+      type === WorkShiftType.WeekOnWeekOff24
+    );
+  }
+
+  /** One fixed shift that alternates between a work period and a rest period of equal length. */
+  get isFixedCycleType(): boolean {
+    const type = this.form?.get('workShiftType')?.value;
+    return type === WorkShiftType.WeekOnWeekOff || type === WorkShiftType.WeekOnWeekOff24;
+  }
+
+  /** Valid duration entered in the shift / rest duration field, or null. */
+  get cycleDays(): number | null {
+    const ctrl = this.form?.get('legacyDaysCount');
+    const value = Number(ctrl?.value);
+    return ctrl?.value != null && ctrl.value !== '' && ctrl.valid && Number.isInteger(value)
+      ? value
+      : null;
   }
 
   get isRotatingType(): boolean {
@@ -679,8 +711,7 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   get showShiftPeriodDuration(): boolean {
-    const type = this.form?.get('workShiftType')?.value;
-    return type === WorkShiftType.Rotating || type === WorkShiftType.WeekOnWeekOff24;
+    return this.isRotatingType || this.isFixedCycleType;
   }
 
   weekDays = weekDays;
