@@ -106,7 +106,7 @@
                 <p-select
                   [(ngModel)]="filterModel.accessLocationId"
                   [optionLabel]="getPropertyName()"
-                  [options]="accessLocations"
+                  [options]="accessLocations | withNameFallback"
                   [showClear]="true"
                   placeholder="{{ 'DEVICE_CONFIGURATION.ACCESS_LOCATION' | translate }}"
                   class="w-full peer"
@@ -170,7 +170,7 @@
                 <td>{{ devicesConfiguration.deviceCode }}</td>
                 <td>{{ devicesConfiguration.deviceName }}</td>
                 <td>{{ devicesConfiguration.deviceIp }}</td>
-                <td>{{ devicesConfiguration.getAccessLocationName() }}</td>
+                <td>{{ devicesConfiguration.accessLocation | localizedName }}</td>
                 <td>
                   <div
                     class="px-2 py-1 rounded-full w-fit text-sm flex items-center gap-2"

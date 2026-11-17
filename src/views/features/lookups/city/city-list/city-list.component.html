@@ -106,7 +106,7 @@
             <ng-template pTemplate="body" let-city>
               <tr>
                 <td>{{ city.nameAr }}</td>
-                <td>{{ city.nameEn }}</td>
+                <td>{{ city | englishName }}</td>
                 <td>
                   <div class="actions flex gap-2">
                     <button (click)="addOrEditModel(city)" class="table-action-gray-btn">

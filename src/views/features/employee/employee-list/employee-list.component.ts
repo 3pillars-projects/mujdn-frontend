@@ -40,6 +40,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { formatDateOnly } from '@/utils/general-helper';
 import { EmployeeImportModalComponent } from '../employee-import-modal/employee-import-modal.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { getEnglishName, getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-employee-list',
@@ -58,6 +61,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
     InputTextModule,
     DropdownModule,
     ToggleSwitchModule,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
@@ -263,9 +268,7 @@ export default class EmployeeListComponent
   }
 
   getDepartmentName(department: BaseLookupModel): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (department?.nameEn ?? '')
-      : (department?.nameAr ?? '');
+    return getLocalizedName(department, this.languageService.getCurrentLanguage());
   }
 
   protected override getBreadcrumbKeys() {
@@ -291,12 +294,14 @@ export default class EmployeeListComponent
       [this.translateService.instant('EMPLOYEES_PAGE.NATIONAL_ID')]: model.nationalId || '',
       [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ARABIC')]:
         model.fullNameAr || '',
-      [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ENGLISH')]:
-        model.fullNameEn || '',
-      [this.translateService.instant('EMPLOYEES_PAGE.DEPARTMENT')]:
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC
-          ? model.department?.nameAr || ''
-          : model.department?.nameEn || model.department?.nameAr || '',
+      [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ENGLISH')]: getEnglishName(
+        model,
+        'fullName'
+      ),
+      [this.translateService.instant('EMPLOYEES_PAGE.DEPARTMENT')]: getLocalizedName(
+        model.department,
+        this.languageService.getCurrentLanguage()
+      ),
       [this.translateService.instant('EMPLOYEES_PAGE.FINGERPRINT_EXEMPTION')]: formatBoolean(
         model.canLeaveWithoutFingerPrint
       ),

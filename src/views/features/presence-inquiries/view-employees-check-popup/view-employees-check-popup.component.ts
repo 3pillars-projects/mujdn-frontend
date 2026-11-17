@@ -1,5 +1,4 @@
 import { BasePopupComponent } from '@/abstracts/base-components/base-popup/base-popup.component';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { PRESENCE_INQUIRY_STATUS_ENUM } from '@/enums/presence-inquiry-status-enum';
 import { USER_PRESENCE_INQUIRY_STATUS_ENUM } from '@/enums/user-presence-inquiry-status-enum';
 import { PresenceInquiry } from '@/models/features/presence-inquiry/presence-inquiry';
@@ -16,10 +15,11 @@ import { Observable } from 'rxjs';
 import { NotificationTypeEnum } from '@/enums/notification-type-enum';
 import { NotificationTypeService } from '@/services/features/setting/notification-type.service';
 import { NotificationTypeBaseLookupModel } from '@/models/features/lookups/notification-type-base-lookup-model';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 
 @Component({
   selector: 'app-view-employees-check-popup',
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, LocalizedNamePipe],
   templateUrl: './view-employees-check-popup.component.html',
   styleUrl: './view-employees-check-popup.component.scss',
 })
@@ -41,7 +41,6 @@ export class ViewEmployeesCheckPopupComponent
   inquiryStatusEnum = PRESENCE_INQUIRY_STATUS_ENUM;
   userInquiryStatusEnum = USER_PRESENCE_INQUIRY_STATUS_ENUM;
   statusGroups: any[] = [];
-  isArabicLang = this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC;
   notificationTypeService = inject(NotificationTypeService);
   declare presenceProofNotificationType: NotificationTypeBaseLookupModel;
 

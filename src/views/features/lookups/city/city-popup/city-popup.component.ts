@@ -14,6 +14,7 @@ import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ValidationMessagesComponent } from '@/views/shared/validation-messages/validation-messages.component';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-city-popup',
@@ -24,6 +25,7 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
     RequiredMarkerDirective,
     TranslatePipe,
     ValidationMessagesComponent,
+    WithNameFallbackPipe,
   ],
   templateUrl: './city-popup.component.html',
   styleUrl: './city-popup.component.scss',

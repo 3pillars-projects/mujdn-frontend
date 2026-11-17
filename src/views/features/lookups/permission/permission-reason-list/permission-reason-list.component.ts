@@ -16,6 +16,8 @@ import { LanguageService } from '@/services/shared/language.service';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-permission-list',
@@ -28,6 +30,7 @@ import { RouterModule } from '@angular/router';
     TranslatePipe,
     CommonModule,
     RouterModule,
+    EnglishNamePipe,
   ],
   templateUrl: './permission-reason-list.component.html',
   styleUrl: './permission-reason-list.component.scss',
@@ -71,7 +74,7 @@ export default class PermissionReasonListComponent
       [this.translateService.instant('PERMISSION_REASONS_PAGE.PERMISSION_REASON_IN_ARABIC')]:
         model.nameAr,
       [this.translateService.instant('PERMISSION_REASONS_PAGE.PERMISSION_REASON_IN_ENGLISH')]:
-        model.nameEn,
+        getEnglishName(model),
     };
   }
 }

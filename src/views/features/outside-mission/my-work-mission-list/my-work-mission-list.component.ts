@@ -29,6 +29,10 @@ import {
   WorkMissionTypeOption,
 } from '@/models/features/business/work-mission-type-option';
 import { Observable } from 'rxjs';
+import { getEnglishName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 interface Adminstration {
   type: string;
 }
@@ -46,6 +50,9 @@ interface Adminstration {
     FormsModule,
     TranslatePipe,
     Select,
+    EnglishNamePipe,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './my-work-mission-list.component.html',
   styleUrl: './my-work-mission-list.component.scss',
@@ -148,7 +155,7 @@ export class MyWorkMissionListComponent extends BaseListComponent<
   protected override mapModelToExcelRow(model: WorkMission): { [key: string]: any } {
     return {
       [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_AR')]: model.nameAr,
-      [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_EN')]: model.nameEn,
+      [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_EN')]: getEnglishName(model),
       [this.translateService.instant('WORK_MISSIONS.START_DATE')]: model.startDate,
       [this.translateService.instant('WORK_MISSIONS.END_DATE')]: model.endDate,
       [this.translateService.instant('WORK_MISSIONS.MISSION_TYPE')]: getWorkMissionTypeName(
@@ -157,8 +164,9 @@ export class MyWorkMissionListComponent extends BaseListComponent<
       ),
       [this.translateService.instant('WORK_MISSIONS.MISSION_CREATOR_AR')]:
         model.missionCreator?.nameAr || '',
-      [this.translateService.instant('WORK_MISSIONS.MISSION_CREATOR_EN')]:
-        model.missionCreator?.nameEn || '',
+      [this.translateService.instant('WORK_MISSIONS.MISSION_CREATOR_EN')]: getEnglishName(
+        model.missionCreator
+      ),
     };
   }
   override exportExcel(

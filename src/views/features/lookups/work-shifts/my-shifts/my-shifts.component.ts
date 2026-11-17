@@ -23,6 +23,7 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { changeTimeSuffix } from '@/utils/general-helper';
 import { WorkDaysSetting } from '@/models/features/setting/work-days-setting';
 import { getShiftTypeTranslation } from '@/utils/shift-helper';
+import { getLocalizedName } from '@/utils/localized-name';
 import {
   WORK_SHIFT_TYPE_OPTIONS,
   WorkShiftTypeOption,
@@ -336,26 +337,20 @@ export default class MyShiftsComponent extends BaseListComponent<
    * Language-aware: always returns the current-UI-language name.
    */
   getShiftNames(shift: EmployeeShift): string[] {
-    const isArabic = !this.isCurrentLanguageEnglish();
+    const lang = this.languageService.getCurrentLanguage();
 
     // Rotating shift — each group has its own sub-shift details
     if (shift.rotationGroups?.length) {
-      return shift.rotationGroups
-        .map((g) => g.shiftDetails)
-        .map((d) => (isArabic ? d?.nameAr : d?.nameEn || d?.nameAr) ?? '');
+      return shift.rotationGroups.map((g) => getLocalizedName(g.shiftDetails, lang));
     }
 
     // Non-rotating shift with a nested shiftDetails object
     if (shift.shiftDetails) {
-      return [
-        isArabic
-          ? shift.shiftDetails.nameAr
-          : shift.shiftDetails.nameEn || shift.shiftDetails.nameAr,
-      ];
+      return [getLocalizedName(shift.shiftDetails, lang)];
     }
 
     // Fallback: top-level nameAr / nameEn (standard API response shape)
-    return [(isArabic ? shift.nameAr : shift.nameEn || shift.nameAr) ?? ''];
+    return [getLocalizedName(shift, lang)];
   }
 
   getShiftTypeName(shift?: EmployeeShift | null): string {

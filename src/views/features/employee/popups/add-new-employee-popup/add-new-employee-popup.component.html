@@ -19,7 +19,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="langOptionLabel"
-              [options]="departments"
+              [options]="departments | withNameFallback"
               class="w-full peer"
               formControlName="fkDepartmentId"
               id="department-popup"
@@ -85,7 +85,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="langOptionLabel"
-              [options]="regions"
+              [options]="regions | withNameFallback"
               class="w-full peer"
               formControlName="fkRegionId"
               id="region"
@@ -107,7 +107,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="langOptionLabel"
-              [options]="filteredCities"
+              [options]="filteredCities | withNameFallback"
               class="w-full peer"
               formControlName="fkCityId"
               id="add-employee-city"

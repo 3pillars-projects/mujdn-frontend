@@ -12,6 +12,9 @@ import { LanguageService } from '@/services/shared/language.service';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import EmployeeShift from '@/models/features/lookups/work-shifts/employee-shift';
 import { formatTimeTo12Hour } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-shift-assignment-panel',
@@ -25,6 +28,8 @@ import { formatTimeTo12Hour } from '@/utils/general-helper';
     AccordionHeader,
     AccordionContent,
     TranslatePipe,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './shift-assignment-panel.component.html',
   styleUrl: './shift-assignment-panel.component.scss',
@@ -176,9 +181,7 @@ export class ShiftAssignmentPanelComponent implements OnInit {
   }
 
   getShiftName() {
-    return this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? this.shift?.nameEn
-      : this.shift?.nameAr;
+    return getLocalizedName(this.shift, this.languageService.getCurrentLanguage());
   }
 
   getShiftDuration() {

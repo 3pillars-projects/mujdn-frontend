@@ -213,7 +213,7 @@
             }}</label>
             <p-select
               id="fkShiftId"
-              [options]="shifts"
+              [options]="shifts | withNameFallback"
               formControlName="fkShiftId"
               [optionLabel]="optionLabel"
               optionValue="id"
@@ -380,7 +380,7 @@
               }}</label>
               <p-select
                 id="shift1"
-                [options]="shifts"
+                [options]="shifts | withNameFallback"
                 formControlName="shift1"
                 [optionLabel]="optionLabel"
                 optionValue="id"
@@ -398,7 +398,7 @@
               }}</label>
               <p-select
                 id="shift2"
-                [options]="shifts"
+                [options]="shifts | withNameFallback"
                 formControlName="shift2"
                 [optionLabel]="optionLabel"
                 optionValue="id"
@@ -416,7 +416,7 @@
               }}</label>
               <p-select
                 id="shift3"
-                [options]="shifts"
+                [options]="shifts | withNameFallback"
                 formControlName="shift3"
                 [optionLabel]="optionLabel"
                 optionValue="id"

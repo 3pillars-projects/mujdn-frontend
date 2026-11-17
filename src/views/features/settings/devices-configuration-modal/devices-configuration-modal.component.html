@@ -52,7 +52,7 @@
         <div class="relative">
           <p-select
             [optionLabel]="getPropertyName()"
-            [options]="accessLocations"
+            [options]="accessLocations | withNameFallback"
             placeholder="{{ 'DEVICE_CONFIGURATION.ACCESS_LOCATION' | translate }}"
             [showClear]="true"
             class="w-full peer"

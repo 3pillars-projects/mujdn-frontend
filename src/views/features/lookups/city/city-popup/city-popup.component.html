@@ -13,7 +13,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="getPropertyName()"
-              [options]="regions"
+              [options]="regions | withNameFallback"
               class="w-full peer"
               formControlName="fkRegionId"
               id="regionSelect"

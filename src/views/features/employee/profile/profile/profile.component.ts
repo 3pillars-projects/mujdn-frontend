@@ -16,6 +16,7 @@ import { LanguageService } from '@/services/shared/language.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AlertService } from '@/services/shared/alert.service';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
+import { getLocalizedName as localizedNameOf } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-profile',
@@ -111,13 +112,7 @@ export default class ProfileComponent implements OnInit {
 
   // Helper method to get localized name from BaseLookupModel
   getLocalizedName(lookupModel: BaseLookupModel | undefined): string {
-    if (!lookupModel) return '-';
-
-    if (this.currentLang === 'en' && lookupModel.nameEn) {
-      return lookupModel.nameEn;
-    }
-
-    return lookupModel.nameAr || lookupModel.nameEn || '-';
+    return localizedNameOf(lookupModel, this.currentLang) || '-';
   }
 
   // Method to get user initials for avatar

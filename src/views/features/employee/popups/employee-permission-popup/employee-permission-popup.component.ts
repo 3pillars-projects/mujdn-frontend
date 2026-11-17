@@ -2,7 +2,6 @@ import { Component, Inject, inject, OnInit } from '@angular/core';
 import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { LanguageService } from '@/services/shared/language.service';
 import { DialogRef } from '@angular/cdk/dialog';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { User } from '@/models/auth/user';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BasePopupComponent } from '@/abstracts/base-components/base-popup/base-popup.component';
@@ -22,6 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { UpdateRolesModel } from '@/models/auth/update-roles-model';
 import { InputTextModule } from 'primeng/inputtext';
+import { getLocalizedName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-employee-permission-popup',
@@ -84,11 +84,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
 
   // Helper method to get department name based on current language
   get departmentName(): string {
-    if (!this.model.department) return '';
-    const lang = this.languageService.getCurrentLanguage();
-    return lang === LANGUAGE_ENUM.ARABIC
-      ? this.model.department.nameAr || ''
-      : this.model.department.nameEn || '';
+    return getLocalizedName(this.model.department, this.languageService.getCurrentLanguage());
   }
 
   override initPopup(): void {

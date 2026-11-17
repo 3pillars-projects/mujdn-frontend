@@ -12,6 +12,7 @@ import EmployeeShift from '@/models/features/lookups/work-shifts/employee-shift'
 import { formatTimeTo12Hour, weekDays } from '@/utils/general-helper';
 import { WorkDaysSetting } from '@/models/features/setting/work-days-setting';
 import { getShiftTypeTranslation } from '@/utils/shift-helper';
+import { getLocalizedName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-work-days-popup',
@@ -108,7 +109,7 @@ export class WorkDaysPopupComponent extends BasePopupComponent<EmployeeShift> im
   }
 
   get shiftName(): string {
-    return this.langService.getCurrentLanguage() === 'ar' ? this.model.nameAr! : this.model.nameEn!;
+    return getLocalizedName(this.model, this.langService.getCurrentLanguage());
   }
 
   isCurrentLanguageEnglish(): boolean {

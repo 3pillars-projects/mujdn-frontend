@@ -47,7 +47,7 @@
           </label>
           <p-select
             [(ngModel)]="filterModel.fkTargetDepartmentId"
-            [options]="departments"
+            [options]="departments | withNameFallback"
             [placeholder]="'VISIT_REQUEST_PAGE.TARGET_DEPARTMENT' | translate"
             [optionLabel]="getPropertyName()"
             optionValue="id"
@@ -69,7 +69,7 @@
             [(ngModel)]="filterModel.creationUserId"
             [placeholder]="'VISIT_REQUEST_PAGE.VISIT_CREATOR' | translate"
             [optionLabel]="langOptionLabel"
-            [options]="visitCreators"
+            [options]="visitCreators | withNameFallback"
             optionValue="id"
             class="w-full peer"
             id="visitCreator"

@@ -98,7 +98,7 @@
                     (onChange)="initializeFilteredCities()"
                     [(ngModel)]="filterModel.fkRegionId"
                     [optionLabel]="getPropertyName()"
-                    [options]="regions"
+                    [options]="regions | withNameFallback"
                     [placeholder]="'DEPARTMENTS_LIST_PAGE.REGION' | translate"
                     ariaLabelledBy="region-label"
                     class="w-full peer"
@@ -120,7 +120,7 @@
                   <p-select
                     [(ngModel)]="filterModel.fkCityId"
                     [optionLabel]="getPropertyName()"
-                    [options]="filteredCities"
+                    [options]="filteredCities | withNameFallback"
                     [placeholder]="'DEPARTMENTS_LIST_PAGE.CITY' | translate"
                     ariaLabelledBy="city-label"
                     class="w-full peer"
@@ -151,11 +151,7 @@
               class="flex flex-wrap items-start lg:items-center justify-between justify-between flex-col lg:flex-row gap-4 bg-[#e5e7eb] rounded-lg p-4 sm:p-6 mb-4"
             >
               <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-[#161616] truncate">
-                {{
-                  isCurrentLanguageEnglish()
-                    ? selectedDepartment?.nameEn
-                    : selectedDepartment?.nameAr
-                }}
+                {{ selectedDepartment | localizedName }}
               </h4>
               <div class="actions flex items-center gap-4 ms-auto">
                 <button
@@ -198,7 +194,7 @@
                 <ng-template #body let-row>
                   <tr>
                     <td>{{ row?.nameAr }}</td>
-                    <td>{{ row?.nameEn }}</td>
+                    <td>{{ row | englishName }}</td>
                     <td>
                       <span
                         class="inline-block text-[12px] font-medium text-[#1f2a37] px-2 rounded-full border border-[#e5e7eb] bg-[#f9fafb]"
@@ -206,15 +202,9 @@
                         {{ getApprovalLevelText(row.isOneLevelApproval) | translate }}
                       </span>
                     </td>
-                    @if (isCurrentLanguageEnglish()) {
-                      <td>
-                        {{ row.manager?.fullNameEn }}
-                      </td>
-                    } @else {
-                      <td>
-                        {{ row.manager?.fullNameAr }}
-                      </td>
-                    }
+                    <td>
+                      {{ row.manager | localizedName: 'fullName' }}
+                    </td>
                     <td>
                       <div class="actions flex gap-2">
                         <button

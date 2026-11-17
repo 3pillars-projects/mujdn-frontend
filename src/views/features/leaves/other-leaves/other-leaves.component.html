@@ -14,7 +14,7 @@
           <p-select
             [(ngModel)]="filterModel.fkDepartmentId"
             (ngModelChange)="onDepartmentChange()"
-            [options]="departments"
+            [options]="departments | withNameFallback"
             [optionLabel]="optionLabel"
             optionValue="id"
             [showClear]="true"
@@ -35,7 +35,7 @@
           }}</label>
           <p-select
             [(ngModel)]="filterModel.fkEmployeeId"
-            [options]="filteredEmployees"
+            [options]="filteredEmployees | withNameFallback"
             [optionLabel]="optionLabel"
             optionValue="id"
             [showClear]="true"
@@ -93,7 +93,7 @@
           <label class="label" for="leaveType">{{ 'LEAVES_PAGE.LEAVE_TYPE' | translate }}</label>
           <p-select
             [(ngModel)]="filterModel.fkLeaveTypeId"
-            [options]="filterLeaveTypes"
+            [options]="filterLeaveTypes | withNameFallback"
             [optionLabel]="optionLabel"
             optionValue="id"
             [showClear]="true"

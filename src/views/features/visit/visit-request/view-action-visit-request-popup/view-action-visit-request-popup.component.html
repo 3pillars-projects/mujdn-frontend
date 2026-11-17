@@ -53,7 +53,7 @@
             {{ 'VISIT_REQUEST_PAGE.NATIONALITY' | translate }}:
           </span>
           <h4 class="font-semibold text-[#161616]">
-            {{ isCurrentLanguageEnglish() ? model.nationalityNameEn : model.nationalityNameAr }}
+            {{ model | localizedName: 'nationalityName' }}
           </h4>
         </div>
 

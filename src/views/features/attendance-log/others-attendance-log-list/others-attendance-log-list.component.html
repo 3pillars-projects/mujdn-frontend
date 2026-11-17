@@ -15,7 +15,7 @@
             (ngModelChange)="onDepartmentChange($event)"
             [(ngModel)]="filterModel.departmentId"
             [optionLabel]="optionLabel"
-            [options]="departments"
+            [options]="departments | withNameFallback"
             [placeholder]="'ATTENDANCE_LOG_PAGE.DEPARTMENT' | translate"
             class="w-full peer"
             id="department"
@@ -38,7 +38,7 @@
             (ngModelChange)="onEmployeeChange($event)"
             [(ngModel)]="filterModel.employeeId"
             [optionLabel]="optionLabel"
-            [options]="getFilteredEmployees()"
+            [options]="getFilteredEmployees() | withNameFallback"
             [placeholder]="'ATTENDANCE_LOG_PAGE.EMPLOYEE' | translate"
             class="w-full peer"
             id="employee"
@@ -77,7 +77,7 @@
             (ngModelChange)="onCreatorChange($event)"
             [(ngModel)]="filterModel.creatorId"
             [optionLabel]="optionLabel"
-            [options]="creators"
+            [options]="creators | withNameFallback"
             [placeholder]="'ATTENDANCE_LOG_PAGE.CREATOR' | translate"
             class="w-full peer"
             id="creator"
@@ -232,7 +232,7 @@
         <ng-template pTemplate="body" let-attendanceLog>
           <tr>
             <td>{{ attendanceLog.employeeNameAr }}</td>
-            <td>{{ attendanceLog.employeeNameEn }}</td>
+            <td>{{ attendanceLog | englishName: 'employeeName' }}</td>
             <td>
               <div class="flex flex-col items-center">
                 <span>{{ formatSwipeTimeArEn(attendanceLog.swipeTime).date }}</span>
@@ -244,7 +244,7 @@
             <td>{{ getDeviceName(attendanceLog) }}</td>
             @if (!attendanceLog.isRawData) {
               <td>{{ attendanceLog.creatorNameAr }}</td>
-              <td>{{ attendanceLog.creatorNameEn }}</td>
+              <td>{{ attendanceLog | englishName: 'creatorName' }}</td>
             } @else {
               <td>النظام</td>
               <td>System</td>

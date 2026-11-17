@@ -5,8 +5,8 @@ import { AttendanceReportService } from '@/services/features/attendance-report.s
 import { AttendanceReportInterceptor } from '@/model-interceptors/features/attendance-report.interceptor';
 import { FactoryService } from '@/services/factory-service';
 import { LanguageService } from '@/services/shared/language.service';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { WorkMissionTypesEnum } from '@/enums/work-mission-type-enum';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new AttendanceReportInterceptor();
 
@@ -90,14 +90,10 @@ export default class AttendanceReport extends BaseCrudModel<
     this.languageService = FactoryService.getService('LanguageService');
   }
   getShiftName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? this.shiftNameEn || this.shiftNameAr!
-      : this.shiftNameAr!;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '', 'shiftName');
   }
   getMissionName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? this.missionNameEn || this.missionNameAr!
-      : this.missionNameAr!;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '', 'missionName');
   }
   getMissionTypeTranslationKey(): string {
     switch (this.missionType) {
@@ -112,14 +108,10 @@ export default class AttendanceReport extends BaseCrudModel<
     }
   }
   getHolidayName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? this.holidayNameEn || this.holidayNameAr!
-      : this.holidayNameAr!;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '', 'holidayName');
   }
   getLeaveTypeName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? this.leaveTypeNameEn || this.leaveTypeNameAr!
-      : this.leaveTypeNameAr!;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '', 'leaveTypeName');
   }
 
   isDefaultShift(): boolean {

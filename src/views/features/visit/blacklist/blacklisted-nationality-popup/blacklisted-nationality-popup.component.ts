@@ -12,7 +12,7 @@ import { BlacklistedNationality } from '@/models/features/visit/blacklisted-nati
 import { TranslatePipe } from '@ngx-translate/core';
 import { ValidationMessagesComponent } from '@/views/shared/validation-messages/validation-messages.component';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
+import { getLocalizedName } from '@/utils/localized-name';
 
 interface Nationality {
   id: number;
@@ -75,10 +75,10 @@ export class BlacklistedNationalityPopupComponent
   }
 
   private prepareNationalityOptions() {
-    const isEnglish = this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH;
+    const language = this.languageService.getCurrentLanguage();
 
     this.nationalityOptions = this.nationalities.map((nationality) => ({
-      label: isEnglish ? nationality.nameEn : nationality.nameAr,
+      label: getLocalizedName(nationality, language),
       value: nationality.id,
     }));
   }

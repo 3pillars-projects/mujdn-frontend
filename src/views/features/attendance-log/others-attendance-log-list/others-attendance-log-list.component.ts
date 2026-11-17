@@ -28,6 +28,9 @@ import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup
 import { BooleanOptionModel } from '@/models/shared/boolean-option';
 import { PROCESSING_STATUS_OPTIONS } from '@/models/shared/processing-status-option';
 import { formatSwipeTime } from '@/utils/general-helper';
+import { englishOrArabic } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import { CustomValidators } from '@/validators/custom-validators';
 import { AuthService } from '@/services/auth/auth.service';
 import { ImportLogPopupComponent } from '../import-log-popup/import-log-popup.component';
@@ -47,6 +50,8 @@ import { AttendanceLogExcelImportPopupComponent } from '../attendance-log-excel-
     PaginatorModule,
     TranslatePipe,
     InputTextModule,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './others-attendance-log-list.component.html',
   styleUrl: './others-attendance-log-list.component.scss',
@@ -64,7 +69,7 @@ export default class OthersAttendanceLogListComponent
   protected override mapModelToPdfRow(model: AttendanceLog): { [key: string]: any } {
     return {
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_EN_PDF')]:
-        model.creatorNameEn ?? 'System',
+        englishOrArabic(model.creatorNameAr, model.creatorNameEn) || 'System',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_AR_PDF')]:
         model.creatorNameAr ?? 'النظام',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CHANNEL_NAME')]:
@@ -73,7 +78,7 @@ export default class OthersAttendanceLogListComponent
         model.swipeTime
       ),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.EMPLOYEE_NAME_EN_PDF')]:
-        model.employeeNameEn,
+        englishOrArabic(model.employeeNameAr, model.employeeNameEn),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.EMPLOYEE_NAME_AR_PDF')]:
         model.employeeNameAr,
     };
@@ -262,14 +267,17 @@ export default class OthersAttendanceLogListComponent
   protected override mapModelToExcelRow(model: AttendanceLog): { [key: string]: any } {
     return {
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.EMPLOYEE_NAME_AR')]: model.employeeNameAr,
-      [this.translateService.instant('ATTENDANCE_LOG_PAGE.EMPLOYEE_NAME_EN')]: model.employeeNameEn,
+      [this.translateService.instant('ATTENDANCE_LOG_PAGE.EMPLOYEE_NAME_EN')]: englishOrArabic(
+        model.employeeNameAr,
+        model.employeeNameEn
+      ),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.SWIPE_TIME')]: this.swipeTimeArEn(
         model.swipeTime
       ),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CHANNEL_NAME')]:
         model.channelName ?? (this.isCurrentLanguageEnglish() ? 'Manual' : 'يدوي'),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_EN')]:
-        model.creatorNameEn ?? 'System',
+        englishOrArabic(model.creatorNameAr, model.creatorNameEn) || 'System',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_AR')]:
         model.creatorNameAr ?? 'النظام',
       // hidden for release 1

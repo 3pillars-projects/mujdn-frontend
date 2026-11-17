@@ -28,6 +28,7 @@ import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ROLES_ENUM } from '@/enums/roles-enum';
 import { BooleanOptionModel } from '@/models/shared/boolean-option';
 import { PasswordModule } from 'primeng/password';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-add-new-employee-popup',
@@ -42,6 +43,7 @@ import { PasswordModule } from 'primeng/password';
     TranslatePipe,
     ValidationMessagesComponent,
     PasswordModule,
+    WithNameFallbackPipe,
   ],
   templateUrl: './add-new-employee-popup.component.html',
   styleUrl: './add-new-employee-popup.component.scss',

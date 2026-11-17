@@ -16,6 +16,8 @@ import { LanguageService } from '@/services/shared/language.service';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-region-list',
@@ -28,6 +30,7 @@ import { RouterModule } from '@angular/router';
     TranslatePipe,
     CommonModule,
     RouterModule,
+    EnglishNamePipe,
   ],
   templateUrl: './region-list.component.html',
   styleUrl: './region-list.component.scss',
@@ -63,7 +66,7 @@ export class RegionListComponent
   protected override mapModelToExcelRow(model: Region): { [key: string]: any } {
     return {
       [this.translateService.instant('REGIONS_PAGE.REGION_IN_ARABIC')]: model.nameAr,
-      [this.translateService.instant('REGIONS_PAGE.REGION_IN_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('REGIONS_PAGE.REGION_IN_ENGLISH')]: getEnglishName(model),
     };
   }
 }

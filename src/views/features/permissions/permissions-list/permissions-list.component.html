@@ -36,7 +36,7 @@
                     <p-select
                       [(ngModel)]="filterModel.fkPermissionTypeId"
                       [optionLabel]="getPropertyName()"
-                      [options]="permissionTypes"
+                      [options]="permissionTypes | withNameFallback"
                       [showClear]="true"
                       class="w-full peer"
                       id="permission-type-select"
@@ -97,7 +97,7 @@
                     <p-select
                       [(ngModel)]="filterModel.fkStatusId"
                       [optionLabel]="getPropertyName()"
-                      [options]="prmissionStatuses"
+                      [options]="prmissionStatuses | withNameFallback"
                       [showClear]="true"
                       class="w-full peer"
                       id="request-status-select"
@@ -263,7 +263,7 @@
                       <p-select
                         [(ngModel)]="filterModel.fkPermissionTypeId"
                         [optionLabel]="getPropertyName()"
-                        [options]="permissionTypes"
+                        [options]="permissionTypes | withNameFallback"
                         [showClear]="true"
                         class="w-full peer"
                         id="permission-type-select"
@@ -282,7 +282,7 @@
                       <p-select
                         [(ngModel)]="filterModel.creationUserId"
                         [optionLabel]="getPropertyName()"
-                        [options]="users"
+                        [options]="users | withNameFallback"
                         [showClear]="true"
                         class="w-full peer"
                         id="employee-name-select"
@@ -304,7 +304,7 @@
                       <p-select
                         [(ngModel)]="filterModel.fkDepartmentId"
                         [optionLabel]="getPropertyName()"
-                        [options]="departments"
+                        [options]="departments | withNameFallback"
                         [showClear]="true"
                         class="w-full peer"
                         id="department-select"
@@ -324,7 +324,7 @@
                       <p-select
                         [(ngModel)]="filterModel.fkStatusId"
                         [optionLabel]="getPropertyName()"
-                        [options]="prmissionStatuses"
+                        [options]="prmissionStatuses | withNameFallback"
                         [showClear]="true"
                         class="w-full peer"
                         id="request-status-select"

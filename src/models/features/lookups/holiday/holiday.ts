@@ -7,6 +7,7 @@ import { LanguageService } from '@/services/shared/language.service';
 import { CustomValidators } from '@/validators/custom-validators';
 import { Validators } from '@angular/forms';
 import { InterceptModel } from 'cast-response';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new HolidayInterceptor();
 
@@ -55,9 +56,7 @@ export class Holiday extends BaseCrudModel<Holiday, HolidayService> {
     };
   }
   getName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH && this.nameEn
-      ? this.nameEn
-      : this.nameAr;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '');
   }
   getStartDate(): string {
     return this.startDate

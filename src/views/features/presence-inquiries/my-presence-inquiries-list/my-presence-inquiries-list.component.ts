@@ -21,6 +21,8 @@ import { LanguageService } from '@/services/shared/language.service';
 import { CustomValidators } from '@/validators/custom-validators';
 import { formatDateTo12Hour } from '@/utils/general-helper';
 import { Observable } from 'rxjs';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-my-presence-inquiries-list',
@@ -34,6 +36,7 @@ import { Observable } from 'rxjs';
     TableModule,
     FormsModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   providers: [DatePipe],
   templateUrl: './my-presence-inquiries-list.component.html',
@@ -115,9 +118,7 @@ export class MyPresenceInquiriesListComponent extends BaseListComponent<
 
   getStatusName(id: number): string {
     const status = this.userPresenceInquiryStatuses.find((d) => d.id === id);
-    return this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? (status?.nameEn ?? '')
-      : (status?.nameAr ?? '');
+    return getLocalizedName(status, this.languageService.getCurrentLanguage());
   }
 
   formatDate(date: string | Date | null | undefined): string {

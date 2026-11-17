@@ -28,6 +28,8 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { LanguageService } from '@/services/shared/language.service';
 import { formatDateTo12Hour } from '@/utils/general-helper';
 import { Observable } from 'rxjs';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-others-presence-inquiries-list',
@@ -41,6 +43,7 @@ import { Observable } from 'rxjs';
     TableModule,
     FormsModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   providers: [DatePipe],
   templateUrl: './others-presence-inquiries-list.component.html',
@@ -168,9 +171,7 @@ export class OthersPresenceInquiriesListComponent extends BaseListComponent<
 
   getStatusName(id: number): string {
     const status = this.presenceInquiryStatuses.find((d) => d.id === id);
-    return this.languageService?.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? (status?.nameEn ?? '')
-      : (status?.nameAr ?? '');
+    return getLocalizedName(status, this.languageService.getCurrentLanguage());
   }
 
   override exportExcel(fileName: string = 'PresenceProofInquiry.xlsx'): void {

@@ -30,7 +30,7 @@
               <p-select
                 [(ngModel)]="filterModel.fkUserProfileId"
                 [optionLabel]="getPropertyName()"
-                [options]="employees"
+                [options]="employees | withNameFallback"
                 [placeholder]="'TEMPORARY_ROLE_ASSIGNMENT_PAGE.EMPLOYEE_NAME' | translate"
                 [showClear]="true"
                 [filter]="true"

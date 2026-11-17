@@ -40,6 +40,8 @@ import { ShiftService } from '@/services/features/lookups/shift.service';
 import { UserService } from '@/services/features/user.service';
 import { WorkDaysSettingService } from '@/services/features/setting/work-days-setting.service';
 import { AuthService } from '@/services/auth/auth.service';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-work-shifts-assignment',
@@ -57,6 +59,7 @@ import { AuthService } from '@/services/auth/auth.service';
     FormsModule,
     TranslatePipe,
     TooltipModule,
+    WithNameFallbackPipe,
     Breadcrumb,
   ],
   templateUrl: './work-shifts-assignment.component.html',
@@ -147,15 +150,16 @@ export default class WorkShiftsAssignmentComponent extends BaseListComponent<
     this.departments = data.departments || [];
     this.defaultWorkDays = data.defaultworkDays || new WorkDaysSetting();
     this.filteredEmployees = this.usersProfiles;
-    this.departments = this.sortByName(this.departments, this.optionLabel);
-    this.filteredEmployees = this.sortByName(this.filteredEmployees, this.optionLabel);
+    this.departments = this.sortByName(this.departments);
+    this.filteredEmployees = this.sortByName(this.filteredEmployees);
   }
-  private sortByName<T extends { [key: string]: any }>(arr: T[], key: string): T[] {
-    return [...arr].sort((a, b) => {
-      const nameA = (a[key] || '').toString().toLowerCase();
-      const nameB = (b[key] || '').toString().toLowerCase();
-      return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
-    });
+  private sortByName<T extends BaseLookupModel>(arr: T[]): T[] {
+    const lang = this.langService.getCurrentLanguage();
+    return [...arr].sort((a, b) =>
+      getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang), undefined, {
+        sensitivity: 'base',
+      })
+    );
   }
 
   protected override mapModelToExcelRow(model: UserWorkShift): { [key: string]: any } {
@@ -304,13 +308,12 @@ export default class WorkShiftsAssignmentComponent extends BaseListComponent<
   onDepartmentChange(): void {
     const selectedDeptId = this.filterOptions.fkDepartmentId;
     if (!selectedDeptId) {
-      this.filteredEmployees = this.sortByName(this.usersProfiles, this.optionLabel);
+      this.filteredEmployees = this.sortByName(this.usersProfiles);
     } else {
       this.filteredEmployees = this.sortByName(
         this.usersProfiles.filter(
           (u) => u.departmentId != null && u.departmentId === selectedDeptId
-        ),
-        this.optionLabel
+        )
       );
     }
     if (this.filterOptions.fkAssignedUserId != null) {
@@ -331,18 +334,11 @@ export default class WorkShiftsAssignmentComponent extends BaseListComponent<
   }
 
   getShiftNames(shift: Shift) {
+    const lang = this.langService.getCurrentLanguage();
     if (shift.shiftDetails) {
-      return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC
-        ? [shift.shiftDetails.nameAr]
-        : [shift.shiftDetails.nameEn || shift.shiftDetails.nameAr];
+      return [getLocalizedName(shift.shiftDetails, lang)];
     } else {
-      return shift.rotationGroups
-        .map((x) => x.shiftDetails)
-        .map((y) => {
-          return this.langService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC
-            ? y?.nameAr
-            : y?.nameEn || y?.nameAr;
-        });
+      return shift.rotationGroups.map((x) => getLocalizedName(x.shiftDetails, lang));
     }
   }
 

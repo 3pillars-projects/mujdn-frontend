@@ -26,6 +26,9 @@ import { PROCESSING_STATUS_OPTIONS } from '@/models/shared/processing-status-opt
 import { MyAttendanceLogFilter } from '@/models/features/attendance/attendance-log/my-attendance-log-filter';
 import { CustomValidators } from '@/validators/custom-validators';
 import { formatSwipeTime } from '@/utils/general-helper';
+import { englishOrArabic } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -42,6 +45,8 @@ import { Observable } from 'rxjs';
     PaginatorModule,
     TranslatePipe,
     InputTextModule,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './my-attendance-log-list.component.html',
   styleUrl: './my-attendance-log-list.component.scss',
@@ -178,7 +183,7 @@ export default class MyAttendanceLogListComponent
   protected override mapModelToPdfRow(model: AttendanceLog): { [key: string]: any } {
     return {
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_EN_PDF')]:
-        model.creatorNameEn ?? 'System',
+        englishOrArabic(model.creatorNameAr, model.creatorNameEn) || 'System',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_AR_PDF')]:
         model.creatorNameAr ?? 'النظام',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CHANNEL_NAME')]: 
@@ -232,7 +237,7 @@ export default class MyAttendanceLogListComponent
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CHANNEL_NAME')]: 
         model.channelName ?? (this.isCurrentLanguageEnglish() ? 'Manual' : 'يدوي'),
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_EN')]:
-        model.creatorNameEn ?? 'System',
+        englishOrArabic(model.creatorNameAr, model.creatorNameEn) || 'System',
       [this.translateService.instant('ATTENDANCE_LOG_PAGE.CREATOR_AR')]:
         model.creatorNameAr ?? 'النظام',
       // hidden for release 1

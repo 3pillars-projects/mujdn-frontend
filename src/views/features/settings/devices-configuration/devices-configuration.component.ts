@@ -19,6 +19,8 @@ import { DevicesLocationModalComponent } from '../devices-location-modal/devices
 import { AccessLocationService } from '@/services/features/business/access-location.service';
 import DevicesConfigurationFilter from '@/models/features/business/devices-configuration-filter';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import {
   DEVICE_STATUS_CONFIG,
   DEVICE_STATUS_ENUM,
@@ -39,6 +41,8 @@ import {
     Select,
     FormsModule,
     TranslatePipe,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './devices-configuration.component.html',
   styleUrl: './devices-configuration.component.scss',

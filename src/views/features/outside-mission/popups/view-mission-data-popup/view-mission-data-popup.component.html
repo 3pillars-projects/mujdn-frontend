@@ -32,7 +32,7 @@
           </div>
           <div class="flex flex-col gap-1 text-white">
             <span class="text-[14px]">{{ 'WORK_MISSIONS.MISSION_NAME_EN' | translate }}</span>
-            <h4 class="font-semibold text-[16px]">{{ model.nameEn }}</h4>
+            <h4 class="font-semibold text-[16px]">{{ model | englishName }}</h4>
           </div>
         </div>
       </div>
@@ -48,11 +48,7 @@
         <div class="flex flex-col gap-1 text-white">
           <span class="text-[14px]">{{ 'WORK_MISSIONS.MISSION_CREATOR' | translate }}</span>
           <h4 class="font-semibold text-[16px]">
-            {{
-              isCurrentLanguageEnglish()
-                ? model.missionCreator?.nameEn
-                : model.missionCreator?.nameAr
-            }}
+            {{ model.missionCreator | localizedName }}
           </h4>
         </div>
         <div class="flex flex-col gap-1 text-white">
@@ -105,7 +101,7 @@
           @for (item of model.assignedEmployees; track $index) {
             <div class="bg-[#f3f4f6] rounded-full px-3">
               <span class="text-[#161616] font-medium"
-                >{{ isCurrentLanguageEnglish() ? item.nameEn : item.nameAr }}
+                >{{ item | localizedName }}
               </span>
             </div>
           }

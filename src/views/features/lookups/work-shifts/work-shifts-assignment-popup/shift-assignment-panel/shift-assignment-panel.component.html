@@ -37,7 +37,7 @@
   <div class="grid grid-cols-2 gap-6">
     <div class="relative">
       <label class="label">{{ 'USER_WORK_SHIFT_ASSIGNMENT.DEPARTMENT' | translate }}</label>
-      <p-multiSelect [options]="departments" [(ngModel)]="selectedDeptIds" (onChange)="onDepartmentChange($event.value)"
+      <p-multiSelect [options]="departments | withNameFallback" [(ngModel)]="selectedDeptIds" (onChange)="onDepartmentChange($event.value)"
         (onSelectAllChange)="onDepartmentSelectAll($event)" class="w-full peer" [optionLabel]="optionLabel"
         optionValue="id" [placeholder]="'USER_WORK_SHIFT_ASSIGNMENT.DEPARTMENT' | translate" [maxSelectedLabels]="0"
         [selectedItemsLabel]="selectedDeptLabel" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-multiSelect>
@@ -46,7 +46,7 @@
     </div>
     <div class="relative">
       <label class="label required">{{ 'USER_WORK_SHIFT_ASSIGNMENT.EMPLOYEE_NAME' | translate }}</label>
-      <p-multiSelect [options]="filteredEmployeesWithDisabled" [(ngModel)]="selectedMemberIds"
+      <p-multiSelect [options]="filteredEmployeesWithDisabled | withNameFallback" [(ngModel)]="selectedMemberIds"
         (onChange)="onEmployeeChange($event.value)" class="w-full peer" [optionLabel]="optionLabel" optionValue="id"
         optionDisabled="disabled" [placeholder]="'USER_WORK_SHIFT_ASSIGNMENT.EMPLOYEE_NAME' | translate"
         [maxSelectedLabels]="0" [selectedItemsLabel]="selectedEmpLabel" [virtualScroll]="true"
@@ -68,7 +68,7 @@
         <p-accordion-header>
           <div class="flex items-center justify-between w-full">
             <h4 class="text-[#161616] font-semibold">
-              {{ optionLabel === 'nameAr' ? group.department.nameAr : group.department.nameEn }}
+              {{ group.department | localizedName }}
             </h4>
             @if (!viewMode) {
               <button type="button" class="text-[#b42318] text-xs font-medium flex items-center gap-1"
@@ -84,7 +84,7 @@
             <div class="flex flex-wrap gap-2">
               <div *ngFor="let employee of group.employees"
                 class="bg-[#fff] py-1 px-3 rounded-full text-[#161616] font-semibold w-fit flex items-center gap-2">
-                <span>{{ optionLabel === 'nameAr' ? employee.nameAr : employee.nameEn }}</span>
+                <span>{{ employee | localizedName }}</span>
                 @if (!viewMode) {
                   <button type="button" (click)="removeEmployee(employee.id!)">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

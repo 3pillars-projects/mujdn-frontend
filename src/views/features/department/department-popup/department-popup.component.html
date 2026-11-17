@@ -111,7 +111,7 @@
           <div class="relative">
             <p-select
               name="regionSelect"
-              [options]="regions"
+              [options]="regions | withNameFallback"
               optionValue="id"
               [optionLabel]="langOptionLabel"
               [placeholder]="'DEPARTMENT_POPUP.CHOOSE_REGION' | translate"
@@ -133,7 +133,7 @@
           <div class="relative">
             <p-select
               name="citySelect"
-              [options]="filteredCities"
+              [options]="filteredCities | withNameFallback"
               optionValue="id"
               [optionLabel]="langOptionLabel"
               [placeholder]="'DEPARTMENT_POPUP.CHOOSE_CITY' | translate"
@@ -212,7 +212,7 @@
           <div class="relative">
             <p-select
               name="managerSelect"
-              [options]="usersProfiles"
+              [options]="usersProfiles | withNameFallback"
               [optionLabel]="langOptionLabel"
               optionValue="id"
               [placeholder]="'DEPARTMENT_POPUP.MANAGER_NAME' | translate"
@@ -237,7 +237,7 @@
             <div class="relative">
               <p-select
                 name="parentDepartmentSelect"
-                [options]="parentDepartments"
+                [options]="parentDepartments | withNameFallback"
                 [optionLabel]="langOptionLabel"
                 optionValue="id"
                 [placeholder]="'DEPARTMENT_POPUP.CHOOSE_PARENT_DEPARTMENT' | translate"
