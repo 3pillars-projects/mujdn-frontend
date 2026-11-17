@@ -34,6 +34,8 @@ import {
   VISIT_ATTENDANCE_STATUS_OPTIONS,
   VisitAttendanceStatusOption,
 } from '@/enums/visit-attendance-status-enum';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-all-visit-request-list',
@@ -49,6 +51,7 @@ import {
     Select,
     DatePicker,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './all-visit-request-list.component.html',
   styleUrl: './all-visit-request-list.component.scss',
@@ -194,17 +197,11 @@ export class AllVisitRequestListComponent
 
   // Department name display
   getDepartmentName(visit: Visit): string {
-    if (this.isCurrentLanguageEnglish()) {
-      return visit.targetDepartment?.nameEn || visit.targetDepartment?.nameAr || '';
-    }
-    return visit.targetDepartment?.nameAr || '';
+    return getLocalizedName(visit.targetDepartment, this.languageService.getCurrentLanguage());
   }
 
   getVisitCreatorName(visit: Visit): string {
-    if (this.isCurrentLanguageEnglish()) {
-      return visit.creationUser?.nameEn || visit.creationUser?.nameAr || '';
-    }
-    return visit.creationUser?.nameAr || '';
+    return getLocalizedName(visit.creationUser, this.languageService.getCurrentLanguage());
   }
 
   override initListComponent(): void {

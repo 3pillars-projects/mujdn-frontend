@@ -31,8 +31,10 @@ import { ConfirmationService } from '@/services/shared/confirmation.service';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { CustomValidators } from '@/validators/custom-validators';
 import { ManualProcessingService } from '@/services/features/business/manual-processing.service';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { Select } from 'primeng/select';
+import { getLocalizedName } from '@/utils/localized-name';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 interface DepartmentEmployees {
   department: BaseLookupModel;
@@ -57,6 +59,8 @@ interface DepartmentEmployees {
     ValidationMessagesComponent,
     RequiredMarkerDirective,
     Select,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './reports-processing.component.html',
   styleUrl: './reports-processing.component.scss',
@@ -258,11 +262,9 @@ export default class ReportsProcessingComponent implements OnInit, OnDestroy {
   }
 
   sortDepartmentsAlphabetically(departments: DepartmentEmployees[]) {
-    const departmentNamePropertyName =
-      this.currentLang == LANGUAGE_ENUM.ENGLISH ? 'nameEn' : 'nameAr';
     return departments.sort((a, b) =>
-      a.department[departmentNamePropertyName]!.localeCompare(
-        b.department[departmentNamePropertyName]!
+      getLocalizedName(a.department, this.currentLang).localeCompare(
+        getLocalizedName(b.department, this.currentLang)
       )
     );
   }

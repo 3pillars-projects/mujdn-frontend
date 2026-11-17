@@ -19,6 +19,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { formatTimeTo12Hour, toRtlExcelCell } from '@/utils/general-helper';
 import { AuthService } from '@/services/auth/auth.service';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-work-shifts-list',
@@ -32,6 +34,7 @@ import { AuthService } from '@/services/auth/auth.service';
     PaginatorModule,
     FormsModule,
     TranslatePipe,
+    EnglishNamePipe,
   ],
   templateUrl: './work-shifts-list.component.html',
   styleUrl: './work-shifts-list.component.scss',
@@ -107,7 +110,7 @@ export default class WorkShiftsListComponent
 
     return {
       [translate.instant('WORK_SHIFTS.SHIFT_NAME_AR')]: model.nameAr,
-      [translate.instant('WORK_SHIFTS.SHIFT_NAME_EN')]: model.nameEn,
+      [translate.instant('WORK_SHIFTS.SHIFT_NAME_EN')]: getEnglishName(model),
       [translate.instant('WORK_SHIFTS.BEFORE_ATTENDANCE_BUFFER')]: model.beforeAttendanceBuffer,
       [translate.instant('WORK_SHIFTS.AFTER_ATTENDANCE_BUFFER')]: model.afterAttendanceBuffer,
       [translate.instant('WORK_SHIFTS.BEFORE_LEAVE_BUFFER')]: model.beforeLeaveBuffer,

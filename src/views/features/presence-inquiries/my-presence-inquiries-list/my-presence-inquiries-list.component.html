@@ -51,7 +51,7 @@
           <p-select
             [(ngModel)]="filterModel.statusId"
             [optionLabel]="getPropertyName()"
-            [options]="userPresenceInquiryStatuses"
+            [options]="userPresenceInquiryStatuses | withNameFallback"
             [showClear]="true"
             class="w-full peer"
             id="request-status-select"

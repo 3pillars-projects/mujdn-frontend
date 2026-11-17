@@ -2,7 +2,6 @@ import { Component, Inject, inject, OnInit } from '@angular/core';
 import { LAYOUT_DIRECTION_ENUM } from '@/enums/layout-direction-enum';
 import { LanguageService } from '@/services/shared/language.service';
 import { DialogRef } from '@angular/cdk/dialog';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { User } from '@/models/auth/user';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BasePopupComponent } from '@/abstracts/base-components/base-popup/base-popup.component';
@@ -22,6 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { UpdateRolesModel } from '@/models/auth/update-roles-model';
 import { InputTextModule } from 'primeng/inputtext';
+import { getLocalizedName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-employee-permission-popup',
@@ -47,6 +47,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     isHR: false,
     isSecurityMember: false,
     isSecurityLeader: false,
+    isComplianceOfficer: false,
   };
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
@@ -82,13 +83,13 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     return this.form.get('isSecurityLeader') as FormControl;
   }
 
+  get isComplianceOfficerControl() {
+    return this.form.get('isComplianceOfficer') as FormControl;
+  }
+
   // Helper method to get department name based on current language
   get departmentName(): string {
-    if (!this.model.department) return '';
-    const lang = this.languageService.getCurrentLanguage();
-    return lang === LANGUAGE_ENUM.ARABIC
-      ? this.model.department.nameAr || ''
-      : this.model.department.nameEn || '';
+    return getLocalizedName(this.model.department, this.languageService.getCurrentLanguage());
   }
 
   override initPopup(): void {
@@ -107,6 +108,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
       isHR: [this.roleStates.isHR],
       isSecurityMember: [this.roleStates.isSecurityMember],
       isSecurityLeader: [this.roleStates.isSecurityLeader],
+      isComplianceOfficer: [this.roleStates.isComplianceOfficer],
     });
 
     // Subscribe to checkbox changes to update roleStates
@@ -140,6 +142,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     if (formValue.isHR) roleIds.push(ROLES_ENUM.HR_OFFICER);
     if (formValue.isSecurityMember) roleIds.push(ROLES_ENUM.SECURITY_MEMBER);
     if (formValue.isSecurityLeader) roleIds.push(ROLES_ENUM.SECURITY_LEADER);
+    if (formValue.isComplianceOfficer) roleIds.push(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
 
     // Update model with new roleIds
     this.model.roleIds = roleIds;
@@ -164,6 +167,7 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
     if (formValue.isHR) roleIds.push(ROLES_ENUM.HR_OFFICER);
     if (formValue.isSecurityMember) roleIds.push(ROLES_ENUM.SECURITY_MEMBER);
     if (formValue.isSecurityLeader) roleIds.push(ROLES_ENUM.SECURITY_LEADER);
+    if (formValue.isComplianceOfficer) roleIds.push(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
 
     // user update role object
     const data: UpdateRolesModel = {
@@ -187,6 +191,9 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
       this.roleStates.isHR = this.model.roleIds.includes(ROLES_ENUM.HR_OFFICER);
       this.roleStates.isSecurityMember = this.model.roleIds.includes(ROLES_ENUM.SECURITY_MEMBER);
       this.roleStates.isSecurityLeader = this.model.roleIds.includes(ROLES_ENUM.SECURITY_LEADER);
+      this.roleStates.isComplianceOfficer = this.model.roleIds.includes(
+        ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER
+      );
     }
   }
 
@@ -219,6 +226,10 @@ export class EmployeePermissionPopupComponent extends BasePopupComponent<User> i
 
     this.form.get('isSecurityLeader')?.valueChanges.subscribe((value) => {
       this.roleStates.isSecurityLeader = value;
+    });
+
+    this.form.get('isComplianceOfficer')?.valueChanges.subscribe((value) => {
+      this.roleStates.isComplianceOfficer = value;
     });
   }
 }

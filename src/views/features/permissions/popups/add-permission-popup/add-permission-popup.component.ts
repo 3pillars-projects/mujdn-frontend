@@ -24,6 +24,7 @@ import { RequiredMarkerDirective } from '../../../../../directives/required-mark
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { AttachmentUploadComponent } from '@/views/shared/attachment-upload/attachment-upload.component';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 interface Adminstration {
   type: string;
@@ -41,6 +42,7 @@ interface Adminstration {
     RequiredMarkerDirective,
     AttachmentUploadComponent,
     AttachmentListComponent,
+    WithNameFallbackPipe,
   ],
   templateUrl: './add-permission-popup.component.html',
   styleUrl: './add-permission-popup.component.scss',

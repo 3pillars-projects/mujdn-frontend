@@ -113,7 +113,7 @@
             <ng-template pTemplate="body" let-permissionReason>
               <tr>
                 <td>{{ permissionReason.nameAr }}</td>
-                <td>{{ permissionReason.nameEn }}</td>
+                <td>{{ permissionReason | englishName }}</td>
                 <td>
                   <div class="actions flex gap-2">
                     <button

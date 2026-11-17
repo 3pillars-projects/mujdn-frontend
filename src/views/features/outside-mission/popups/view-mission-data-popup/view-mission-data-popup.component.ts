@@ -32,10 +32,13 @@ import {
   LeavesRejectPopupComponent,
   RejectPopupData,
 } from '@/views/features/leaves/leaves-reject-popup/leaves-reject-popup.component';
+import { getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 
 @Component({
   selector: 'app-view-mission-data-popup',
-  imports: [DatePipe, TranslatePipe, AttachmentListComponent],
+  imports: [DatePipe, TranslatePipe, AttachmentListComponent, EnglishNamePipe, LocalizedNamePipe],
   templateUrl: './view-mission-data-popup.component.html',
   styleUrl: './view-mission-data-popup.component.scss',
 })
@@ -105,14 +108,13 @@ export class ViewMissionDataPopupComponent {
 
   private getMissionPdfFileName(): string {
     const title = this.translateService.instant('WORK_MISSIONS.MISSION_PDF_FILE_NAME');
-    const missionName = this.isCurrentLanguageEnglish() ? this.model.nameEn : this.model.nameAr;
+    const missionName = getLocalizedName(this.model, this.languageService.getCurrentLanguage());
     return `${missionName ? `${title} - ${missionName}` : title}.pdf`;
   }
 
   /** Department names in the current language. */
   lookupName(item?: { nameAr?: string; nameEn?: string | null } | null): string {
-    if (!item) return '';
-    return (this.isCurrentLanguageEnglish() ? item.nameEn || item.nameAr : item.nameAr) ?? '';
+    return getLocalizedName(item, this.languageService.getCurrentLanguage());
   }
 
   approve(): void {

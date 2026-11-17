@@ -1,5 +1,4 @@
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { PERMISSION_APPROVAL_LEVELS } from '@/enums/permission-approval-levels';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
@@ -12,10 +11,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { DepartmentPopupComponent } from '../department-popup/department-popup.component';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 
 @Component({
   selector: 'app-department-header',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, LocalizedNamePipe],
   templateUrl: './department-header.component.html',
   styleUrl: './department-header.component.scss',
 })
@@ -104,9 +104,5 @@ export class DepartmentHeaderComponent {
         }
       });
     });
-  }
-
-  isCurrentLanguageEnglish() {
-    return this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH;
   }
 }

@@ -49,6 +49,8 @@ import {
   workMissionStatusDotClass,
   workMissionStatusTextKey,
 } from '@/utils/work-mission-status';
+import { getEnglishName, getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
 
 @Component({
   selector: 'app-assign-work-mission-list',
@@ -62,6 +64,7 @@ import {
     TranslatePipe,
     Select,
     MenuModule,
+    EnglishNamePipe,
   ],
   templateUrl: './assign-work-mission-list.component.html',
   styleUrl: './assign-work-mission-list.component.scss',
@@ -170,7 +173,7 @@ export class AssignWorkMissionListComponent
     const datePipe = new DatePipe('en-US');
     return {
       [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_AR')]: model.nameAr,
-      [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_EN')]: model.nameEn,
+      [this.translateService.instant('WORK_MISSIONS.MISSION_NAME_EN')]: getEnglishName(model),
       [this.translateService.instant('WORK_MISSIONS.START_DATE')]: datePipe.transform(
         model.startDate,
         'dd/MM/yyyy'
@@ -286,7 +289,7 @@ export class AssignWorkMissionListComponent
 
   private getMissionPdfFileName(mission: WorkMission): string {
     const title = this.translateService.instant('WORK_MISSIONS.MISSION_PDF_FILE_NAME');
-    const missionName = this.isCurrentLanguageEnglish() ? mission.nameEn : mission.nameAr;
+    const missionName = getLocalizedName(mission, this.langService.getCurrentLanguage());
     return `${missionName ? `${title} - ${missionName}` : title}.pdf`;
   }
 

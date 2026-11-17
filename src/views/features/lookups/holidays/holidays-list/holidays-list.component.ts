@@ -20,6 +20,8 @@ import { HolidayFilter } from '@/models/features/lookups/holiday/holiday-filter'
 import { AuthService } from '@/services/auth/auth.service';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { NotesPopupComponent } from '../notes-popup/notes-popup/notes-popup.component';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-holidays-list',
@@ -35,6 +37,7 @@ import { NotesPopupComponent } from '../notes-popup/notes-popup/notes-popup.comp
     TableModule,
     CommonModule,
     RouterModule,
+    EnglishNamePipe,
   ],
 
   providers: [DatePipe],
@@ -77,7 +80,7 @@ export default class HolidaysListComponent extends BaseListComponent<
   protected override mapModelToExcelRow(model: Holiday): { [key: string]: any } {
     return {
       [this.translateService.instant('HOLIDAYS_PAGE.HOLIDAY_NAME_ARABIC')]: model.nameAr,
-      [this.translateService.instant('HOLIDAYS_PAGE.HOLIDAY_NAME_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('HOLIDAYS_PAGE.HOLIDAY_NAME_ENGLISH')]: getEnglishName(model),
       [this.translateService.instant('HOLIDAYS_PAGE.START_DATE')]: this.formatDate(
         model.startDate
       ),

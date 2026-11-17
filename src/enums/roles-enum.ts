@@ -6,4 +6,6 @@ export enum ROLES_ENUM {
   HR_OFFICER = '9hr55964-876d-45ec-e2b80ef3894f',
   SECURITY_LEADER = 'sec17l3d-d847-48f4-39bec9b5cb10',
   SECURITY_MEMBER = 'sec49m3m-133e-4d6f-4b53d752c34b',
+  /** Composite role: the backend also grants HR_OFFICER and FOLLOW_UP_OFFICER, never Super HR. */
+  ATTENDANCE_COMPLIANCE_OFFICER = 'acmp1nc3-5a2e-4c71-8be0c3f1a9d2',
 }

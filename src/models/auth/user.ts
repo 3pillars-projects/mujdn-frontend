@@ -9,6 +9,7 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { FactoryService } from '@/services/factory-service';
 import { LanguageService } from '@/services/shared/language.service';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new UserInterceptor();
 
@@ -135,9 +136,7 @@ export class User extends BaseCrudModel<User, UserService, string> {
   }
 
   getUserName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.fullNameEn ?? '')
-      : (this.fullNameAr ?? '');
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '', 'fullName');
   }
   getJobTitleName(): string {
     return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH

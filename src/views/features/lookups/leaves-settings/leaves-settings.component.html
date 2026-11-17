@@ -107,7 +107,7 @@
             <ng-template pTemplate="body" let-leaveType>
               <tr>
                 <td>{{ leaveType.nameAr }}</td>
-                <td>{{ leaveType.nameEn }}</td>
+                <td>{{ leaveType | englishName }}</td>
                 <td>
                   <div class="actions flex gap-2">
                     <button (click)="addOrEditModel(leaveType)" class="table-action-gray-btn">

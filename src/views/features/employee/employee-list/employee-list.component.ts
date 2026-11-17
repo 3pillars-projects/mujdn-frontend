@@ -40,6 +40,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { formatDateOnly } from '@/utils/general-helper';
 import { EmployeeImportModalComponent } from '../employee-import-modal/employee-import-modal.component';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { getEnglishName, getLocalizedName } from '@/utils/localized-name';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-employee-list',
@@ -58,6 +61,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
     InputTextModule,
     DropdownModule,
     ToggleSwitchModule,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
@@ -263,9 +268,7 @@ export default class EmployeeListComponent
   }
 
   getDepartmentName(department: BaseLookupModel): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (department?.nameEn ?? '')
-      : (department?.nameAr ?? '');
+    return getLocalizedName(department, this.languageService.getCurrentLanguage());
   }
 
   protected override getBreadcrumbKeys() {
@@ -277,30 +280,36 @@ export default class EmployeeListComponent
 
   // Excel Export Implementation
   protected override mapModelToExcelRow(model: User): { [key: string]: any } {
-    const formatBoolean = (value: boolean | undefined): string => {
+    const formatBoolean = (
+      value: boolean | undefined,
+      inactiveKey: string = 'COMMON.INACTIVE'
+    ): string => {
       if (value === undefined || value === null) return '';
       return value
         ? this.translateService.instant('COMMON.ACTIVE')
-        : this.translateService.instant('COMMON.INACTIVE');
+        : this.translateService.instant(inactiveKey);
     };
 
     return {
       [this.translateService.instant('EMPLOYEES_PAGE.NATIONAL_ID')]: model.nationalId || '',
       [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ARABIC')]:
         model.fullNameAr || '',
-      [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ENGLISH')]:
-        model.fullNameEn || '',
-      [this.translateService.instant('EMPLOYEES_PAGE.DEPARTMENT')]:
-        this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC
-          ? model.department?.nameAr || ''
-          : model.department?.nameEn || model.department?.nameAr || '',
+      [this.translateService.instant('EMPLOYEES_PAGE.EMPLOYEE_NAME_ENGLISH')]: getEnglishName(
+        model,
+        'fullName'
+      ),
+      [this.translateService.instant('EMPLOYEES_PAGE.DEPARTMENT')]: getLocalizedName(
+        model.department,
+        this.languageService.getCurrentLanguage()
+      ),
       [this.translateService.instant('EMPLOYEES_PAGE.FINGERPRINT_EXEMPTION')]: formatBoolean(
         model.canLeaveWithoutFingerPrint
       ),
       [this.translateService.instant('EMPLOYEES_PAGE.JOB_TITLE_ARABIC')]: model.jobTitleAr || '',
       [this.translateService.instant('EMPLOYEES_PAGE.JOB_TITLE_ENGLISH')]: model.jobTitleEn || '',
       [this.translateService.instant('EMPLOYEES_PAGE.ACCOUNT_STATUS')]: formatBoolean(
-        model.isActive
+        model.isActive,
+        'EMPLOYEES_PAGE.ACCOUNT_STATUS_INACTIVE'
       ),
       [this.translateService.instant('EMPLOYEES_PAGE.JOIN_DATE')]: formatDateOnly(model.joinDate),
     };

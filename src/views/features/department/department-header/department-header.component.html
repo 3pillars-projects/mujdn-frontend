@@ -6,9 +6,9 @@
   >
     <h4
       class="text-lg sm:text-xl md:text-2xl font-bold text-[#fff] truncate"
-      title="{{ isCurrentLanguageEnglish() ? departmentData?.nameEn : departmentData?.nameAr }}"
+      [title]="departmentData | localizedName"
     >
-      {{ isCurrentLanguageEnglish() ? departmentData?.nameEn : departmentData?.nameAr }}
+      {{ departmentData | localizedName }}
     </h4>
     <div class="actions flex items-center gap-4 ms-auto pb-4">
       <button
@@ -35,9 +35,9 @@
       </p>
       <h5
         class="text-base font-semibold text-white truncate"
-        title="{{ isCurrentLanguageEnglish() ? departmentData?.nameEn : departmentData?.nameAr }}"
+        [title]="departmentData | localizedName"
       >
-        {{ isCurrentLanguageEnglish() ? departmentData?.nameEn : departmentData?.nameAr }}
+        {{ departmentData | localizedName }}
       </h5>
     </div>
     <div>
@@ -48,28 +48,20 @@
         @if (departmentData?.fkParentDepartmentId == null) {
           {{ 'DEPARTMENTS_HEADER_PAGE.MAIN_DEPARTMENT' | translate }}
         } @else {
-          {{
-            isCurrentLanguageEnglish() ? parentDepartment?.nameEn : parentDepartment?.nameAr
-          }}
+          {{ parentDepartment | localizedName }}
         }
       </h5>
     </div>
     <div>
       <p class="text-sm text-white mb-2">{{ 'DEPARTMENTS_HEADER_PAGE.REGION' | translate }}</p>
       <h5 class="text-base font-semibold text-white">
-        {{
-          isCurrentLanguageEnglish()
-            ? departmentData?.region?.nameEn
-            : departmentData?.region?.nameAr
-        }}
+        {{ departmentData?.region | localizedName }}
       </h5>
     </div>
     <div>
       <p class="text-sm text-white mb-2">{{ 'DEPARTMENTS_HEADER_PAGE.CITY' | translate }}</p>
       <h5 class="text-base font-semibold text-white">
-        {{
-          isCurrentLanguageEnglish() ? departmentData?.city?.nameEn : departmentData?.city?.nameAr
-        }}
+        {{ departmentData?.city | localizedName }}
       </h5>
     </div>
     <div>
@@ -114,11 +106,7 @@
         {{ 'DEPARTMENTS_HEADER_PAGE.MANAGER_NAME' | translate }}
       </p>
       <h5 class="text-base font-semibold text-white">
-        {{
-          isCurrentLanguageEnglish()
-            ? departmentData?.manager?.fullNameEn
-            : departmentData?.manager?.fullNameAr
-        }}
+        {{ departmentData?.manager | localizedName: 'fullName' }}
       </h5>
     </div>
   </div>

@@ -33,6 +33,8 @@ import { CustomValidators } from '@/validators/custom-validators';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AccessLocationLookup } from '@/models/features/business/access-location-lookup';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-add-edit-visit-request-popup',
@@ -51,6 +53,8 @@ import { AccessLocationLookup } from '@/models/features/business/access-location
     TranslatePipe,
     MultiSelectModule,
     ValidationMessagesComponent,
+    LocalizedNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './add-edit-visit-request-popup.component.html',
   styleUrl: './add-edit-visit-request-popup.component.scss',
@@ -237,9 +241,6 @@ export class AddEditVisitRequestPopupComponent extends BasePopupComponent<Visit>
   removeAccessLocation(id: number | undefined) {
     const currentIds: number[] = this.accessLocationIdsControl.value || [];
     this.accessLocationIdsControl.setValue(currentIds.filter((x) => x !== id));
-  }
-  isEnglishLanguage() {
-    return this.languageService.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH;
   }
 
   get minDate(): Date {

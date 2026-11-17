@@ -20,6 +20,7 @@ import { Select } from 'primeng/select';
 import { Observable } from 'rxjs';
 import { RequiredMarkerDirective } from '../../../../directives/required-marker.directive';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 import { DEVICE_STATUS_CONFIG } from '@/enums/device-status-enum';
 
 @Component({
@@ -31,6 +32,7 @@ import { DEVICE_STATUS_CONFIG } from '@/enums/device-status-enum';
     TranslatePipe,
     ReactiveFormsModule,
     RequiredMarkerDirective,
+    WithNameFallbackPipe,
   ],
   templateUrl: './devices-configuration-modal.component.html',
   styleUrl: './devices-configuration-modal.component.scss',

@@ -52,7 +52,7 @@
             'WORK_MISSIONS.MISSION_CREATOR' | translate
           }}</label>
           <p-select
-            [options]="creators"
+            [options]="creators | withNameFallback"
             [(ngModel)]="filterModel.missionCreatorId"
             optionValue="id"
             [optionLabel]="getPropertyName()"
@@ -194,7 +194,7 @@
             </td>
             <td>
               <div>
-                {{ mission.nameEn }}
+                {{ mission | englishName }}
               </div>
             </td>
             <td>{{ mission.startDate | date: 'dd/MM/yyyy' }}</td>
@@ -206,11 +206,7 @@
               >
             </td>
             <td>
-              {{
-                isCurrentLanguageEnglish()
-                  ? mission.missionCreator?.nameEn
-                  : mission.missionCreator?.nameAr
-              }}
+              {{ mission.missionCreator | localizedName }}
             </td>
             <td>
               <!-- Only View Action -->

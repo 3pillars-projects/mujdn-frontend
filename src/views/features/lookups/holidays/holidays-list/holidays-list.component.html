@@ -164,7 +164,7 @@
                   {{ rowIndex + 1 + (paginationInfo.currentPage - 1) * paginationInfo.pageSize }}
                 </td>
                 <td>{{ holiday.nameAr }}</td>
-                <td>{{ holiday.nameEn }}</td>
+                <td>{{ holiday | englishName }}</td>
                 <td>{{ holiday.startDate | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ holiday.endDate | date: 'dd/MM/yyyy' }}</td>
                 @if (showAddEditButtons()) {

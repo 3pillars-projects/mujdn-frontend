@@ -33,7 +33,7 @@
               (ngModelChange)="onDepartmentChange($event)"
               [ngModelOptions]="{ standalone: true }"
               [disabled]="isTakeActionMode"
-              [options]="departments"
+              [options]="departments | withNameFallback"
               [optionLabel]="optionLabel"
               optionValue="id"
               [showClear]="!isTakeActionMode"
@@ -55,7 +55,7 @@
             <div class="relative">
               <p-select
                 formControlName="fkEmployeeId"
-                [options]="filteredEmployees"
+                [options]="filteredEmployees | withNameFallback"
                 [optionLabel]="optionLabel"
                 optionValue="id"
                 [filter]="true"
@@ -161,7 +161,7 @@
           <div class="relative">
             <p-select
               formControlName="fkLeaveTypeId"
-              [options]="leaveTypes"
+              [options]="leaveTypes | withNameFallback"
               [optionLabel]="optionLabel"
               optionValue="id"
               [filter]="true"

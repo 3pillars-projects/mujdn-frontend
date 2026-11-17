@@ -40,6 +40,8 @@ import { ShiftAssignmentPanelComponent } from './shift-assignment-panel/shift-as
 import { RequiredMarkerDirective } from '../../../../../directives/required-marker.directive';
 import { AuthService } from '@/services/auth/auth.service';
 import { CustomValidators } from '@/validators/custom-validators';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-work-shifts-assignment-popup',
@@ -54,6 +56,7 @@ import { CustomValidators } from '@/validators/custom-validators';
     InputTextModule,
     ShiftAssignmentPanelComponent,
     RequiredMarkerDirective,
+    WithNameFallbackPipe,
   ],
   templateUrl: './work-shifts-assignment-popup.component.html',
   styleUrl: './work-shifts-assignment-popup.component.scss',
@@ -114,9 +117,9 @@ export class WorkShiftsAssignmentPopupComponent
     this.viewMode = this.data.viewMode;
     this.isCreateMode = this.viewMode === ViewModeEnum.CREATE;
 
-    this.usersProfiles = this.sortByName(this.usersProfiles, this.optionLabel);
-    this.departments = this.sortByName(this.departments, this.optionLabel);
-    this.shifts = this.sortByName(this.shifts, this.optionLabel);
+    this.usersProfiles = this.sortByName(this.usersProfiles);
+    this.departments = this.sortByName(this.departments);
+    this.shifts = this.sortByName(this.shifts);
 
     this.singleShiftMemberIds = this.model.assignedUserIds || [];
     this.assignSelectedGroupsAndShiftsAndUsers();
@@ -431,12 +434,13 @@ export class WorkShiftsAssignmentPopupComponent
     return model;
   }
 
-  private sortByName<T extends { [key: string]: any }>(arr: T[], key: string): T[] {
-    return [...arr].sort((a, b) => {
-      const nameA = (a[key] || '').toString().toLowerCase();
-      const nameB = (b[key] || '').toString().toLowerCase();
-      return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
-    });
+  private sortByName<T extends { nameAr?: string; nameEn?: string }>(arr: T[]): T[] {
+    const lang = this.getCurrentLanguage();
+    return [...arr].sort((a, b) =>
+      getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang), undefined, {
+        sensitivity: 'base',
+      })
+    );
   }
 
   getCurrentLanguage() {
@@ -687,10 +691,15 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   getSortedShiftsNames(order: number): string {
-    const nameKey = this.getCurrentLanguage() === LANGUAGE_ENUM.ARABIC ? 'nameAr' : 'nameEn';
+    const lang = this.getCurrentLanguage();
     const shiftIds = [1, 2, 3].map((i) => this.form.get(`shift${i}`)?.value);
     const rotated = [0, 1, 2].map((i) => shiftIds[(order + i) % 3]);
 
-    return rotated.map((id) => this.shifts.find((s) => s.id === id)?.[nameKey] ?? '-').join(',');
+    return rotated
+      .map((id) => {
+        const shift = this.shifts.find((s) => s.id === id);
+        return shift ? getLocalizedName(shift, lang) || '-' : '-';
+      })
+      .join(',');
   }
 }

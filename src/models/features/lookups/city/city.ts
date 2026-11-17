@@ -6,7 +6,7 @@ import { Validators } from '@angular/forms';
 import { InterceptModel } from 'cast-response';
 import { LanguageService } from '@/services/shared/language.service';
 import { FactoryService } from '@/services/factory-service';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new CityInterceptor();
 
@@ -24,9 +24,7 @@ export class City extends BaseCrudModel<City, CityService> {
   }
 
   getName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH && this.nameEn
-      ? this.nameEn
-      : this.nameAr;
+    return getLocalizedName(this, this.languageService?.getCurrentLanguage() ?? '');
   }
 
   buildForm() {

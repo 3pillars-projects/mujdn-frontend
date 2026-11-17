@@ -27,6 +27,7 @@ import { UsersWithDepartmentLookup } from '@/models/auth/users-department-lookup
 import { markFormGroupTouched } from '@/utils/general-helper';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { BaseCrudModel } from '@/abstracts/base-crud-model';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-department-popup',
@@ -40,6 +41,7 @@ import { BaseCrudModel } from '@/abstracts/base-crud-model';
     TranslatePipe,
     ValidationMessagesComponent,
     RequiredMarkerDirective,
+    WithNameFallbackPipe,
   ],
   templateUrl: './department-popup.component.html',
   styleUrl: './department-popup.component.scss',

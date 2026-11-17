@@ -28,6 +28,7 @@ import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ROLES_ENUM } from '@/enums/roles-enum';
 import { BooleanOptionModel } from '@/models/shared/boolean-option';
 import { PasswordModule } from 'primeng/password';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-add-new-employee-popup',
@@ -42,6 +43,7 @@ import { PasswordModule } from 'primeng/password';
     TranslatePipe,
     ValidationMessagesComponent,
     PasswordModule,
+    WithNameFallbackPipe,
   ],
   templateUrl: './add-new-employee-popup.component.html',
   styleUrl: './add-new-employee-popup.component.scss',
@@ -77,6 +79,7 @@ export class AddNewEmployeePopupComponent extends BasePopupComponent<User> imple
     isHR: false,
     isSecurityMember: false,
     isSecurityLeader: false,
+    isComplianceOfficer: false,
   };
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
@@ -173,6 +176,7 @@ export class AddNewEmployeePopupComponent extends BasePopupComponent<User> imple
     if (this.roleStates.isHR) roleIds.push(ROLES_ENUM.HR_OFFICER);
     if (this.roleStates.isSecurityMember) roleIds.push(ROLES_ENUM.SECURITY_MEMBER);
     if (this.roleStates.isSecurityLeader) roleIds.push(ROLES_ENUM.SECURITY_LEADER);
+    if (this.roleStates.isComplianceOfficer) roleIds.push(ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER);
 
     formValue.roleIds = roleIds;
 
@@ -258,6 +262,9 @@ export class AddNewEmployeePopupComponent extends BasePopupComponent<User> imple
       this.roleStates.isHR = this.model.roleIds.includes(ROLES_ENUM.HR_OFFICER);
       this.roleStates.isSecurityMember = this.model.roleIds.includes(ROLES_ENUM.SECURITY_MEMBER);
       this.roleStates.isSecurityLeader = this.model.roleIds.includes(ROLES_ENUM.SECURITY_LEADER);
+      this.roleStates.isComplianceOfficer = this.model.roleIds.includes(
+        ROLES_ENUM.ATTENDANCE_COMPLIANCE_OFFICER
+      );
     }
   }
 

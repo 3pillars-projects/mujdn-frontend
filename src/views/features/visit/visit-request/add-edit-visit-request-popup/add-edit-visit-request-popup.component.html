@@ -95,7 +95,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="langOptionLabel"
-              [options]="nationalities"
+              [options]="nationalities | withNameFallback"
               class="w-full peer"
               formControlName="fkNationalityId"
               id="nationality"
@@ -141,7 +141,7 @@
           <div class="relative">
             <p-select
               [optionLabel]="langOptionLabel"
-              [options]="departments"
+              [options]="departments | withNameFallback"
               class="w-full peer"
               formControlName="fkTargetDepartmentId"
               id="targetDepartment"
@@ -227,7 +227,7 @@
           </label>
           <div class="relative">
             <p-multiselect
-              [options]="accessLocations"
+              [options]="accessLocations | withNameFallback"
               [optionLabel]="getPropertyName()"
               optionValue="id"
               [formControl]="accessLocationIdsControl"
@@ -256,7 +256,7 @@
             <div
               class="bg-[#f3f4f6] py-2 px-3 rounded-full text-[#161616] font-semibold w-fit flex items-center gap-2"
             >
-              <span>{{ isEnglishLanguage() ? loc.nameEn : loc.nameAr }}</span>
+              <span>{{ loc | localizedName }}</span>
 
               @if (loc.status) {
                 <span class="bg-[#067647] rounded-full text-white px-2 block">{{

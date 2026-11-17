@@ -8,6 +8,7 @@ import { LanguageService } from '@/services/shared/language.service';
 import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { ATTENDANCE_STATUS_CONFIG, ATTENDANCE_STATUS_ENUM } from '@/enums/attendance-status-enum';
 import { formatDateTo12Hour } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
 import { DIALOG_ENUM } from '@/enums/dialog-enum';
 import { WorkShiftType } from '@/enums/work-shift-type';
 
@@ -40,17 +41,11 @@ export class ReportDetailsModalComponent extends BaseAppComponent implements OnI
   // ─── Computed getters ──────────────────────────────────────────────────────
 
   get employeeName(): string {
-    return this.langSvc.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-      ? (this.model.fullNameEn ?? this.model.fullNameAr)
-      : this.model.fullNameAr;
+    return getLocalizedName(this.model, this.langSvc.getCurrentLanguage(), 'fullName');
   }
 
   get departmentName(): string {
-    return (
-      (this.langSvc.getCurrentLanguage() === LANGUAGE_ENUM.ENGLISH
-        ? this.model.departmentNameEn
-        : this.model.departmentNameAr) ?? '-'
-    );
+    return getLocalizedName(this.model, this.langSvc.getCurrentLanguage(), 'departmentName') || '-';
   }
 
   get hasPermission(): boolean {

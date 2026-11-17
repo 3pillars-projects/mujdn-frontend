@@ -11,11 +11,21 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LeaveTypeService } from '@/services/features/lookups/leave-type.service';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-leaves-settings',
   standalone: true,
-  imports: [Breadcrumb, TableModule, PaginatorModule, InputTextModule, FormsModule, TranslatePipe],
+  imports: [
+    Breadcrumb,
+    TableModule,
+    PaginatorModule,
+    InputTextModule,
+    FormsModule,
+    TranslatePipe,
+    EnglishNamePipe,
+  ],
   providers: [LeaveTypeService],
   templateUrl: './leaves-settings.component.html',
   styleUrl: './leaves-settings.component.scss',
@@ -53,7 +63,8 @@ export default class LeavesSettingsComponent
   protected override mapModelToExcelRow(model: LeaveType): { [key: string]: any } {
     return {
       [this.translateService.instant('LEAVE_TYPES_PAGE.LEAVE_TYPE_IN_ARABIC')]: model.nameAr,
-      [this.translateService.instant('LEAVE_TYPES_PAGE.LEAVE_TYPE_IN_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('LEAVE_TYPES_PAGE.LEAVE_TYPE_IN_ENGLISH')]:
+        getEnglishName(model),
     };
   }
 }

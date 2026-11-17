@@ -61,7 +61,7 @@
         <div class="relative">
           <label for="department" class="label">
             {{ 'DEPARTMENTS_LIST_PAGE.DEPARTMENT_NAME' | translate }}</label>
-          <p-multiselect [options]="departments" [(ngModel)]="filterModel.departmentIds" [optionLabel]="getPropertyName()"
+          <p-multiselect [options]="departments | withNameFallback" [(ngModel)]="filterModel.departmentIds" [optionLabel]="getPropertyName()"
             [showClear]="true" [filter]="true" [showToggleAll]="true" class="w-full peer" inputId="department" optionValue="id"
             placeholder="{{ 'DEPARTMENTS_LIST_PAGE.DEPARTMENT_NAME' | translate }}"></p-multiselect>
           <span
@@ -146,22 +146,12 @@
       </ng-template>
       <ng-template #body let-attendance>
         <tr>
-          <td title="{{
-                isCurrentLanguageEnglish() && attendance.fullNameEn ? attendance.fullNameEn : attendance.fullNameAr
-              }}">
-            {{ isCurrentLanguageEnglish() && attendance.fullNameEn ? attendance.fullNameEn : attendance.fullNameAr }}
+          <td [title]="attendance | localizedName: 'fullName'">
+            {{ attendance | localizedName: 'fullName' }}
           </td>
           <td>{{ attendance.nationalId }}</td>
-          <td title="{{
-                isCurrentLanguageEnglish()
-                  ? attendance.departmentNameEn
-                  : attendance.departmentNameAr
-              }}">
-            {{
-            isCurrentLanguageEnglish()
-            ? attendance.departmentNameEn
-            : attendance.departmentNameAr
-            }}
+          <td [title]="attendance | localizedName: 'departmentName'">
+            {{ attendance | localizedName: 'departmentName' }}
           </td>
           <td>{{ formatDate(attendance.processingDate) }}</td>
           <td>{{ attendance.getShiftName() }}</td>

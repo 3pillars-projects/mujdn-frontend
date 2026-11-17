@@ -47,7 +47,7 @@
           </label>
           <p-select
             [(ngModel)]="filterModel.fkTargetDepartmentId"
-            [options]="departments"
+            [options]="departments | withNameFallback"
             [placeholder]="'VISIT_REQUEST_PAGE.TARGET_DEPARTMENT' | translate"
             [optionLabel]="getPropertyName()"
             optionValue="id"

@@ -37,6 +37,8 @@ import { WorkDaysSetting } from '@/models/features/setting/work-days-setting';
 import EmployeeShift from '@/models/features/lookups/work-shifts/employee-shift';
 import { WorkShiftType } from '@/enums/work-shift-type';
 import { ViewModeEnum } from '@/enums/view-mode-enum';
+import { getLocalizedName } from '@/utils/localized-name';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-shifts-view',
@@ -51,6 +53,7 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
     DatePickerModule,
     FormsModule,
     TranslatePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './shifts-view.component.html',
   styleUrl: './shifts-view.component.scss',
@@ -123,21 +126,13 @@ export class ShiftsViewComponent extends BaseListComponent<
   private loadLookups(): void {
     this.departmentService.getLookup().subscribe({
       next: (data) => {
-        this.departments = data.sort((a, b) =>
-          this.isArabic
-            ? (a.nameAr ?? '').localeCompare(b.nameAr ?? '')
-            : (a.nameEn ?? '').localeCompare(b.nameEn ?? '')
-        );
+        this.departments = data.sort((a, b) => this.compareByLocalizedName(a, b));
       },
     });
 
     this.userService.getUsersWithDepartment().subscribe({
       next: (data) => {
-        this.usersProfiles = data.sort((a, b) =>
-          this.isArabic
-            ? (a.nameAr ?? '').localeCompare(b.nameAr ?? '')
-            : (a.nameEn ?? '').localeCompare(b.nameEn ?? '')
-        );
+        this.usersProfiles = data.sort((a, b) => this.compareByLocalizedName(a, b));
       },
     });
 
@@ -255,19 +250,16 @@ export class ShiftsViewComponent extends BaseListComponent<
   }
 
   getEmployeeName(item: EmployeeShiftDay): string {
-    return (
-      (this.isArabic
-        ? item.employeeName?.nameAr
-        : item.employeeName?.nameEn || item.employeeName?.nameAr) ?? ''
-    );
+    return getLocalizedName(item.employeeName, this.langService.getCurrentLanguage());
   }
 
   getShiftName(item: EmployeeShiftDay): string {
-    return (
-      (this.isArabic
-        ? item.shiftDetails?.nameAr
-        : item.shiftDetails?.nameEn || item.shiftDetails?.nameAr) ?? ''
-    );
+    return getLocalizedName(item.shiftDetails, this.langService.getCurrentLanguage());
+  }
+
+  private compareByLocalizedName(a: BaseLookupModel, b: BaseLookupModel): number {
+    const lang = this.langService.getCurrentLanguage();
+    return getLocalizedName(a, lang).localeCompare(getLocalizedName(b, lang));
   }
 
   getShiftTypeName(type: number): string {

@@ -28,6 +28,10 @@ import { filter, of, switchMap, tap } from 'rxjs';
 import { Department } from '@/models/features/lookups/department/department';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { ImportLogPopupComponent } from '../import-log-popup/import-log-popup.component';
+import { getEnglishName } from '@/utils/localized-name';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-department-list',
@@ -46,6 +50,9 @@ import { ImportLogPopupComponent } from '../import-log-popup/import-log-popup.co
     DepartmentHeaderComponent,
     DepartmentTreeComponent,
     TranslatePipe,
+    LocalizedNamePipe,
+    EnglishNamePipe,
+    WithNameFallbackPipe,
   ],
   templateUrl: './department-list.component.html',
   styleUrl: './department-list.component.scss',
@@ -177,7 +184,8 @@ export default class DepartmentListComponent extends BaseListComponent<
   protected override mapModelToExcelRow(model: Department): { [key: string]: any } {
     return {
       [this.translateService.instant('DEPARTMENT_POPUP.DEPARTMENT_NAME_ARABIC')]: model.nameAr,
-      [this.translateService.instant('DEPARTMENT_POPUP.DEPARTMENT_NAME_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('DEPARTMENT_POPUP.DEPARTMENT_NAME_ENGLISH')]:
+        getEnglishName(model),
       [this.translateService.instant('DEPARTMENTS_LIST_PAGE.PERMISSION_REQUEST')]:
         model.isOneLevelApproval
           ? this.translateService.instant('DEPARTMENTS_LIST_PAGE.ONE_LEVEL_APPROVAL')
@@ -185,7 +193,7 @@ export default class DepartmentListComponent extends BaseListComponent<
       [this.translateService.instant('DEPARTMENTS_LIST_PAGE.MANAGER_NAME_ARABIC')]:
         model.manager?.fullNameAr,
       [this.translateService.instant('DEPARTMENTS_LIST_PAGE.MANAGER_NAME_ENGLISH')]:
-        model.manager?.fullNameEn,
+        getEnglishName(model.manager, 'fullName'),
     };
   }
 
@@ -298,9 +306,6 @@ export default class DepartmentListComponent extends BaseListComponent<
     this.openDialog(departmentCopy);
   }
 
-  isCurrentLanguageEnglish() {
-    return this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH;
-  }
   onDepartmentChange(updatedDepartment?: Department) {
     if (updatedDepartment) {
       this.selectedDepartment = Object.assign({}, updatedDepartment);

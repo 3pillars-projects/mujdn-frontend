@@ -15,6 +15,7 @@ import { LEAVE_STATUS_ENUM } from '@/enums/leave-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import { AttachmentListComponent } from '@/views/shared/attachment-list/attachment-list.component';
 import { leaveStatusTextKey } from '@/utils/leave-status';
+import { getLocalizedName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-leaves-view-popup',
@@ -104,40 +105,23 @@ export class LeavesViewPopupComponent {
   }
 
   employeeName(): string {
-    const lang = this.languageService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? this.model?.employee?.nameAr
-        : (this.model?.employee?.nameEn ?? this.model?.employee?.nameAr)) ?? ''
-    );
+    return getLocalizedName(this.model?.employee, this.languageService.getCurrentLanguage());
   }
 
   rejectedByName(): string {
-    const user = this.model?.rejectedBy;
-    const lang = this.languageService.getCurrentLanguage();
     return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? user?.nameAr || user?.nameEn
-        : user?.nameEn || user?.nameAr) || '-'
+      getLocalizedName(this.model?.rejectedBy, this.languageService.getCurrentLanguage()) || '-'
     );
   }
 
   departmentName(): string {
-    const lang = this.languageService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? this.model?.employee?.department?.nameAr
-        : (this.model?.employee?.department?.nameEn ?? this.model?.employee?.department?.nameAr)) ??
-      ''
+    return getLocalizedName(
+      this.model?.employee?.department,
+      this.languageService.getCurrentLanguage()
     );
   }
 
   leaveTypeName(): string {
-    const lang = this.languageService.getCurrentLanguage();
-    return (
-      (lang === LANGUAGE_ENUM.ARABIC
-        ? this.model?.leaveType?.nameAr
-        : (this.model?.leaveType?.nameEn ?? this.model?.leaveType?.nameAr)) ?? ''
-    );
+    return getLocalizedName(this.model?.leaveType, this.languageService.getCurrentLanguage());
   }
 }

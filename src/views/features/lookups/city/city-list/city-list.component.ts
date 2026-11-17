@@ -16,6 +16,8 @@ import { ViewModeEnum } from '@/enums/view-mode-enum';
 import { BaseLookupModel } from '@/models/features/lookups/base-lookup-model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { getEnglishName } from '@/utils/localized-name';
 
 @Component({
   selector: 'app-city-list',
@@ -28,6 +30,7 @@ import { RouterModule } from '@angular/router';
     TranslatePipe,
     CommonModule,
     RouterModule,
+    EnglishNamePipe,
   ],
   providers: [CityService],
   templateUrl: './city-list.component.html',
@@ -77,7 +80,7 @@ export default class CityListComponent extends BaseListComponent<
 
     return {
       [this.translateService.instant('CITIES_PAGE.CITY_IN_ARABIC')]: model.nameAr,
-      [this.translateService.instant('CITIES_PAGE.CITY_IN_ENGLISH')]: model.nameEn,
+      [this.translateService.instant('CITIES_PAGE.CITY_IN_ENGLISH')]: getEnglishName(model),
     };
   }
 }

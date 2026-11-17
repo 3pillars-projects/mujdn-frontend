@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { RequiredMarkerDirective } from '../../../../directives/required-marker.directive';
+import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 
 @Component({
   selector: 'app-temporary-role-assignment-popup',
@@ -31,6 +32,7 @@ import { RequiredMarkerDirective } from '../../../../directives/required-marker.
     RequiredMarkerDirective,
     TranslatePipe,
     ValidationMessagesComponent,
+    WithNameFallbackPipe,
   ],
   templateUrl: './temporary-role-assignment-popup.component.html',
   styleUrl: './temporary-role-assignment-popup.component.scss',

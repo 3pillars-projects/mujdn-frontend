@@ -82,7 +82,7 @@
                   optionValue="id"
                   [placeholder]="'ATTENDANCE_REPORT_PROCESSING_PAGE.SELECT_DEPARTMENT' | translate"
                   class="w-full"
-                  [options]="departmentList"
+                  [options]="departmentList | withNameFallback"
                   [filter]="true"
                 />
                 <span
@@ -103,7 +103,7 @@
                     [placeholder]="'ATTENDANCE_REPORT_PROCESSING_PAGE.EMPLOYEE_NAME' | translate"
                     [maxSelectedLabels]="0"
                     class="w-full"
-                    [options]="filteredEmployeeList"
+                    [options]="filteredEmployeeList | withNameFallback"
                     [selectedItemsLabel]="getSelectedEmployeesLabel()"
                     [virtualScroll]="true"
                     [virtualScrollItemSize]="38"
@@ -166,7 +166,7 @@
               <p-accordion-header>
                 <div class="flex items-center justify-between ps-8 w-[100%]">
                   <h4 class="text-[#161616] font-semibold">
-                    {{ currentLang === 'ar' ? group.department.nameAr : group.department.nameEn }}
+                    {{ group.department | localizedName }}
                   </h4>
                   <button
                     type="button"
@@ -188,7 +188,7 @@
                       *ngFor="let employee of group.employees"
                       class="bg-[#fff] py-1 px-3 rounded-full text-[#161616] font-semibold w-fit flex items-center gap-2"
                     >
-                      <span>{{ currentLang === 'ar' ? employee.nameAr : employee.nameEn }}</span>
+                      <span>{{ employee | localizedName }}</span>
                       <button type="button" (click)="removeEmployee(employee)">
                         <svg
                           width="18"

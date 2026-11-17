@@ -8,13 +8,13 @@ import { Department } from '../department/department';
 import { BaseLookupModel } from '../base-lookup-model';
 import { LanguageService } from '@/services/shared/language.service';
 import { FactoryService } from '@/services/factory-service';
-import { LANGUAGE_ENUM } from '@/enums/language-enum';
 import { PERMISSION_STATUS_ENUM } from '@/enums/permission-status-enum';
 import { Attachment } from '@/models/shared/attachment/attachment';
 import {
   AttachmentSelection,
   toAttachmentSelection,
 } from '@/models/shared/attachment/attachment-selection';
+import { getLocalizedName } from '@/utils/localized-name';
 
 const { send, receive } = new PermissionInterceptor();
 
@@ -75,28 +75,18 @@ export class Permission extends BaseCrudModel<Permission, PermissionService> {
     return (this.fkStatusId ?? this.status?.id) === PERMISSION_STATUS_ENUM.Accepted;
   }
   getStatusName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.status?.nameEn ?? '')
-      : (this.status?.nameAr ?? '');
+    return getLocalizedName(this.status, this.languageService?.getCurrentLanguage() ?? '');
   }
   getCreationUserName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.creationUser?.nameEn ?? '')
-      : (this.creationUser?.nameAr ?? '');
+    return getLocalizedName(this.creationUser, this.languageService?.getCurrentLanguage() ?? '');
   }
   getPermissionReasonName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.permissionReason?.nameEn ?? '')
-      : (this.permissionReason?.nameAr ?? '');
+    return getLocalizedName(this.permissionReason, this.languageService?.getCurrentLanguage() ?? '');
   }
   getPermissionTypeName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.permissionType?.nameEn ?? '')
-      : (this.permissionType?.nameAr ?? '');
+    return getLocalizedName(this.permissionType, this.languageService?.getCurrentLanguage() ?? '');
   }
   getPermissionDepartmentName(): string {
-    return this.languageService?.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH
-      ? (this.department?.nameEn ?? '')
-      : (this.department?.nameAr ?? '');
+    return getLocalizedName(this.department, this.languageService?.getCurrentLanguage() ?? '');
   }
 }

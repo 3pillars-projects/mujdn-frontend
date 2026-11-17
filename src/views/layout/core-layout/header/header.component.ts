@@ -22,6 +22,7 @@ import { WorkShiftType } from '@/enums/work-shift-type';
 import { getShiftTypeTranslation } from '@/utils/shift-helper';
 import { PopoverModule } from 'primeng/popover';
 import { formatTimeTo12Hour } from '@/utils/general-helper';
+import { getLocalizedName } from '@/utils/localized-name';
 import { SystemTypeEnum } from '@/enums/system-type-enum';
 
 @Component({
@@ -108,13 +109,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
    */
   getCurrentShiftName(): string {
     if (!this.currentShift) return '';
-    const isArabic = this.isArabic();
+    const language = this.uiLanguage();
 
     // Non-rotating: name is inside shiftDetails
     if (this.currentShift.shiftDetails) {
-      return isArabic
-        ? (this.currentShift.shiftDetails.nameAr ?? '')
-        : (this.currentShift.shiftDetails.nameEn ?? '');
+      return getLocalizedName(this.currentShift.shiftDetails, language);
     }
 
     // Rotating: use the currently-active rotation group
@@ -125,11 +124,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
           ? (this.currentShift.rotationGroups.find((g) => g.periodOrder === periodOrder) ??
             this.currentShift.rotationGroups[0])
           : this.currentShift.rotationGroups[0];
-      return isArabic ? (group.shiftDetails?.nameAr ?? '') : (group.shiftDetails?.nameEn ?? '');
+      return getLocalizedName(group.shiftDetails, language);
     }
 
     // Fallback to top-level names
-    return isArabic ? (this.currentShift.nameAr ?? '') : (this.currentShift.nameEn ?? '');
+    return getLocalizedName(this.currentShift, language);
   }
 
   /** Returns whether today is a working day for the current shift.
@@ -235,16 +234,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.languageService.setLanguage(targetLanguage);
   }
 
-  getLoggedInUserName(): string | undefined {
-    return this.isArabic()
-      ? this.loggedInUser?.fullNameAr
-      : (this.loggedInUser?.fullNameEn ?? this.loggedInUser?.fullNameAr);
+  getLoggedInUserName(): string {
+    return getLocalizedName(this.loggedInUser, this.uiLanguage(), 'fullName');
   }
 
-  getLoggedInUserDepartment(): string | undefined {
-    return this.isArabic()
-      ? this.loggedInUser?.departNameAr
-      : (this.loggedInUser?.departNameEn ?? this.loggedInUser?.departNameAr);
+  getLoggedInUserDepartment(): string {
+    return getLocalizedName(this.loggedInUser, this.uiLanguage(), 'departName');
   }
 
   toggleSideMenu(): void {
@@ -263,6 +258,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private isArabic(): boolean {
     return this.translateService.currentLang === LANGUAGE_ENUM.ARABIC;
+  }
+
+  private uiLanguage(): LANGUAGE_ENUM {
+    return this.isArabic() ? LANGUAGE_ENUM.ARABIC : LANGUAGE_ENUM.ENGLISH;
   }
 
   private initializeProfileMenu(): void {

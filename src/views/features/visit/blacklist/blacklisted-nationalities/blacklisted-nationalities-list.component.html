@@ -99,7 +99,7 @@
         <ng-template pTemplate="body" let-blacklistedNationality>
           <tr>
             <td>{{ blacklistedNationality.nameAr }}</td>
-            <td>{{ blacklistedNationality.nameEn }}</td>
+            <td>{{ blacklistedNationality | englishName }}</td>
             <td>
               <div class="actions flex gap-2">
                 <button
