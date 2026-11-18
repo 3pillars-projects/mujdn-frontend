@@ -12,6 +12,8 @@ export interface VisitCardHolder {
   visitDate: string;
   visitTimeFrom: string;
   visitTimeTo: string;
+  /** The holder already used the card during a visit that is still running: it cannot be moved, replaced or unlinked. */
+  isLocked: boolean;
 }
 
 /** Result of looking a card up by its friendly number at the gate. */

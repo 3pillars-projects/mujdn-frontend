@@ -1,11 +1,11 @@
 <div
   class="bg-white py-3 px-6 rounded-2xl flex justify-between items-start sm:items-center mb-8 flex-col sm:flex-row gap-4"
 >
-  <div class="flex items-center gap-2">
-    <span class="text-[14px] text-[#6c737f]">
+  <div class="flex items-center gap-2 min-w-0">
+    <span class="text-[14px] text-[#6c737f] shrink-0">
       {{ 'VISIT_REQUEST_PAGE.VISITOR_NAME' | translate }}:
     </span>
-    <h4 class="font-semibold text-[#161616]">{{ model.fullName }}</h4>
+    <h4 class="font-semibold text-[#161616] min-w-0 wrap-anywhere">{{ model.fullName }}</h4>
   </div>
   <div class="flex items-center gap-2">
     <span class="text-[14px] text-[#6c737f]">
@@ -20,7 +20,9 @@
   </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 *:min-w-0 wrap-anywhere"
+>
   <!-- National ID -->
   <div>
     <span class="text-[14px] text-[#6c737f]">

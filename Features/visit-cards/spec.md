@@ -33,9 +33,9 @@ Security staff at the gate hand an approved visitor a physical DSS access card, 
 | AC-03 | `availability` reports whether a card ID / friendly number is taken, ignoring the card being edited (`excludeId`). |
 | AC-04 | A card linked to a visit (`isInUse`) cannot have its card ID or friendly number changed and cannot be deleted (`VISIT_CARD_IN_USE`). A card that is not in use can be deleted; its history keeps a snapshot of its ID and number. |
 | AC-05 | Card registry endpoints are restricted on the server to ADMIN and SECURITY_LEADER, including every inherited action. |
-| AC-06 | Looking up a friendly number returns the card and the visit that currently holds it (visitor name, date, time window), or `VISIT_CARD_NOT_FOUND` (404). |
+| AC-06 | Looking up a friendly number returns the card and the visit that currently holds it (visitor name, date, time window), or `VISIT_CARD_NOT_FOUND` (404). A visit whose time has ended is not reported as the holder (`currentAssignment` is null), so the officer sees the card as free. |
 | AC-07 | Linking requires an approved visit that exists in DSS (`VISIT_NOT_APPROVED_FOR_CARD`) whose time window has not ended (`VISIT_ENDED`). The card is set on the DSS visitor before the database is updated. |
-| AC-08 | Linking a card held by another visit without `moveFromOtherVisit` fails with 409 `VISIT_CARD_ASSIGNED_TO_ANOTHER_VISIT` and the holder's details. With `moveFromOtherVisit`, the card is cleared on the old visitor first, then set on the new one; the old assignment is released (`MovedToAnotherVisit`). |
+| AC-08 | Linking a card held by another visit that has not ended without `moveFromOtherVisit` fails with 409 `VISIT_CARD_ASSIGNED_TO_ANOTHER_VISIT` and the holder's details. With `moveFromOtherVisit`, the card is cleared on the old visitor first, then set on the new one; the old assignment is released (`MovedToAnotherVisit`). A card held by a visit whose time has ended is moved the same way without `moveFromOtherVisit` and without any warning. |
 | AC-09 | Linking a different card to a visit that already holds one replaces it (`ReplacedOnVisit`). Linking the same card again does nothing. |
 | AC-10 | If DSS rejects a step or the database save fails, earlier DSS changes are reverted (best effort, logged) and the database is unchanged. |
 | AC-11 | Unlinking clears the card on the DSS visitor and releases the assignment (`Manual`); unlinking a visit without a card fails with `VISIT_HAS_NO_CARD`. |
@@ -43,6 +43,7 @@ Security staff at the gate hand an approved visitor a physical DSS access card, 
 | AC-13 | Visit list rows include `assignedCard` (friendly number and card ID) while a card is linked. |
 | AC-14 | Gate endpoints are restricted on the server to SECURITY_MEMBER and SECURITY_LEADER. |
 | AC-15 | The database enforces one active assignment per card and per visit (filtered unique indexes). |
+| AC-16 | While the visitor is **inside**: exactly one access print (a DSS swipe whose `SwipeId` equals the visit's `VisitorSwipeId`, between `VisitDate`+`VisitTimeFrom` and `VisitDate`+`VisitTimeTo`) while the visit has not ended (attendance status *In visit*), the card on that visit is locked: replacing it, moving it to another visit (with or without `moveFromOtherVisit`) and unlinking it fail with `VISIT_CARD_LOCKED_AFTER_ACCESS` (400) and nothing changes in DSS or the database. The lookup reports this as `currentAssignment.isLocked`. With two or more prints in the window the visitor entered and left (status *Finished*, for example a visitor who left early), so the card is unlocked again and can be unlinked, replaced or moved before the visit time ends. Linking a first card to a visit whose visitor already entered (for example with the QR code) is allowed. After the visit ends the card is never locked. |
 
 ## Data model (`Visit` schema)
 

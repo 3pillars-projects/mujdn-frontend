@@ -167,6 +167,10 @@
     "TEMPORARY_ROLE_ASSIGNMENT_OVERLAP": "The selected employee already has an overlapping temporary assignment for the same role.",
     "TEMPORARY_ROLE_ASSIGNMENT_INVALID_DATE_RANGE": "DateTo must be greater than or equal to DateFrom for the temporary role assignment.",
     "LEAVE_INVALID_DATE_RANGE": "The leave end date must be greater than or equal to the start date.",
+    "SHIFT_ASSIGNMENT_INVALID_DATE_RANGE": "The shift assignment end date must be on or after the start date.",
+    "SHIFT_ASSIGNMENT_PERIOD_EXCEEDS_ONE_YEAR": "Shift period cannot exceed one year.",
+    "SHIFT_ASSIGNMENT_SHIFT_NOT_FOUND": "The selected shift does not exist.",
+    "INVALID_SHIFT_CYCLE_DAY_COUNTS": "The shift / rest duration is required and must be a whole number of days from 1 to 30.",
     "LEAVE_OVERLAPPING_DATES": "The leave dates overlap with an existing leave.",
     "LEAVE_ALREADY_DECIDED": "This leave request has already been decided.",
     "LEAVE_DECISION_NUMBER_INVALID": "Decision/request number is required and must not exceed 100 characters.",
@@ -217,6 +221,7 @@
     "VISIT_NOT_APPROVED_FOR_CARD": "A card can only be linked to an approved visit.",
     "VISIT_ENDED": "The visit time has already ended.",
     "VISIT_HAS_NO_CARD": "No card is linked to this visit.",
+    "VISIT_CARD_LOCKED_AFTER_ACCESS": "The card cannot be changed because the visitor has entered and has not left yet.",
     "DSS_CARD_ASSIGNMENT_FAILED": "The access control system could not update the visitor's card. Please try again."
   },
   "ATTACHMENTS": {
@@ -779,10 +784,15 @@
     "ROTATING_SHIFTS": "Rotating Shifts",
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "Shift period cannot exceed one year",
     "SHIFT_PERIOD_DURATION": "Shift / rest duration in days",
+    "SHIFT_PERIOD_DURATION_RANGE": "The duration must be from 1 to 30 days",
     "DAYS_UNIT": "days",
-    "WORK_REST_CYCLE_DESC": "One fixed shift: work days followed by rest days",
+    "WORK_REST_CYCLE_DESC": "Work days followed by rest days",
     "WORK_REST_CYCLE_HINT": "The same number of days applies to the work period and the rest period.",
-    "WORK_REST_CYCLE_SUMMARY": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s)."
+    "WORK_REST_CYCLE_SUMMARY_ONE": "Repeats from the start date: work {{days}} day, then rest {{days}} day.",
+    "WORK_REST_CYCLE_SUMMARY_TWO": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_FEW": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_MANY": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_OTHER": "Repeats from the start date: work {{days}} days, then rest {{days}} days."
   },
   "USER_WORK_SHIFT_PAGE": {
     "WORK_SHIFT_ASSIGNMENT_TAB": "Employees Assigned Work Shifts",
@@ -1064,6 +1074,8 @@
     "UNLINK_CARD": "Unlink card",
     "UNLINK_CARD_CONFIRM": "Unlink the card from this visit? The visitor will no longer be able to use it.",
     "CARD_LINKED_TO_OTHER_VISIT": "This card is currently linked to another visit: {{holder}}",
+    "CARD_LOCKED_BY_OTHER_VISIT": "This card is in use on another visit: {{holder}}. The visitor has entered and has not left yet, so it cannot be moved to this visit.",
+    "OWN_CARD_LOCKED": "The visitor has entered and has not left yet, so the card linked to this visit cannot be changed or unlinked until the visitor leaves or the visit ends.",
     "CARD_ALREADY_LINKED_HERE": "This card is linked to this visit",
     "CARD_LINKED_SUCCESSFULLY": "The card was linked to the visit successfully",
     "CARD_UNLINKED_SUCCESSFULLY": "The card was unlinked from the visit",

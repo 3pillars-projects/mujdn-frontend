@@ -167,6 +167,10 @@
     "TEMPORARY_ROLE_ASSIGNMENT_OVERLAP": "الموظف المحدد لديه بالفعل إسناد دور مؤقت متداخل لنفس الدور.",
     "TEMPORARY_ROLE_ASSIGNMENT_INVALID_DATE_RANGE": "يجب أن يكون تاريخ الانتهاء أكبر من أو مساوياً لتاريخ البدء في إسناد الدور المؤقت.",
     "LEAVE_INVALID_DATE_RANGE": "يجب أن يكون تاريخ نهاية الإجازة أكبر من أو مساوياً لتاريخ البداية.",
+    "SHIFT_ASSIGNMENT_INVALID_DATE_RANGE": "يجب أن يكون تاريخ نهاية إسناد الوردية في تاريخ البداية أو بعده.",
+    "SHIFT_ASSIGNMENT_PERIOD_EXCEEDS_ONE_YEAR": "لا يمكن أن تتجاوز فترة الوردية سنة واحدة.",
+    "SHIFT_ASSIGNMENT_SHIFT_NOT_FOUND": "الوردية المختارة غير موجودة.",
+    "INVALID_SHIFT_CYCLE_DAY_COUNTS": "مدة المناوبة / الراحة مطلوبة ويجب أن تكون عددًا صحيحًا من الأيام من 1 إلى 30.",
     "LEAVE_OVERLAPPING_DATES": "تتداخل تواريخ الإجازة مع إجازة قائمة بالفعل.",
     "LEAVE_ALREADY_DECIDED": "تم البت في طلب الإجازة هذا بالفعل.",
     "LEAVE_DECISION_NUMBER_INVALID": "رقم القرار / رقم الطلب مطلوب ويجب ألا يتجاوز 100 حرف.",
@@ -217,6 +221,7 @@
     "VISIT_NOT_APPROVED_FOR_CARD": "يمكن ربط البطاقة بالزيارات المقبولة فقط.",
     "VISIT_ENDED": "انتهى وقت الزيارة.",
     "VISIT_HAS_NO_CARD": "لا توجد بطاقة مرتبطة بهذه الزيارة.",
+    "VISIT_CARD_LOCKED_AFTER_ACCESS": "لا يمكن تغيير البطاقة لأن الزائر دخل ولم يغادر بعد.",
     "DSS_CARD_ASSIGNMENT_FAILED": "تعذر على نظام التحكم في الدخول تحديث بطاقة الزائر، برجاء المحاولة مرة أخرى."
   },
   "ATTACHMENTS": {
@@ -778,10 +783,15 @@
     "ROTATING_SHIFTS": "ورديات التناوب",
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "لا يمكن أن تتجاوز فترة الوردية سنة واحدة",
     "SHIFT_PERIOD_DURATION": "مدة المناوبة / الراحة بالأيام",
+    "SHIFT_PERIOD_DURATION_RANGE": "يجب أن تكون المدة من 1 إلى 30 يومًا",
     "DAYS_UNIT": "أيام",
-    "WORK_REST_CYCLE_DESC": "وردية ثابتة: أيام عمل تليها أيام راحة",
+    "WORK_REST_CYCLE_DESC": "أيام عمل تليها أيام راحة",
     "WORK_REST_CYCLE_HINT": "يُطبَّق نفس عدد الأيام على فترة العمل وفترة الراحة.",
-    "WORK_REST_CYCLE_SUMMARY": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يوم عمل ثم {{days}} يوم راحة."
+    "WORK_REST_CYCLE_SUMMARY_ONE": "تتكرر الدورة بدءًا من تاريخ البداية: يوم عمل واحد ثم يوم راحة واحد.",
+    "WORK_REST_CYCLE_SUMMARY_TWO": "تتكرر الدورة بدءًا من تاريخ البداية: يومان عمل ثم يومان راحة.",
+    "WORK_REST_CYCLE_SUMMARY_FEW": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} أيام عمل ثم {{days}} أيام راحة.",
+    "WORK_REST_CYCLE_SUMMARY_MANY": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يومًا عمل ثم {{days}} يومًا راحة.",
+    "WORK_REST_CYCLE_SUMMARY_OTHER": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يوم عمل ثم {{days}} يوم راحة."
   },
   "USER_WORK_SHIFT_PAGE": {
     "WORK_SHIFT_ASSIGNMENT_TAB": "الورديات المسندة للموظفين التابعين",
@@ -1063,6 +1073,8 @@
     "UNLINK_CARD": "إلغاء ربط البطاقة",
     "UNLINK_CARD_CONFIRM": "هل تريد إلغاء ربط البطاقة بهذه الزيارة؟ لن يتمكن الزائر من استخدامها.",
     "CARD_LINKED_TO_OTHER_VISIT": "البطاقة مرتبطة حالياً بزيارة أخرى: {{holder}}",
+    "CARD_LOCKED_BY_OTHER_VISIT": "البطاقة مستخدمة في زيارة أخرى: {{holder}}. الزائر دخل ولم يغادر بعد، لذلك لا يمكن نقلها إلى هذه الزيارة.",
+    "OWN_CARD_LOCKED": "الزائر دخل ولم يغادر بعد، لذلك لا يمكن تغيير البطاقة المرتبطة بهذه الزيارة أو إلغاء ربطها حتى يغادر الزائر أو تنتهي الزيارة.",
     "CARD_ALREADY_LINKED_HERE": "البطاقة مرتبطة بهذه الزيارة",
     "CARD_LINKED_SUCCESSFULLY": "تم ربط البطاقة بالزيارة بنجاح",
     "CARD_UNLINKED_SUCCESSFULLY": "تم إلغاء ربط البطاقة بالزيارة",

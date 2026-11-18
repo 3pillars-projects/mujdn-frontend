@@ -1,7 +1,6 @@
 import { BaseCrudModel } from '@/abstracts/base-crud-model';
 import { VisitCardInterceptor } from '@/model-interceptors/features/visit/visit-card.interceptor';
 import { VisitCardService } from '@/services/features/visit/visit-card.service';
-import { CustomValidators } from '@/validators/custom-validators';
 import { VisitCardValidators } from '@/validators/visit-card-validators';
 import { Validators } from '@angular/forms';
 import { InterceptModel } from 'cast-response';
@@ -31,14 +30,7 @@ export class VisitCard extends BaseCrudModel<VisitCard, VisitCardService> {
       ],
       friendlyNumber: [
         friendlyNumber,
-        [
-          Validators.required,
-          CustomValidators.integerNumber(),
-          CustomValidators.numberRange(
-            VisitCardValidators.FRIENDLY_NUMBER_MIN,
-            VisitCardValidators.FRIENDLY_NUMBER_MAX
-          ),
-        ],
+        [Validators.required, VisitCardValidators.friendlyNumberRange()],
       ],
     };
   }
