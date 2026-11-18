@@ -339,7 +339,7 @@ export class WorkShiftsAssignmentPopupComponent
     if (this.model.id) {
       this.prepareModel(this.model, this.form);
       this.userWorkShiftService.update(this.model).subscribe({
-        next: () => this.dialogRef.close(DIALOG_ENUM.OK),
+        next: () => this.onSaved(this.model),
         error: onError,
       });
     } else {
@@ -349,10 +349,16 @@ export class WorkShiftsAssignmentPopupComponent
         newModel.assignedUserIds = formValue.userIdsArray || [];
       }
       this.userWorkShiftService.assignUserShift(newModel).subscribe({
-        next: () => this.dialogRef.close(DIALOG_ENUM.OK),
+        next: () => this.onSaved(newModel),
         error: onError,
       });
     }
+  }
+
+  /** Confirms a successful create / edit (BRD section 4: "Saved successfully") and closes. */
+  private onSaved(model: UserWorkShift): void {
+    this.afterSave(model, this.dialogRef);
+    this.dialogRef.close(DIALOG_ENUM.OK);
   }
 
   private validateEmployeeSelection(): boolean {
