@@ -782,6 +782,7 @@
     "ROTATING_SHIFTS": "ورديات التناوب",
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "لا يمكن أن تتجاوز فترة الوردية سنة واحدة",
     "SHIFT_PERIOD_DURATION": "مدة المناوبة / الراحة بالأيام",
+    "SHIFT_PERIOD_DURATION_RANGE": "يجب أن تكون المدة من 1 إلى 30 يومًا",
     "DAYS_UNIT": "أيام",
     "WORK_REST_CYCLE_DESC": "أيام عمل تليها أيام راحة",
     "WORK_REST_CYCLE_HINT": "يُطبَّق نفس عدد الأيام على فترة العمل وفترة الراحة.",

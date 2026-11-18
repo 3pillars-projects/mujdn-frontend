@@ -24,6 +24,7 @@ export enum ValidationErrorKeyEnum {
   DATE_MAX_RANGE_EXCEEDED = 'maxRangeExceeded',
   DUPLICATE_SHIFT = 'duplicateShift',
   SHIFTING_PERIOD_MAX_ONE_YEAR = 'shiftingPeriodMaxOneYear',
+  SHIFT_CYCLE_DAYS_RANGE = 'shiftCycleDaysRange',
   INVALID_SHIFT_CONFIGURATION = 'invalidShiftConfiguration',
   GRACE_MONTHLY_LESS_THAN_DAILY = 'graceMonthlyMinutesLessThanDaily',
   HEX_CARD_ID = 'hexCardId',

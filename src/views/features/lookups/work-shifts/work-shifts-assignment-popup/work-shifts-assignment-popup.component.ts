@@ -573,8 +573,7 @@ export class WorkShiftsAssignmentPopupComponent
     if (isRotating || isWeekOnOff || isWeekOnOff24) {
       legacyDaysCountCtrl?.setValidators([
         Validators.required,
-        Validators.min(1),
-        Validators.max(30),
+        CustomValidators.shiftCycleDaysRange(1, 30),
         CustomValidators.integerNumber(),
       ]);
     } else {

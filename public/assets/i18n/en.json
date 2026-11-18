@@ -783,6 +783,7 @@
     "ROTATING_SHIFTS": "Rotating Shifts",
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "Shift period cannot exceed one year",
     "SHIFT_PERIOD_DURATION": "Shift / rest duration in days",
+    "SHIFT_PERIOD_DURATION_RANGE": "The duration must be from 1 to 30 days",
     "DAYS_UNIT": "days",
     "WORK_REST_CYCLE_DESC": "Work days followed by rest days",
     "WORK_REST_CYCLE_HINT": "The same number of days applies to the work period and the rest period.",
