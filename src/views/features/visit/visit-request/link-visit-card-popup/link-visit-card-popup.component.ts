@@ -39,6 +39,7 @@ type LookupResult = { ok: true; card: VisitCardLookup } | { ok: false; error: Ht
 
 const CARD_HELD_ELSEWHERE = 'VISIT_CARD_ASSIGNED_TO_ANOTHER_VISIT';
 const CARD_NOT_FOUND = 'VISIT_CARD_NOT_FOUND';
+const CARD_LOCKED = 'VISIT_CARD_LOCKED_AFTER_ACCESS';
 
 /**
  * Gate dialog: shows the approved visit and lets security staff link a card by its friendly number.
@@ -85,6 +86,8 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
   lookupState: LookupState = 'idle';
   lookup: VisitCardLookup | null = null;
   busy = false;
+  /** This visit's own card was already used by the visitor and the visit is running: no replace or unlink. */
+  ownCardLocked = false;
 
   ngOnInit(): void {
     this.model = this.data.model;
@@ -100,9 +103,11 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
           visitDate: '',
           visitTimeFrom: '',
           visitTimeTo: '',
+          isLocked: false,
         },
       };
       this.lookupState = 'found';
+      this.checkOwnCardLock(linked.friendlyNumber);
     }
 
     this.listenToFriendlyNumber();
@@ -119,28 +124,44 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
     return holder && holder.visitLogId !== this.model.id ? holder : null;
   }
 
+  /** The typed card's holder already used it during a running visit, so the server refuses a move. */
+  get heldElsewhereLocked(): boolean {
+    return !!this.heldElsewhere?.isLocked;
+  }
+
   get canConfirm(): boolean {
     return (
       !this.busy &&
       this.lookupState === 'found' &&
       !!this.lookup &&
       !this.linkedHere &&
+      !this.heldElsewhereLocked &&
+      !this.ownCardLocked &&
       this.friendlyNumberControl.valid
     );
   }
 
   get canUnlink(): boolean {
-    return !this.busy && !!this.model.assignedCard;
+    return !this.busy && !!this.model.assignedCard && !this.ownCardLocked;
   }
 
-  /** Holder details for the move warning, e.g. "Visitor name — 18/11/2026 08:00 AM - 04:00 PM". */
+  /**
+   * Holder details for the move warning, e.g. "Visitor name — 18/11/2026 — 08:00 AM - 04:00 PM".
+   * Each part is wrapped in Unicode bidi isolates so a Latin name, dates and times keep their order
+   * inside an Arabic (RTL) sentence instead of being reshuffled by the bidi algorithm.
+   */
   holderDescription(holder: VisitCardHolder): string {
-    const locale =
-      this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH ? 'en-US' : 'ar-EG';
+    const isEnglish = this.languageService.getCurrentLanguage() == LANGUAGE_ENUM.ENGLISH;
+    const locale = isEnglish ? 'en-US' : 'ar-EG';
+    // FSI…PDI: direction taken from the text itself (name, date, single time).
+    const isolate = (text: string) => `⁨${text}⁩`;
+    // LRI/RLI…PDI: the from-to range follows the UI direction so "from" is read first.
+    const isolateUi = (text: string) => `${isEnglish ? '⁦' : '⁧'}${text}⁩`;
     const date = holder.visitDate ? formatDateOnly(holder.visitDate) : '';
     const from = holder.visitTimeFrom ? formatTimeTo12Hour(holder.visitTimeFrom, locale) : '';
     const to = holder.visitTimeTo ? formatTimeTo12Hour(holder.visitTimeTo, locale) : '';
-    return [holder.visitorName, date, from && to ? `${from} - ${to}` : '']
+    const range = from && to ? isolateUi(`${isolate(from)} - ${isolate(to)}`) : '';
+    return [holder.visitorName && isolate(holder.visitorName), date && isolate(date), range]
       .filter(Boolean)
       .join(' — ');
   }
@@ -241,6 +262,11 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (messageKey === CARD_LOCKED) {
+      // The holder swiped after the lookup: refresh it so the dialog stops offering the move.
+      this.relookup$.next(friendlyNumber);
+    }
+
     const key = messageKey ? `COMMON.${messageKey}` : 'COMMON.UNKNOWN_ERROR';
     const translated = this.translateService.instant(key);
     this.alertService.showErrorMessage({
@@ -293,6 +319,23 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
     }
 
     this.lookupState = 'error';
+  }
+
+  /**
+   * Looks up this visit's own card to learn whether the visitor already used it. If the check fails, the
+   * actions stay enabled and the server still refuses them with VISIT_CARD_LOCKED_AFTER_ACCESS.
+   */
+  private checkOwnCardLock(friendlyNumber: number): void {
+    this.visitService
+      .lookupCardByFriendlyNumber(friendlyNumber)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (card) => {
+          const holder = card.currentAssignment;
+          this.ownCardLocked = holder?.visitLogId === this.model.id && !!holder?.isLocked;
+        },
+        error: () => (this.ownCardLocked = false),
+      });
   }
 
   private showNotFound(): void {

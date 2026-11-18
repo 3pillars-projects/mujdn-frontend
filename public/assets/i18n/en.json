@@ -1074,6 +1074,8 @@
     "UNLINK_CARD": "Unlink card",
     "UNLINK_CARD_CONFIRM": "Unlink the card from this visit? The visitor will no longer be able to use it.",
     "CARD_LINKED_TO_OTHER_VISIT": "This card is currently linked to another visit: {{holder}}",
+    "CARD_LOCKED_BY_OTHER_VISIT": "This card is in use on another visit that is still in progress: {{holder}}. The visitor has already used it, so it cannot be moved to this visit.",
+    "OWN_CARD_LOCKED": "The visitor has already used the card linked to this visit, so it cannot be changed or unlinked until the visit ends.",
     "CARD_ALREADY_LINKED_HERE": "This card is linked to this visit",
     "CARD_LINKED_SUCCESSFULLY": "The card was linked to the visit successfully",
     "CARD_UNLINKED_SUCCESSFULLY": "The card was unlinked from the visit",

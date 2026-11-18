@@ -84,14 +84,34 @@
           </p>
         }
         @if (heldElsewhere; as holder) {
+          @if (holder.isLocked) {
+            <p
+              class="mt-4 text-[14px] text-[#b42318] bg-[#fef3f2] border border-[#fecdca] rounded-lg p-3 flex items-start gap-2"
+            >
+              <i class="pi pi-ban mt-0.5"></i>
+              <span>{{
+                'VISIT_REQUEST_PAGE.CARD_LOCKED_BY_OTHER_VISIT'
+                  | translate: { holder: holderDescription(holder) }
+              }}</span>
+            </p>
+          } @else {
+            <p
+              class="mt-4 text-[14px] text-[#b54708] bg-[#fffaeb] border border-[#fedf89] rounded-lg p-3 flex items-start gap-2"
+            >
+              <i class="pi pi-exclamation-triangle mt-0.5"></i>
+              <span>{{
+                'VISIT_REQUEST_PAGE.CARD_LINKED_TO_OTHER_VISIT'
+                  | translate: { holder: holderDescription(holder) }
+              }}</span>
+            </p>
+          }
+        }
+        @if (ownCardLocked) {
           <p
-            class="mt-4 text-[14px] text-[#b54708] bg-[#fffaeb] border border-[#fedf89] rounded-lg p-3 flex items-start gap-2"
+            class="mt-4 text-[14px] text-[#b42318] bg-[#fef3f2] border border-[#fecdca] rounded-lg p-3 flex items-start gap-2"
           >
-            <i class="pi pi-exclamation-triangle mt-0.5"></i>
-            <span>{{
-              'VISIT_REQUEST_PAGE.CARD_LINKED_TO_OTHER_VISIT'
-                | translate: { holder: holderDescription(holder) }
-            }}</span>
+            <i class="pi pi-lock mt-0.5"></i>
+            <span>{{ 'VISIT_REQUEST_PAGE.OWN_CARD_LOCKED' | translate }}</span>
           </p>
         }
       </div>
@@ -121,7 +141,7 @@
         type="button"
       >
         {{
-          (heldElsewhere
+          (heldElsewhere && !heldElsewhereLocked
             ? 'VISIT_REQUEST_PAGE.MOVE_AND_CONFIRM_CARD'
             : 'VISIT_REQUEST_PAGE.CONFIRM_CARD_DATA'
           ) | translate
