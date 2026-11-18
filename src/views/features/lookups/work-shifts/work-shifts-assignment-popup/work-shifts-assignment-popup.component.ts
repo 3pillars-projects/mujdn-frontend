@@ -706,6 +706,19 @@ export class WorkShiftsAssignmentPopupComponent
       : null;
   }
 
+  /**
+   * Translation key of the work / rest hint for the entered duration. Arabic and English need a
+   * different wording per CLDR plural category (e.g. "يومان" for 2, "أيام" for 3-10, "يومًا" for
+   * 11-99), so each category has its own key.
+   */
+  get cycleSummaryKey(): string {
+    const category = new Intl.PluralRules(this.getCurrentLanguage()).select(this.cycleDays ?? 0);
+    const suffix = ['one', 'two', 'few', 'many'].includes(category)
+      ? category.toUpperCase()
+      : 'OTHER';
+    return `USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_SUMMARY_${suffix}`;
+  }
+
   get isRotatingType(): boolean {
     return this.form?.get('workShiftType')?.value === WorkShiftType.Rotating;
   }

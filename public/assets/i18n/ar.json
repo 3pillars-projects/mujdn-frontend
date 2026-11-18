@@ -782,7 +782,11 @@
     "DAYS_UNIT": "أيام",
     "WORK_REST_CYCLE_DESC": "أيام عمل تليها أيام راحة",
     "WORK_REST_CYCLE_HINT": "يُطبَّق نفس عدد الأيام على فترة العمل وفترة الراحة.",
-    "WORK_REST_CYCLE_SUMMARY": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يوم عمل ثم {{days}} يوم راحة."
+    "WORK_REST_CYCLE_SUMMARY_ONE": "تتكرر الدورة بدءًا من تاريخ البداية: يوم عمل واحد ثم يوم راحة واحد.",
+    "WORK_REST_CYCLE_SUMMARY_TWO": "تتكرر الدورة بدءًا من تاريخ البداية: يومان عمل ثم يومان راحة.",
+    "WORK_REST_CYCLE_SUMMARY_FEW": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} أيام عمل ثم {{days}} أيام راحة.",
+    "WORK_REST_CYCLE_SUMMARY_MANY": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يومًا عمل ثم {{days}} يومًا راحة.",
+    "WORK_REST_CYCLE_SUMMARY_OTHER": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يوم عمل ثم {{days}} يوم راحة."
   },
   "USER_WORK_SHIFT_PAGE": {
     "WORK_SHIFT_ASSIGNMENT_TAB": "الورديات المسندة للموظفين التابعين",

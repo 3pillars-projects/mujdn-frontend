@@ -229,10 +229,7 @@
             @if (isFixedCycleType) {
               <p id="legacyDaysCountHint" class="mt-2 text-sm text-[#6c737f]" aria-live="polite">
                 @if (cycleDays) {
-                  {{
-                    'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_SUMMARY'
-                      | translate: { days: cycleDays }
-                  }}
+                  {{ cycleSummaryKey | translate: { days: cycleDays } }}
                 } @else {
                   {{ 'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_HINT' | translate }}
                 }
