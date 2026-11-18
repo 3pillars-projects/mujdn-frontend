@@ -167,6 +167,7 @@
     "TEMPORARY_ROLE_ASSIGNMENT_OVERLAP": "The selected employee already has an overlapping temporary assignment for the same role.",
     "TEMPORARY_ROLE_ASSIGNMENT_INVALID_DATE_RANGE": "DateTo must be greater than or equal to DateFrom for the temporary role assignment.",
     "LEAVE_INVALID_DATE_RANGE": "The leave end date must be greater than or equal to the start date.",
+    "SHIFT_ASSIGNMENT_INVALID_DATE_RANGE": "The shift assignment end date must be on or after the start date.",
     "LEAVE_OVERLAPPING_DATES": "The leave dates overlap with an existing leave.",
     "LEAVE_ALREADY_DECIDED": "This leave request has already been decided.",
     "LEAVE_DECISION_NUMBER_INVALID": "Decision/request number is required and must not exceed 100 characters.",
