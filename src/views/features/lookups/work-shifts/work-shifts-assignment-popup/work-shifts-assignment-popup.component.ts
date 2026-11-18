@@ -326,9 +326,10 @@ export class WorkShiftsAssignmentPopupComponent
       ctrl.updateValueAndValidity();
     });
 
-    if (!this.form.valid) return;
-
-    if (!this.validateEmployeeSelection()) return;
+    // Check the employees even when other fields are invalid: an empty selection would otherwise
+    // only show the generic "required" text instead of the BRD's "assign at least one employee".
+    const hasEmployees = this.validateEmployeeSelection();
+    if (!this.form.valid || !hasEmployees) return;
 
     const formValue = this.form.value;
 
