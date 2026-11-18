@@ -221,7 +221,7 @@
     "VISIT_NOT_APPROVED_FOR_CARD": "A card can only be linked to an approved visit.",
     "VISIT_ENDED": "The visit time has already ended.",
     "VISIT_HAS_NO_CARD": "No card is linked to this visit.",
-    "VISIT_CARD_LOCKED_AFTER_ACCESS": "The card cannot be changed because the visitor has already used it and the visit is still in progress.",
+    "VISIT_CARD_LOCKED_AFTER_ACCESS": "The card cannot be changed because the visitor has entered and has not left yet.",
     "DSS_CARD_ASSIGNMENT_FAILED": "The access control system could not update the visitor's card. Please try again."
   },
   "ATTACHMENTS": {
@@ -1074,8 +1074,8 @@
     "UNLINK_CARD": "Unlink card",
     "UNLINK_CARD_CONFIRM": "Unlink the card from this visit? The visitor will no longer be able to use it.",
     "CARD_LINKED_TO_OTHER_VISIT": "This card is currently linked to another visit: {{holder}}",
-    "CARD_LOCKED_BY_OTHER_VISIT": "This card is in use on another visit that is still in progress: {{holder}}. The visitor has already used it, so it cannot be moved to this visit.",
-    "OWN_CARD_LOCKED": "The visitor has already used the card linked to this visit, so it cannot be changed or unlinked until the visit ends.",
+    "CARD_LOCKED_BY_OTHER_VISIT": "This card is in use on another visit: {{holder}}. The visitor has entered and has not left yet, so it cannot be moved to this visit.",
+    "OWN_CARD_LOCKED": "The visitor has entered and has not left yet, so the card linked to this visit cannot be changed or unlinked until the visitor leaves or the visit ends.",
     "CARD_ALREADY_LINKED_HERE": "This card is linked to this visit",
     "CARD_LINKED_SUCCESSFULLY": "The card was linked to the visit successfully",
     "CARD_UNLINKED_SUCCESSFULLY": "The card was unlinked from the visit",
