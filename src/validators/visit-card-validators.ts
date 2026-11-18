@@ -56,11 +56,50 @@ function availability(
   };
 }
 
+const FRIENDLY_NUMBER_MIN = 1;
+const FRIENDLY_NUMBER_MAX = 9999;
+
+/**
+ * Short (friendly) number: a whole number from 1 to 9999. Reports one error, `friendlyNumberRange`,
+ * for every bad value (0, negative, decimal, too large), so the field shows a single "between 1 and
+ * 9999" message instead of the shared min / max / length texts, which talk about time and length.
+ */
+function friendlyNumberRange(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+
+    const number = Number(value);
+    const valid =
+      Number.isInteger(number) && number >= FRIENDLY_NUMBER_MIN && number <= FRIENDLY_NUMBER_MAX;
+    return valid ? null : { friendlyNumberRange: true };
+  };
+}
+
+/**
+ * A number input keeps leading zeros on screen ("00012") although its value, and what is saved, is
+ * 12. Redraws the input as the saved number so it matches the "up to 4 digits" hint. Only the text
+ * on screen changes: the form value and its validation stay as they are.
+ */
+function redrawFriendlyNumberInput(input: HTMLInputElement, value: unknown): void {
+  if (value === null || value === undefined || value === '') {
+    return;
+  }
+  const number = Number(value);
+  if (Number.isFinite(number) && input.value !== String(number)) {
+    input.value = String(number);
+  }
+}
+
 export const VisitCardValidators = {
   CARD_ID_MAX_LENGTH: 32,
-  FRIENDLY_NUMBER_MIN: 1,
-  FRIENDLY_NUMBER_MAX: 9999,
+  FRIENDLY_NUMBER_MIN,
+  FRIENDLY_NUMBER_MAX,
   normalizeCardId,
   hexCardId,
+  friendlyNumberRange,
+  redrawFriendlyNumberInput,
   availability,
 };

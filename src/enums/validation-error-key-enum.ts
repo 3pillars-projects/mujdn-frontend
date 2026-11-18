@@ -30,5 +30,6 @@ export enum ValidationErrorKeyEnum {
   HEX_CARD_ID = 'hexCardId',
   CARD_ID_TAKEN = 'cardIdTaken',
   FRIENDLY_NUMBER_TAKEN = 'friendlyNumberTaken',
+  FRIENDLY_NUMBER_RANGE = 'friendlyNumberRange',
   CARD_NOT_FOUND = 'cardNotFound',
 }

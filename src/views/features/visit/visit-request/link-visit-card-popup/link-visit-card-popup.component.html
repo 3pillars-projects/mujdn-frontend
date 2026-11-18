@@ -31,14 +31,14 @@
               [attr.aria-busy]="lookupState === 'loading'"
               [formControl]="friendlyNumberControl"
               [placeholder]="'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate"
+              (blur)="normalizeFriendlyNumberInput(friendlyNumberInput)"
               (keydown.enter)="confirm()"
               autocomplete="off"
               class="peer"
               fluid="true"
+              #friendlyNumberInput
               id="linkCardFriendlyNumber"
               inputmode="numeric"
-              max="9999"
-              min="1"
               pInputText
               type="number"
             />

@@ -32,6 +32,49 @@ describe('VisitCardValidators', () => {
     });
   });
 
+  describe('friendlyNumberRange', () => {
+    const errorsFor = (value: unknown) =>
+      new FormControl(value, VisitCardValidators.friendlyNumberRange()).errors;
+
+    it('accepts whole numbers from 1 to 9999', () => {
+      for (const value of [1, 12, 9999, '12']) {
+        expect(errorsFor(value)).withContext(String(value)).toBeNull();
+      }
+    });
+
+    it('leaves empty values to the required validator', () => {
+      for (const value of [null, undefined, '']) {
+        expect(errorsFor(value)).toBeNull();
+      }
+    });
+
+    it('reports one range error for 0, negatives, decimals and values above 9999', () => {
+      for (const value of [0, -5, 1.5, 10000]) {
+        expect(errorsFor(value)).withContext(String(value)).toEqual({ friendlyNumberRange: true });
+      }
+    });
+  });
+
+  describe('redrawFriendlyNumberInput', () => {
+    it('redraws leading zeros as the saved number', () => {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.value = '00012';
+
+      VisitCardValidators.redrawFriendlyNumberInput(input, 12);
+
+      expect(input.value).toBe('12');
+    });
+
+    it('leaves the input alone when the value is empty', () => {
+      const input = document.createElement('input');
+
+      VisitCardValidators.redrawFriendlyNumberInput(input, null);
+
+      expect(input.value).toBe('');
+    });
+  });
+
   describe('availability', () => {
     function setup(response: () => Observable<VisitCardAvailability>) {
       const calls: unknown[] = [];

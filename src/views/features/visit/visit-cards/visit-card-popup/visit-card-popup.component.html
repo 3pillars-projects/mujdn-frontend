@@ -53,16 +53,16 @@
           }}</label>
           <div class="relative">
             <input
+              (blur)="normalizeFriendlyNumberInput(friendlyNumberInput)"
               [attr.aria-busy]="friendlyNumberControl.pending"
               aria-describedby="visitCardFriendlyNumber-hint"
               autocomplete="off"
               class="peer"
               fluid="true"
               formControlName="friendlyNumber"
+              #friendlyNumberInput
               id="visitCardFriendlyNumber-popup"
               inputmode="numeric"
-              max="9999"
-              min="1"
               pInputText
               placeholder="{{ 'VISIT_CARDS_PAGE.FRIENDLY_NUMBER' | translate }}"
               type="number"
