@@ -8,7 +8,6 @@ import { AlertService } from '@/services/shared/alert.service';
 import { ConfirmationService } from '@/services/shared/confirmation.service';
 import { LanguageService } from '@/services/shared/language.service';
 import { formatDateOnly, formatTimeTo12Hour } from '@/utils/general-helper';
-import { CustomValidators } from '@/validators/custom-validators';
 import {
   VISIT_CARD_CHECK_DEBOUNCE_MS,
   VisitCardValidators,
@@ -76,11 +75,7 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
 
   friendlyNumberControl = new FormControl<number | string | null>(null, [
     Validators.required,
-    CustomValidators.integerNumber(),
-    CustomValidators.numberRange(
-      VisitCardValidators.FRIENDLY_NUMBER_MIN,
-      VisitCardValidators.FRIENDLY_NUMBER_MAX
-    ),
+    VisitCardValidators.friendlyNumberRange(),
   ]);
 
   lookupState: LookupState = 'idle';
@@ -346,6 +341,11 @@ export class LinkVisitCardPopupComponent implements OnInit, OnDestroy {
       cardNotFound: true,
     });
     this.friendlyNumberControl.markAsTouched();
+  }
+
+  /** Redraws "00012" as 12 after leaving the field; the value (and so the lookup) does not change. */
+  normalizeFriendlyNumberInput(input: HTMLInputElement): void {
+    VisitCardValidators.redrawFriendlyNumberInput(input, this.friendlyNumberControl.value);
   }
 
   /** Retries the lookup after a network or server failure. */

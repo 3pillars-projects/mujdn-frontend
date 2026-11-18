@@ -109,6 +109,11 @@ export class VisitCardPopupComponent
     }
   }
 
+  /** Redraws "00012" as 12 after leaving the field; the value itself (and the checks) do not change. */
+  normalizeFriendlyNumberInput(input: HTMLInputElement) {
+    VisitCardValidators.redrawFriendlyNumberInput(input, this.friendlyNumberControl.value);
+  }
+
   /** Waits for pending uniqueness checks to finish before deciding whether to save. */
   override beforeSave(model: VisitCard, form: FormGroup): Observable<boolean> | boolean {
     if (!form.pending) {

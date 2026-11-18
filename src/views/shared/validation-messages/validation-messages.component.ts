@@ -108,6 +108,8 @@ export class ValidationMessagesComponent implements OnInit {
     [ValidationErrorKeyEnum.HEX_CARD_ID]: 'VISIT_CARDS_PAGE.CARD_ID_HEX_ONLY',
     [ValidationErrorKeyEnum.CARD_ID_TAKEN]: 'VISIT_CARDS_PAGE.CARD_ID_TAKEN',
     [ValidationErrorKeyEnum.FRIENDLY_NUMBER_TAKEN]: 'VISIT_CARDS_PAGE.FRIENDLY_NUMBER_TAKEN',
+    [ValidationErrorKeyEnum.FRIENDLY_NUMBER_RANGE]:
+      'COMMON.VISIT_CARD_FRIENDLY_NUMBER_OUT_OF_RANGE',
     [ValidationErrorKeyEnum.CARD_NOT_FOUND]: 'VISIT_REQUEST_PAGE.CARD_NOT_FOUND',
   };
 }
