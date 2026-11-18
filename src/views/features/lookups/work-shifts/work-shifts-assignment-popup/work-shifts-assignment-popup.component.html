@@ -211,9 +211,13 @@
                 pInputText
                 fluid="true"
                 type="number"
+                inputmode="numeric"
                 min="1"
                 max="30"
                 step="1"
+                (keydown)="allowDigitKeysOnly($event)"
+                (paste)="allowDigitTextOnly($event, $event.clipboardData)"
+                (drop)="allowDigitTextOnly($event, $event.dataTransfer)"
                 [placeholder]="'USER_WORK_SHIFT_ASSIGNMENT.SHIFT_PERIOD_DURATION' | translate"
                 [attr.aria-describedby]="isFixedCycleType ? 'legacyDaysCountHint' : null"
               />
@@ -229,10 +233,7 @@
             @if (isFixedCycleType) {
               <p id="legacyDaysCountHint" class="mt-2 text-sm text-[#6c737f]" aria-live="polite">
                 @if (cycleDays) {
-                  {{
-                    'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_SUMMARY'
-                      | translate: { days: cycleDays }
-                  }}
+                  {{ cycleSummaryKey | translate: { days: cycleDays } }}
                 } @else {
                   {{ 'USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_HINT' | translate }}
                 }
@@ -530,7 +531,13 @@
         <div class="flex gap-2">
           @if (isHROfficer) {
             @if (!isViewMode) {
-              <button type="button" (click)="onSaveClick()" class="btn green-btn">
+              <button
+                type="button"
+                (click)="onSaveClick()"
+                class="btn green-btn"
+                [disabled]="isSaving"
+                [attr.aria-busy]="isSaving"
+              >
                 {{ 'COMMON.SAVE' | translate }}
               </button>
             }

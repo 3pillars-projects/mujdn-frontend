@@ -88,6 +88,8 @@ export class WorkShiftsAssignmentPopupComponent
   allowedWeekDaysInRange: number[] = [];
   activeShift: number = 0;
   authService: AuthService = inject(AuthService);
+  /** True while a save request is in flight; blocks a second request from a repeated click. */
+  isSaving = false;
 
   // Single shift: tracks selected member IDs for the standard shift panel
   singleShiftMemberIds: number[] = [];
@@ -317,22 +319,29 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   onSaveClick(): void {
+    if (this.isSaving) return;
+
     Object.values(this.form.controls).forEach((ctrl) => {
       ctrl.markAsTouched();
       ctrl.updateValueAndValidity();
     });
 
-    if (!this.form.valid) return;
-
-    if (!this.validateEmployeeSelection()) return;
+    // Check the employees even when other fields are invalid: an empty selection would otherwise
+    // only show the generic "required" text instead of the BRD's "assign at least one employee".
+    const hasEmployees = this.validateEmployeeSelection();
+    if (!this.form.valid || !hasEmployees) return;
 
     const formValue = this.form.value;
+
+    // The global error interceptor shows the failure; re-enable Save so the user can retry.
+    const onError = () => (this.isSaving = false);
+    this.isSaving = true;
 
     if (this.model.id) {
       this.prepareModel(this.model, this.form);
       this.userWorkShiftService.update(this.model).subscribe({
-        next: () => this.dialogRef.close(DIALOG_ENUM.OK),
-        error: (err) => this.save$.error(err),
+        next: () => this.onSaved(this.model),
+        error: onError,
       });
     } else {
       const newModel = new UserWorkShift();
@@ -341,10 +350,16 @@ export class WorkShiftsAssignmentPopupComponent
         newModel.assignedUserIds = formValue.userIdsArray || [];
       }
       this.userWorkShiftService.assignUserShift(newModel).subscribe({
-        next: () => this.dialogRef.close(DIALOG_ENUM.OK),
-        error: (err) => this.save$.error(err),
+        next: () => this.onSaved(newModel),
+        error: onError,
       });
     }
+  }
+
+  /** Confirms a successful create / edit (BRD section 4: "Saved successfully") and closes. */
+  private onSaved(model: UserWorkShift): void {
+    this.afterSave(model, this.dialogRef);
+    this.dialogRef.close(DIALOG_ENUM.OK);
   }
 
   private validateEmployeeSelection(): boolean {
@@ -558,8 +573,7 @@ export class WorkShiftsAssignmentPopupComponent
     if (isRotating || isWeekOnOff || isWeekOnOff24) {
       legacyDaysCountCtrl?.setValidators([
         Validators.required,
-        Validators.min(1),
-        Validators.max(30),
+        CustomValidators.shiftCycleDaysRange(1, 30),
         CustomValidators.integerNumber(),
       ]);
     } else {
@@ -696,6 +710,37 @@ export class WorkShiftsAssignmentPopupComponent
     return ctrl?.value != null && ctrl.value !== '' && ctrl.valid && Number.isInteger(value)
       ? value
       : null;
+  }
+
+  /**
+   * The duration is a whole number of days. A number input also accepts "e", "+", "-" and ".",
+   * and the browser turns "1e1" into 10 before the form sees it, so block those characters.
+   */
+  allowDigitKeysOnly(event: KeyboardEvent): void {
+    const isCharacter = event.key.length === 1;
+    if (isCharacter && !event.ctrlKey && !event.metaKey && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  allowDigitTextOnly(event: Event, data: DataTransfer | null): void {
+    const text = data?.getData('text') ?? '';
+    if (!/^[0-9]+$/.test(text.trim())) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Translation key of the work / rest hint for the entered duration. Arabic and English need a
+   * different wording per CLDR plural category (e.g. "يومان" for 2, "أيام" for 3-10, "يومًا" for
+   * 11-99), so each category has its own key.
+   */
+  get cycleSummaryKey(): string {
+    const category = new Intl.PluralRules(this.getCurrentLanguage()).select(this.cycleDays ?? 0);
+    const suffix = ['one', 'two', 'few', 'many'].includes(category)
+      ? category.toUpperCase()
+      : 'OTHER';
+    return `USER_WORK_SHIFT_ASSIGNMENT.WORK_REST_CYCLE_SUMMARY_${suffix}`;
   }
 
   get isRotatingType(): boolean {

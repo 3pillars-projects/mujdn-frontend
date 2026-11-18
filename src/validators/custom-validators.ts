@@ -123,6 +123,22 @@ export function integerNumber(): ValidatorFn {
   };
 }
 
+/**
+ * Whole number of days from `min` to `max` for a shift / rest cycle. Reports one error,
+ * `shiftCycleDaysRange`, so the field can say "days" instead of the shared min / max texts,
+ * which talk about time.
+ */
+export function shiftCycleDaysRange(min: number, max: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+
+    const value = Number(control.value);
+    return value >= min && value <= max ? null : { shiftCycleDaysRange: { min, max } };
+  };
+}
+
 // Custom validator for number range
 export function numberRange(min: number, max: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -458,6 +474,7 @@ export const CustomValidators = {
   positiveNumber,
   integerNumber,
   numberRange,
+  shiftCycleDaysRange,
   timeFromBeforeTimeTo,
   crossDateTimeValidator,
 };
