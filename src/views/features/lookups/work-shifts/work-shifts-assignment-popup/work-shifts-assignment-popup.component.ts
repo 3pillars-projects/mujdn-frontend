@@ -713,6 +713,24 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   /**
+   * The duration is a whole number of days. A number input also accepts "e", "+", "-" and ".",
+   * and the browser turns "1e1" into 10 before the form sees it, so block those characters.
+   */
+  allowDigitKeysOnly(event: KeyboardEvent): void {
+    const isCharacter = event.key.length === 1;
+    if (isCharacter && !event.ctrlKey && !event.metaKey && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  allowDigitTextOnly(event: Event, data: DataTransfer | null): void {
+    const text = data?.getData('text') ?? '';
+    if (!/^[0-9]+$/.test(text.trim())) {
+      event.preventDefault();
+    }
+  }
+
+  /**
    * Translation key of the work / rest hint for the entered duration. Arabic and English need a
    * different wording per CLDR plural category (e.g. "يومان" for 2, "أيام" for 3-10, "يومًا" for
    * 11-99), so each category has its own key.
