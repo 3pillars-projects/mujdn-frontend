@@ -779,7 +779,7 @@
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "لا يمكن أن تتجاوز فترة الوردية سنة واحدة",
     "SHIFT_PERIOD_DURATION": "مدة المناوبة / الراحة بالأيام",
     "DAYS_UNIT": "أيام",
-    "WORK_REST_CYCLE_DESC": "وردية ثابتة: أيام عمل تليها أيام راحة",
+    "WORK_REST_CYCLE_DESC": "أيام عمل تليها أيام راحة",
     "WORK_REST_CYCLE_HINT": "يُطبَّق نفس عدد الأيام على فترة العمل وفترة الراحة.",
     "WORK_REST_CYCLE_SUMMARY": "تتكرر الدورة بدءًا من تاريخ البداية: {{days}} يوم عمل ثم {{days}} يوم راحة."
   },

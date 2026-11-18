@@ -780,7 +780,7 @@
     "SHIFTING_PERIOD_MAX_ONE_YEAR": "Shift period cannot exceed one year",
     "SHIFT_PERIOD_DURATION": "Shift / rest duration in days",
     "DAYS_UNIT": "days",
-    "WORK_REST_CYCLE_DESC": "One fixed shift: work days followed by rest days",
+    "WORK_REST_CYCLE_DESC": "Work days followed by rest days",
     "WORK_REST_CYCLE_HINT": "The same number of days applies to the work period and the rest period.",
     "WORK_REST_CYCLE_SUMMARY": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s)."
   },
