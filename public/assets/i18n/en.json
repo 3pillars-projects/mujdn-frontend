@@ -221,6 +221,7 @@
     "VISIT_NOT_APPROVED_FOR_CARD": "A card can only be linked to an approved visit.",
     "VISIT_ENDED": "The visit time has already ended.",
     "VISIT_HAS_NO_CARD": "No card is linked to this visit.",
+    "VISIT_CARD_LOCKED_AFTER_ACCESS": "The card cannot be changed because the visitor has already used it and the visit is still in progress.",
     "DSS_CARD_ASSIGNMENT_FAILED": "The access control system could not update the visitor's card. Please try again."
   },
   "ATTACHMENTS": {

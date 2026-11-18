@@ -43,6 +43,7 @@ Security staff at the gate hand an approved visitor a physical DSS access card, 
 | AC-13 | Visit list rows include `assignedCard` (friendly number and card ID) while a card is linked. |
 | AC-14 | Gate endpoints are restricted on the server to SECURITY_MEMBER and SECURITY_LEADER. |
 | AC-15 | The database enforces one active assignment per card and per visit (filtered unique indexes). |
+| AC-16 | Once the visitor has an access print (a DSS swipe whose `SwipeId` equals the visit's `VisitorSwipeId`, between `VisitDate`+`VisitTimeFrom` and `VisitDate`+`VisitTimeTo`), the card on that visit is locked until the visit ends: replacing it, moving it to another visit (with or without `moveFromOtherVisit`) and unlinking it fail with `VISIT_CARD_LOCKED_AFTER_ACCESS` (400) and nothing changes in DSS or the database. Linking a first card to a visit whose visitor already entered (for example with the QR code) is still allowed. After the visit ends, the card can be moved or unlinked again. |
 
 ## Data model (`Visit` schema)
 
