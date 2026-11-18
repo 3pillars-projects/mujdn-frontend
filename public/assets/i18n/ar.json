@@ -168,6 +168,8 @@
     "TEMPORARY_ROLE_ASSIGNMENT_INVALID_DATE_RANGE": "يجب أن يكون تاريخ الانتهاء أكبر من أو مساوياً لتاريخ البدء في إسناد الدور المؤقت.",
     "LEAVE_INVALID_DATE_RANGE": "يجب أن يكون تاريخ نهاية الإجازة أكبر من أو مساوياً لتاريخ البداية.",
     "SHIFT_ASSIGNMENT_INVALID_DATE_RANGE": "يجب أن يكون تاريخ نهاية إسناد الوردية في تاريخ البداية أو بعده.",
+    "SHIFT_ASSIGNMENT_PERIOD_EXCEEDS_ONE_YEAR": "لا يمكن أن تتجاوز فترة الوردية سنة واحدة.",
+    "INVALID_SHIFT_CYCLE_DAY_COUNTS": "مدة المناوبة / الراحة مطلوبة ويجب أن تكون عددًا صحيحًا من الأيام من 1 إلى 30.",
     "LEAVE_OVERLAPPING_DATES": "تتداخل تواريخ الإجازة مع إجازة قائمة بالفعل.",
     "LEAVE_ALREADY_DECIDED": "تم البت في طلب الإجازة هذا بالفعل.",
     "LEAVE_DECISION_NUMBER_INVALID": "رقم القرار / رقم الطلب مطلوب ويجب ألا يتجاوز 100 حرف.",
