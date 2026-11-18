@@ -787,11 +787,11 @@
     "DAYS_UNIT": "days",
     "WORK_REST_CYCLE_DESC": "Work days followed by rest days",
     "WORK_REST_CYCLE_HINT": "The same number of days applies to the work period and the rest period.",
-    "WORK_REST_CYCLE_SUMMARY_ONE": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s).",
-    "WORK_REST_CYCLE_SUMMARY_TWO": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s).",
-    "WORK_REST_CYCLE_SUMMARY_FEW": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s).",
-    "WORK_REST_CYCLE_SUMMARY_MANY": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s).",
-    "WORK_REST_CYCLE_SUMMARY_OTHER": "Repeats from the start date: work {{days}} day(s), then rest {{days}} day(s)."
+    "WORK_REST_CYCLE_SUMMARY_ONE": "Repeats from the start date: work {{days}} day, then rest {{days}} day.",
+    "WORK_REST_CYCLE_SUMMARY_TWO": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_FEW": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_MANY": "Repeats from the start date: work {{days}} days, then rest {{days}} days.",
+    "WORK_REST_CYCLE_SUMMARY_OTHER": "Repeats from the start date: work {{days}} days, then rest {{days}} days."
   },
   "USER_WORK_SHIFT_PAGE": {
     "WORK_SHIFT_ASSIGNMENT_TAB": "Employees Assigned Work Shifts",
