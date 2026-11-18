@@ -88,6 +88,8 @@ export class WorkShiftsAssignmentPopupComponent
   allowedWeekDaysInRange: number[] = [];
   activeShift: number = 0;
   authService: AuthService = inject(AuthService);
+  /** True while a save request is in flight; blocks a second request from a repeated click. */
+  isSaving = false;
 
   // Single shift: tracks selected member IDs for the standard shift panel
   singleShiftMemberIds: number[] = [];
@@ -317,6 +319,8 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   onSaveClick(): void {
+    if (this.isSaving) return;
+
     Object.values(this.form.controls).forEach((ctrl) => {
       ctrl.markAsTouched();
       ctrl.updateValueAndValidity();
@@ -328,11 +332,15 @@ export class WorkShiftsAssignmentPopupComponent
 
     const formValue = this.form.value;
 
+    // The global error interceptor shows the failure; re-enable Save so the user can retry.
+    const onError = () => (this.isSaving = false);
+    this.isSaving = true;
+
     if (this.model.id) {
       this.prepareModel(this.model, this.form);
       this.userWorkShiftService.update(this.model).subscribe({
         next: () => this.dialogRef.close(DIALOG_ENUM.OK),
-        error: (err) => this.save$.error(err),
+        error: onError,
       });
     } else {
       const newModel = new UserWorkShift();
@@ -342,7 +350,7 @@ export class WorkShiftsAssignmentPopupComponent
       }
       this.userWorkShiftService.assignUserShift(newModel).subscribe({
         next: () => this.dialogRef.close(DIALOG_ENUM.OK),
-        error: (err) => this.save$.error(err),
+        error: onError,
       });
     }
   }

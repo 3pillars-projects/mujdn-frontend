@@ -530,7 +530,13 @@
         <div class="flex gap-2">
           @if (isHROfficer) {
             @if (!isViewMode) {
-              <button type="button" (click)="onSaveClick()" class="btn green-btn">
+              <button
+                type="button"
+                (click)="onSaveClick()"
+                class="btn green-btn"
+                [disabled]="isSaving"
+                [attr.aria-busy]="isSaving"
+              >
                 {{ 'COMMON.SAVE' | translate }}
               </button>
             }
