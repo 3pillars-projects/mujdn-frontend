@@ -130,12 +130,6 @@ export class SideBarLinksService {
           routeId: RouteIdsEnum.BLACKLIST,
           system: SystemTypeEnum.VISITS,
         },
-        {
-          labelKey: 'MENU.VISIT_CARDS',
-          routerLink: ['/visits/visit-cards'],
-          routeId: RouteIdsEnum.VISIT_CARDS,
-          system: SystemTypeEnum.VISITS,
-        },
       ],
     },
     {

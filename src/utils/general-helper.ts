@@ -332,13 +332,27 @@ export function buildTranslationParams(details: any, translateService: any): any
   return translationParams;
 }
 
+/**
+ * The same day one year later, or the last day of that month when the day does not exist
+ * (29 Feb -> 28 Feb). Matches .NET DateOnly.AddYears(1), which the server uses for the shift
+ * assignment one-year limit; Date.setFullYear would roll 29 Feb over to 1 Mar instead.
+ */
+export function addOneYearClamped(date: Date): Date {
+  const result = new Date(date);
+  const day = result.getDate();
+  result.setDate(1);
+  result.setFullYear(result.getFullYear() + 1);
+  const lastDayOfMonth = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+  result.setDate(Math.min(day, lastDayOfMonth));
+  return result;
+}
+
 export function shiftingPeriodMaxOneYearValidator(getStartDate: () => string | Date): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const startDate = getStartDate();
     const endDate = control.value as Date | null;
     if (!startDate || !endDate) return null;
-    const maxEndDate = new Date(startDate);
-    maxEndDate.setFullYear(maxEndDate.getFullYear() + 1);
+    const maxEndDate = addOneYearClamped(new Date(startDate));
     return endDate > maxEndDate ? { shiftingPeriodMaxOneYear: true } : null;
   };
 }

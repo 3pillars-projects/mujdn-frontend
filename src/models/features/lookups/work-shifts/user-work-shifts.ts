@@ -65,7 +65,7 @@ export default class UserWorkShift extends BaseCrudModel<UserWorkShift, UserWork
       presenceInquiryBuffer: [presenceInquiryBuffer, []],
       legacyDaysCount: [
         legacyDaysCount ?? null,
-        [CustomValidators.shiftCycleDaysRange(1, 30), CustomValidators.integerNumber()],
+        [CustomValidators.shiftCycleDaysRange(1, 30), CustomValidators.digitsOnly()],
       ],
     };
   }
