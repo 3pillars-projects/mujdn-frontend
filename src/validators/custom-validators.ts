@@ -124,6 +124,21 @@ export function integerNumber(): ValidatorFn {
 }
 
 /**
+ * Digits only (0-9), checked on the raw text. Use it on a text input: a number input hands the
+ * form the parsed value, so "1e1" or "+3" would already be 10 or 3 there. Reports
+ * `integerNumber`, so the existing "whole numbers only" message is shown.
+ */
+export function digitsOnly(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+
+    return /^[0-9]+$/.test(String(control.value)) ? null : { integerNumber: true };
+  };
+}
+
+/**
  * Whole number of days from `min` to `max` for a shift / rest cycle. Reports one error,
  * `shiftCycleDaysRange`, so the field can say "days" instead of the shared min / max texts,
  * which talk about time.
@@ -473,6 +488,7 @@ export const CustomValidators = {
   numberMinLength,
   positiveNumber,
   integerNumber,
+  digitsOnly,
   numberRange,
   shiftCycleDaysRange,
   timeFromBeforeTimeTo,

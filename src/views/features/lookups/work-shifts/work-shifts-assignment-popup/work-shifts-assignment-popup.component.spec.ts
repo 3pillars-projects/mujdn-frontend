@@ -14,7 +14,7 @@ import { WorkShiftsAssignmentPopupComponent } from './work-shifts-assignment-pop
 
 /**
  * Shift / rest duration field of the assign shift popup, rendered with its real template.
- * QC bug W-06 in Bugs-Work-Rest-Cycle-Shift.md (retest 19/11/2026).
+ * QC bugs W-06 / W-07 in Bugs-Work-Rest-Cycle-Shift.md (retest 19/11/2026).
  */
 describe('WorkShiftsAssignmentPopupComponent – shift / rest duration', () => {
   let fixture: ComponentFixture<WorkShiftsAssignmentPopupComponent>;
@@ -73,6 +73,23 @@ describe('WorkShiftsAssignmentPopupComponent – shift / rest duration', () => {
       expect(shownMessages()).toEqual(['USER_WORK_SHIFT_ASSIGNMENT.SHIFT_PERIOD_DURATION_RANGE']);
     }));
   }
+
+  for (const value of ['1e1', '1E1', '+3', '-3', '2.5', ' 3a']) {
+    it(`rejects "${value}" even when it is not typed key by key (W-07)`, fakeAsync(() => {
+      enterDuration(value);
+
+      expect(component.legacyDaysCountControl.valid).toBeFalse();
+      expect(component.cycleDays).toBeNull();
+    }));
+  }
+
+  it('sends the duration to the server as a number', fakeAsync(() => {
+    enterDuration('3');
+
+    const model = component.prepareModel(new UserWorkShift(), component.form) as UserWorkShift;
+
+    expect(model.legacyDaysCount).toBe(3);
+  }));
 
   for (const [text, days] of [
     ['1', 1],

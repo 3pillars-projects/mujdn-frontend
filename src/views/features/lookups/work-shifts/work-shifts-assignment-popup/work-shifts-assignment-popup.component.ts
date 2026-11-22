@@ -445,7 +445,11 @@ export class WorkShiftsAssignmentPopupComponent
       model.presenceInquiryTime = formValue.presenceInquiryTime;
     }
     model.presenceInquiryBuffer = formValue.presenceInquiryBuffer;
-    model.legacyDaysCount = formValue.legacyDaysCount;
+    // The duration field is a text input (see allowDigitKeysOnly); send it as a number.
+    model.legacyDaysCount =
+      formValue.legacyDaysCount == null || formValue.legacyDaysCount === ''
+        ? (null as unknown as number)
+        : Number(formValue.legacyDaysCount);
 
     const userIds = formValue.userIdsArray || [];
     model.fkAssignedUserId = userIds.length > 0 ? userIds[0] : null;
@@ -574,7 +578,7 @@ export class WorkShiftsAssignmentPopupComponent
       legacyDaysCountCtrl?.setValidators([
         Validators.required,
         CustomValidators.shiftCycleDaysRange(1, 30),
-        CustomValidators.integerNumber(),
+        CustomValidators.digitsOnly(),
       ]);
     } else {
       legacyDaysCountCtrl?.clearValidators();
@@ -713,8 +717,9 @@ export class WorkShiftsAssignmentPopupComponent
   }
 
   /**
-   * The duration is a whole number of days. A number input also accepts "e", "+", "-" and ".",
-   * and the browser turns "1e1" into 10 before the form sees it, so block those characters.
+   * The duration is a whole number of days. It is a text input, so the form validates the raw text
+   * (digitsOnly) whatever way it was entered; these handlers also stop non-digits being typed,
+   * pasted or dropped in.
    */
   allowDigitKeysOnly(event: KeyboardEvent): void {
     const isCharacter = event.key.length === 1;

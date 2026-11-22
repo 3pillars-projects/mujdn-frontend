@@ -210,8 +210,9 @@
                 formControlName="legacyDaysCount"
                 pInputText
                 fluid="true"
-                type="number"
+                type="text"
                 inputmode="numeric"
+                autocomplete="off"
                 (keydown)="allowDigitKeysOnly($event)"
                 (paste)="allowDigitTextOnly($event, $event.clipboardData)"
                 (drop)="allowDigitTextOnly($event, $event.dataTransfer)"
