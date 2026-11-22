@@ -16,8 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { VisitCardPopupComponent } from '../visit-card-popup/visit-card-popup.component';
 
 /**
- * Visit card registry ("بطاقات الزيارات"). Routed twice: under attendance settings for ADMIN and
- * under the visits system for SECURITY_LEADER.
+ * Visit card registry ("بطاقات الزيارات"). Routed under attendance settings for ADMIN only.
  */
 @Component({
   selector: 'app-visit-cards-list',

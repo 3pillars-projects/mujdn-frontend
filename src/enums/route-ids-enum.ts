@@ -30,6 +30,4 @@ export enum RouteIdsEnum {
   TEMPORARY_ROLE_ASSIGNMENTS = 'TEMPORARY_ROLE_ASSIGNMENTS',
   /** Visit cards page under attendance settings (ADMIN). */
   VISIT_CARDS_SETTINGS = 'VISIT_CARDS_SETTINGS',
-  /** Visit cards page under the visits system (SECURITY_LEADER). */
-  VISIT_CARDS = 'VISIT_CARDS',
 }

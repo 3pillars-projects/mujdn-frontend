@@ -408,17 +408,6 @@ export const routes: Routes = [
             '@/views/features/visit/blacklist/blacklisted-container/blacklisted-container.component'
           ),
       },
-      {
-        path: 'visit-cards',
-        canActivate: [authGuard],
-        resolve: { list: visitCardResolver },
-        data: {
-          roles: [ROLES_ENUM.SECURITY_LEADER],
-          routeId: RouteIdsEnum.VISIT_CARDS,
-        },
-        loadComponent: () =>
-          import('@/views/features/visit/visit-cards/visit-cards-list/visit-cards-list.component'),
-      },
     ],
   },
 
