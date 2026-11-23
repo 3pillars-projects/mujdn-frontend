@@ -177,11 +177,12 @@
         <ng-template #header>
           <tr>
             <th>{{ 'WORK_MISSIONS.MISSION_NAME_AR' | translate }}</th>
-            <th>{{ 'WORK_MISSIONS.MISSION_NAME_EN' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.STARTING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.ENDING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.MISSION_TYPE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.STATUS' | translate }}</th>
+            <th>{{ 'WORK_MISSIONS.MISSION_CREATOR' | translate }}</th>
+            <th>{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</th>
             <th class="w-10">{{ 'COMMON.ACTION' | translate }}</th>
           </tr>
         </ng-template>
@@ -200,11 +201,6 @@
                 }
               </span>
             </td>
-            <td>
-              <div>
-                {{ mission | englishName }}
-              </div>
-            </td>
             <td>{{ mission.startDate | date: 'dd/MM/yyyy' }}</td>
             <td>{{ mission.endDate | date: 'dd/MM/yyyy' }}</td>
             <td>
@@ -221,6 +217,8 @@
                 </span>
               }
             </td>
+            <td>{{ (mission.missionCreator | localizedName) || '-' }}</td>
+            <td>{{ (mission.creatorDepartment | localizedName) || '-' }}</td>
             <td>
               <!-- View, then Assign employees for a new mission or Download otherwise, then ⋮. -->
               <div class="actions flex items-center gap-2">
