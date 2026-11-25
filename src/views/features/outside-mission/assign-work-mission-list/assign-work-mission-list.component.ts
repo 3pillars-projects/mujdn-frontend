@@ -50,7 +50,7 @@ import {
   workMissionStatusTextKey,
 } from '@/utils/work-mission-status';
 import { getEnglishName, getLocalizedName } from '@/utils/localized-name';
-import { EnglishNamePipe } from '@/pipes/english-name.pipe';
+import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 
 @Component({
   selector: 'app-assign-work-mission-list',
@@ -64,7 +64,7 @@ import { EnglishNamePipe } from '@/pipes/english-name.pipe';
     TranslatePipe,
     Select,
     MenuModule,
-    EnglishNamePipe,
+    LocalizedNamePipe,
   ],
   templateUrl: './assign-work-mission-list.component.html',
   styleUrl: './assign-work-mission-list.component.scss',

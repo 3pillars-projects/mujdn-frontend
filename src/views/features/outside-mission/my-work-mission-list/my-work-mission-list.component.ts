@@ -30,7 +30,6 @@ import {
 } from '@/models/features/business/work-mission-type-option';
 import { Observable } from 'rxjs';
 import { getEnglishName } from '@/utils/localized-name';
-import { EnglishNamePipe } from '@/pipes/english-name.pipe';
 import { LocalizedNamePipe } from '@/pipes/localized-name.pipe';
 import { WithNameFallbackPipe } from '@/pipes/with-name-fallback.pipe';
 interface Adminstration {
@@ -50,7 +49,6 @@ interface Adminstration {
     FormsModule,
     TranslatePipe,
     Select,
-    EnglishNamePipe,
     LocalizedNamePipe,
     WithNameFallbackPipe,
   ],

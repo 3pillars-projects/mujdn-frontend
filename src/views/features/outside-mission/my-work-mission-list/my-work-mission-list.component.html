@@ -169,11 +169,11 @@
         <ng-template #header>
           <tr>
             <th>{{ 'WORK_MISSIONS.MISSION_NAME_AR' | translate }}</th>
-            <th>{{ 'WORK_MISSIONS.MISSION_NAME_EN' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.STARTING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.ENDING_DATE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.MISSION_TYPE' | translate }}</th>
             <th>{{ 'WORK_MISSIONS.MISSION_CREATOR' | translate }}</th>
+            <th>{{ 'WORK_MISSIONS.CREATOR_DEPARTMENT' | translate }}</th>
             <th class="w-10">{{ 'COMMON.ACTION' | translate }}</th>
           </tr>
         </ng-template>
@@ -192,11 +192,6 @@
                 }
               </span>
             </td>
-            <td>
-              <div>
-                {{ mission | englishName }}
-              </div>
-            </td>
             <td>{{ mission.startDate | date: 'dd/MM/yyyy' }}</td>
             <td>{{ mission.endDate | date: 'dd/MM/yyyy' }}</td>
             <td>
@@ -205,9 +200,8 @@
                 >{{ getWorkMissionTypeName(mission) }}</span
               >
             </td>
-            <td>
-              {{ mission.missionCreator | localizedName }}
-            </td>
+            <td>{{ (mission.missionCreator | localizedName) || '-' }}</td>
+            <td>{{ (mission.creatorDepartment | localizedName) || '-' }}</td>
             <td>
               <!-- Only View Action -->
               <div class="actions flex gap-2">
